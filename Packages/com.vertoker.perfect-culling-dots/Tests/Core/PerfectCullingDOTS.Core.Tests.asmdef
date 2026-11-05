@@ -1,0 +1,6 @@
+{
+  "name": "PerfectCullingDOTS.Core.Tests",
+  "references": ["PerfectCullingDOTS.Core", "Unity.Entities", "Unity.Collections", "Unity.Burst"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}
