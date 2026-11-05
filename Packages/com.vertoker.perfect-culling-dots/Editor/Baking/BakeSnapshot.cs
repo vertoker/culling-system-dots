@@ -11,7 +11,7 @@ namespace PerfectCullingDOTS.Editor.Baking
     public enum BakeInputProfile { NativeVulkanInput, ComputeSoftwareInput }
     public struct BakeRendererPolicy { public BakeSurfaceOverride Surface; public bool DoubleSided; }
     public struct BakeRaySettings { public int Width, Height; public float Far; public quaternion Rotation; public float3 CellSize; }
-    public struct BakeGeometry { public int VertexOffset, VertexCount, IndexOffset, IndexCount; }
+    public struct BakeGeometry { public int VertexOffset, VertexCount, IndexOffset, IndexCount, SourceBinCount; }
     public struct BakeInstance
     {
         public int Geometry, GroupIndex, SourceRenderer;

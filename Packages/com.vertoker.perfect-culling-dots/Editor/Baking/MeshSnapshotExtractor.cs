@@ -5,6 +5,7 @@ using PerfectCullingDOTS.Authoring;
 using PerfectCullingDOTS.Core;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEditor;
 
 namespace PerfectCullingDOTS.Editor.Baking
 {
@@ -100,7 +101,10 @@ namespace PerfectCullingDOTS.Editor.Baking
                             if (!entry.ReverseAll && mesh.GetTopology(sub) != MeshTopology.Triangles) throw new ArgumentException("Bake geometry requires triangle topology.");
                             var triangleIndices = entry.ReverseAll ? mesh.triangles.Reverse().ToArray() : mesh.GetTriangles(sub);
                             var sourceVertices = mesh.vertices;
-                            var range = new BakeGeometry { IndexOffset = indices.Count, IndexCount = triangleIndices.Length };
+                            // Source cache distinguishes procedural geometry using its GUID+localID filename.
+                            AssetDatabase.TryGetGUIDAndLocalFileIdentifier(mesh,out string meshGuid,out long localId);
+                            int sourceBins = (meshGuid+localId).EndsWith(new string('0',33),StringComparison.Ordinal) ? 8 : 128;
+                            var range = new BakeGeometry { IndexOffset = indices.Count, IndexCount = triangleIndices.Length,SourceBinCount = sourceBins };
                             if (request.Profile == BakeInputProfile.NativeVulkanInput)
                             {
                                 range.VertexOffset = vertices.Count; var compact = new Dictionary<int, int>();

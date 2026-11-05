@@ -9,6 +9,7 @@ using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using PerfectCullingDOTS.Editor.Baking.Jobs;
 namespace PerfectCullingDOTS.Editor.Baking
 {
     public sealed class CollectedBakeInput : IDisposable
@@ -120,6 +121,7 @@ namespace PerfectCullingDOTS.Editor.Baking
             using var writer = new BinaryWriter(sink);
             void F3(float3 v) { writer.Write(v.x); writer.Write(v.y); writer.Write(v.z); }
             void F4(float4 v) { writer.Write(v.x); writer.Write(v.y); writer.Write(v.z); writer.Write(v.w); }
+            writer.Write(BakeBackendFactory.AlgorithmId(settings.InputProfile));
             writer.Write((int)settings.InputProfile); F3(size); F3(settings.CellSize); writer.Write(settings.Resolution);
             writer.Write(settings.Far); writer.Write(settings.RenderTransparency); writer.Write(settings.MemoryBudgetMiB); writer.Write(settings.MaxCellsPerBatch);
             writer.Write(settings.MergeAxes.Length); foreach (var axis in settings.MergeAxes) { writer.Write(axis.x); writer.Write(axis.y); writer.Write(axis.z); }
@@ -128,7 +130,7 @@ namespace PerfectCullingDOTS.Editor.Baking
             foreach (var key in s.Groups) { writer.Write(key.VolumeId.x); writer.Write(key.VolumeId.y); writer.Write(key.VolumeId.z); writer.Write(key.VolumeId.w); writer.Write(key.GroupIndex); }
             writer.Write(s.Vertices.Length); foreach (var vertex in s.Vertices) F3(vertex);
             writer.Write(s.Indices.Length); foreach (int index in s.Indices) writer.Write(index);
-            writer.Write(s.Geometry.Length); foreach (var g in s.Geometry) { writer.Write(g.VertexOffset); writer.Write(g.VertexCount); writer.Write(g.IndexOffset); writer.Write(g.IndexCount); }
+            writer.Write(s.Geometry.Length); foreach (var g in s.Geometry) { writer.Write(g.VertexOffset); writer.Write(g.VertexCount); writer.Write(g.IndexOffset); writer.Write(g.IndexCount); writer.Write(g.SourceBinCount); }
             writer.Write(s.Instances.Length);
             foreach (var instance in s.Instances)
             {

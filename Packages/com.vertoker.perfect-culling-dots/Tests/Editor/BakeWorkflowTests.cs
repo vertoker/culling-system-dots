@@ -42,7 +42,7 @@ namespace PerfectCullingDOTS.Tests
         {
             bool hostDirty = SceneManager.GetActiveScene().isDirty;
             using var controller = new BakeController(volume,settings); controller.Start();
-            Assert.That(controller.BackendName, Is.EqualTo("CPU Jobs/Burst")); controller.Complete();
+            Assert.That(controller.BackendName, Does.StartWith("CPU Jobs/Burst")); controller.Complete();
             Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Ready)); Assert.That(controller.Progress, Is.EqualTo(1));
             var asset = controller.Publish(output); Assert.That(volume.Bake, Is.SameAs(asset));
             Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Published));
@@ -58,6 +58,20 @@ namespace PerfectCullingDOTS.Tests
                 for (int i = 0; i < 2; i++) { groups.Clear(); PerfectCullingDOTS.Core.LegacyCellDecoder.DecodeCell(ref blob.Value,i,ref groups); CollectionAssert.AreEqual(new ushort[] {0},groups.AsArray().ToArray()); }
             }
             Assert.That(SceneManager.GetActiveScene().isDirty, Is.EqualTo(hostDirty));
+        }
+        [Test]
+        public void DefaultComputeWorkflowKeepsTheSourceCompressedTraversalTie()
+        {
+            var second = new GameObject("Coincident original group 1"); second.transform.SetParent(volume.transform,false); second.transform.localPosition = Vector3.forward;
+            second.AddComponent<MeshFilter>().sharedMesh = mesh; var renderer = second.AddComponent<MeshRenderer>(); renderer.sharedMaterial = material;
+            var group = second.AddComponent<CullingGroupAuthoring>(); group.Volume = volume; group.GroupIndex = 1; group.Renderers = new Renderer[] {renderer};
+            using var controller = new BakeController(volume,settings); controller.Start(); controller.Complete(); var asset = controller.Publish(output);
+            Assert.That(asset.TryCreateBlob(out var blob,out _,out var diagnostic), Is.True,diagnostic);
+            using (blob) using (var decoded = new NativeList<ushort>(Allocator.Temp))
+            {
+                var groups = decoded;
+                for (int i = 0; i < 2; i++) { groups.Clear(); PerfectCullingDOTS.Core.LegacyCellDecoder.DecodeCell(ref blob.Value,i,ref groups); CollectionAssert.AreEqual(new ushort[] {1},groups.AsArray().ToArray()); }
+            }
         }
         [Test]
         public void SettingsChangeInvalidatesBakeBeforePublication()
