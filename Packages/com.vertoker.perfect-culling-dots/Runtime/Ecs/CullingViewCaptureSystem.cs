@@ -84,7 +84,7 @@ namespace PerfectCullingDOTS.Runtime
                 foreach (var old in volumes.Keys.Where(e => !liveVolumes.Contains(e)).ToArray())
                 {
                     var record = volumes[old];
-                    for (int g = 0; g < record.GroupCount; g++) owner.Registry.ClearGroup(new CullingGroupKey(record.Data.InstanceId, (ushort)g));
+                    for (int g = 0; g < record.GroupCount; g++) owner.Registry.ForgetGroup(new CullingGroupKey(record.Data.InstanceId, (ushort)g));
                     volumes.Remove(old); changed = true;
                 }
                 foreach (var entity in currentVolumes)
@@ -96,7 +96,7 @@ namespace PerfectCullingDOTS.Runtime
                     if (record.GroupCount > 0)
                         for (int g = 0; g < record.GroupCount; g++)
                             if (!record.Data.InstanceId.Equals(data.InstanceId) || g >= data.Bake.Value.GroupCount)
-                                owner.Registry.ClearGroup(new CullingGroupKey(record.Data.InstanceId, (ushort)g));
+                                owner.Registry.ForgetGroup(new CullingGroupKey(record.Data.InstanceId, (ushort)g));
                     if (!record.Data.Equals(data)) changed = true;
                     record.Data = data; record.GroupCount = data.Bake.Value.GroupCount;
                 }
@@ -130,7 +130,7 @@ namespace PerfectCullingDOTS.Runtime
                 }
                 foreach (var old in groups.Keys.Where(e => !liveGroups.Contains(e)).ToArray())
                 {
-                    if (groups[old].HasKey) owner.Registry.ClearGroup(groups[old].Key);
+                    if (groups[old].HasKey) owner.Registry.ForgetGroup(groups[old].Key);
                     groups.Remove(old); changed = true;
                 }
                 var portalSnapshots = new List<CullingPortalSnapshot>();
@@ -164,20 +164,18 @@ namespace PerfectCullingDOTS.Runtime
                         var key = new CullingGroupKey(data.InstanceId, (ushort)g);
                         var definitionEntity = definitions[entity][g];
                         var state = new CullingGroupSnapshot { Key = key, InitialApplied = 1, StateGeneration = record.Order };
-                        if (!freshVolumes.Contains(entity) && owner.TryGetGroupState(key, out bool queued, out bool applied))
-                        { state.InitialQueued = queued ? (byte)1 : (byte)0; state.InitialApplied = applied ? (byte)1 : (byte)0; }
+                        if (!freshVolumes.Contains(entity) && owner.TryGetGroupState(key, out bool queued, out bool applied, out bool valid))
+                        { state.InitialQueued = queued ? (byte)1 : (byte)0; state.InitialApplied = applied ? (byte)1 : (byte)0; state.InitialAppliedValid = valid ? (byte)1 : (byte)0; }
                         if (definitionEntity != Entity.Null)
                         {
                             var group = groups[definitionEntity];
-                            if (group.HasKey && !group.Key.Equals(key)) owner.Registry.ClearGroup(group.Key);
+                            if (group.HasKey && !group.Key.Equals(key)) owner.Registry.ForgetGroup(group.Key);
                             group.Key = key; group.HasKey = true;
                             state.StateGeneration = group.Generation; state.VertexCount = group.Data.VertexCount;
                             foreach (var binding in group.Bindings)
                             {
                                 if (!EntityManager.Exists(binding.Main)) continue;
                                 var shadow = binding.ShadowOnly;
-                                if (ToggleMode == CullingRenderToggleMode.RendererComponent && EntityManager.HasComponent<MaterialMeshInfo>(binding.Main))
-                                    EntityManager.SetComponentEnabled<MaterialMeshInfo>(binding.Main, true);
                                 if (ToggleMode == CullingRenderToggleMode.ShadowcastMode && binding.OriginalShadowMode == ShadowCastingMode.On && shadow == Entity.Null)
                                 { shadow = owner.ShadowCompanions.GetOrCreate(binding.Main); frame.ShadowMains.Add(binding.Main); }
                                 renderBindings.Add(new RenderGroupBinding { Group = key, Main = binding.Main, ShadowOnly = shadow,

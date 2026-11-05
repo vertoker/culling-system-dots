@@ -19,6 +19,151 @@ namespace PerfectCullingDOTS.Rendering.Tests
     {
         public struct Receiver : IComponentData, IEnableableComponent { }
 
+        [UnityTest]
+        public IEnumerator RemovingOverlappingVolumeRestoresRendererUntilSurvivorExecutesAgain()
+        {
+            var world = World.DefaultGameObjectInjectionWorld; var manager = world.EntityManager;
+            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube); cube.SetActive(false);
+            var material = new Material(Shader.Find("Universal Render Pipeline/Unlit")); material.SetColor("_BaseColor", Color.red);
+            var cameraObject = new GameObject("Overlapping volume removal camera"); var camera = cameraObject.AddComponent<Camera>();
+            var target = new RenderTexture(64, 64, 24); target.Create(); camera.targetTexture = target;
+            camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = Color.black;
+            camera.cullingMask = 1 << 31; camera.transform.position = new Vector3(0, 0, -5);
+            var entity = manager.CreateEntity();
+            var both = CullingFrameState.Create(2, 1, 2, 1, Allocator.Persistent);
+            var remaining = CullingFrameState.Create(1, 1, 1, 1, Allocator.Persistent);
+            var first = new CullingGroupKey(new uint4(86, 0, 0, 0), 0);
+            var second = new CullingGroupKey(new uint4(87, 0, 0, 0), 0);
+            using var bothRanges = new NativeArray<RenderVolumeRange>(new[] { new RenderVolumeRange { GroupCount = 1 }, new RenderVolumeRange { GroupOffset = 1, GroupCount = 1 } }, Allocator.Persistent);
+            using var oneRange = new NativeArray<RenderVolumeRange>(new[] { new RenderVolumeRange { GroupCount = 1 } }, Allocator.Persistent);
+            var firstBinding = new RenderGroupBinding { Group = first, Main = entity, InitialRendererEnabled = true,
+                OriginalShadowMode = ShadowCastingMode.Off, ToggleMode = CullingRenderToggleMode.ShadowcastMode };
+            var secondBinding = firstBinding; secondBinding.Group = second;
+            using var bothBindings = new NativeArray<RenderGroupBinding>(new[] { firstBinding, secondBinding }, Allocator.Persistent);
+            using var oneBinding = new NativeArray<RenderGroupBinding>(new[] { secondBinding }, Allocator.Persistent);
+            EcsRenderVisibilityAdapter adapter = null;
+            try
+            {
+                RenderMeshUtility.AddComponents(entity, manager, new RenderMeshDescription(ShadowCastingMode.Off, layer: 31),
+                    new RenderMeshArray(new[] { material }, new[] { cube.GetComponent<MeshFilter>().sharedMesh }), MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
+                manager.SetComponentData(entity, new LocalToWorld { Value = float4x4.identity });
+                both.Groups[0] = new CullingGroupSnapshot { Key = first, StateGeneration = 1 };
+                both.Groups[1] = remaining.Groups[0] = new CullingGroupSnapshot { Key = second, StateGeneration = 1 };
+                both.StartAppliedValid[0] = both.StartAppliedValid[1] = remaining.StartAppliedValid[0] = 1;
+                both.Result[0] = remaining.Result[0] = new CullingEvaluationResult { Status = CullingEvaluationStatus.Success };
+                both.Passes[0] = remaining.Passes[0] = new CullingViewPass { RenderViewId = 1, ViewIndex = 0 };
+                for (int i = 0; i < 3; i++) yield return null;
+                adapter = new EcsRenderVisibilityAdapter(world); adapter.RegisterCamera(camera, 1);
+                adapter.Publish(in both, bothRanges, bothBindings); yield return null;
+                Assert.That(Center(target), Is.EqualTo(new Color32(0, 0, 0, 255)));
+                adapter.Publish(in remaining, oneRange, oneBinding); yield return null;
+                Assert.That(Center(target).r, Is.GreaterThan(200), "A removed volume's restore must survive the other volume's cache hit.");
+                remaining.PassVolumeApplications[0] = 1;
+                adapter.Publish(in remaining, oneRange, oneBinding); yield return null;
+                Assert.That(Center(target), Is.EqualTo(new Color32(0, 0, 0, 255)), "The surviving volume must hide its renderer when it executes again.");
+            }
+            finally
+            {
+                adapter?.Dispose(); manager.CompleteAllTrackedJobs(); if (manager.Exists(entity)) manager.DestroyEntity(entity);
+                both.Dispose(); remaining.Dispose(); camera.targetTexture = null; Object.Destroy(cameraObject); Object.Destroy(cube); Object.Destroy(material);
+                target.Release(); Object.Destroy(target);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator UnknownCameraBeforeFirstCullingPassKeepsOriginalRendererFlags()
+        {
+            var world = World.DefaultGameObjectInjectionWorld; var manager = world.EntityManager;
+            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube); cube.SetActive(false);
+            var material = new Material(Shader.Find("Universal Render Pipeline/Unlit")); material.SetColor("_BaseColor", Color.red);
+            var cameras = new[] { new GameObject("First unknown camera").AddComponent<Camera>(), new GameObject("First culling camera").AddComponent<Camera>() };
+            var targets = new[] { new RenderTexture(64, 64, 24), new RenderTexture(64, 64, 24) };
+            var entity = manager.CreateEntity();
+            var frame = CullingFrameState.Create(1, 1, 1, 2, Allocator.Persistent);
+            var key = new CullingGroupKey(new uint4(88, 0, 0, 0), 0);
+            using var ranges = new NativeArray<RenderVolumeRange>(new[] { new RenderVolumeRange { GroupCount = 1 } }, Allocator.Persistent);
+            using var bindings = new NativeArray<RenderGroupBinding>(new[] { new RenderGroupBinding { Group = key, Main = entity,
+                OriginalShadowMode = ShadowCastingMode.Off, ToggleMode = CullingRenderToggleMode.ShadowcastMode,
+                InitialRendererEnabled = true, InitialForceRenderingOff = true } }, Allocator.Persistent);
+            EcsRenderVisibilityAdapter adapter = null;
+            try
+            {
+                RenderMeshUtility.AddComponents(entity, manager, new RenderMeshDescription(ShadowCastingMode.Off, layer: 31),
+                    new RenderMeshArray(new[] { material }, new[] { cube.GetComponent<MeshFilter>().sharedMesh }), MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
+                manager.SetComponentData(entity, new LocalToWorld { Value = float4x4.identity });
+                for (int i = 0; i < 2; i++)
+                {
+                    targets[i].Create(); cameras[i].targetTexture = targets[i]; cameras[i].depth = i;
+                    cameras[i].clearFlags = CameraClearFlags.SolidColor; cameras[i].backgroundColor = Color.black;
+                    cameras[i].cullingMask = 1 << 31; cameras[i].transform.position = new Vector3(0, 0, -5);
+                }
+                frame.Groups[0] = new CullingGroupSnapshot { Key = key, StateGeneration = 1, InitialApplied = 1 };
+                frame.StartApplied[0] = 1; // Bootstrap group value is not a real prior ExecuteQueue operation.
+                frame.Result[0] = new CullingEvaluationResult { Status = CullingEvaluationStatus.Success };
+                frame.Passes[0] = new CullingViewPass { RenderViewId = 41, ViewIndex = -1 };
+                frame.Passes[1] = new CullingViewPass { RenderViewId = 42, ViewIndex = 0 };
+                frame.PassStates[0] = frame.PassStates[1] = 1; frame.PassVolumeApplications[1] = 1;
+                for (int i = 0; i < 3; i++) yield return null;
+                adapter = new EcsRenderVisibilityAdapter(world); adapter.RegisterCamera(cameras[0], 41); adapter.RegisterCamera(cameras[1], 42);
+                adapter.Publish(in frame, ranges, bindings); yield return null;
+                Assert.That(Center(targets[0]), Is.EqualTo(new Color32(0, 0, 0, 255)), "Unknown first camera must see the original force-off flag.");
+                Assert.That(Center(targets[1]).r, Is.GreaterThan(200), "The first real source toggle must clear force-off for an Off shadow renderer.");
+            }
+            finally
+            {
+                adapter?.Dispose(); manager.CompleteAllTrackedJobs(); if (manager.Exists(entity)) manager.DestroyEntity(entity);
+                frame.Dispose();
+                for (int i = 0; i < 2; i++) { cameras[i].targetTexture = null; Object.Destroy(cameras[i].gameObject); targets[i].Release(); Object.Destroy(targets[i]); }
+                Object.Destroy(cube); Object.Destroy(material);
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator RemovingGraphicsBindingsRestoresInitiallyDisabledRenderer()
+        {
+            var world = World.DefaultGameObjectInjectionWorld; var manager = world.EntityManager;
+            var cube = GameObject.CreatePrimitive(PrimitiveType.Cube); cube.SetActive(false);
+            var material = new Material(Shader.Find("Universal Render Pipeline/Unlit")); material.SetColor("_BaseColor", Color.red);
+            var cameraObject = new GameObject("Binding removal camera"); var camera = cameraObject.AddComponent<Camera>();
+            var target = new RenderTexture(64, 64, 24); target.Create(); camera.targetTexture = target;
+            camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = Color.black;
+            camera.cullingMask = 1 << 31; camera.transform.position = new Vector3(0, 0, -5);
+            var entity = manager.CreateEntity();
+            var frame = CullingFrameState.Create(1, 1, 1, 1, Allocator.Persistent);
+            using var ranges = new NativeArray<RenderVolumeRange>(new[] { new RenderVolumeRange { GroupCount = 1 } }, Allocator.Persistent);
+            var key = new CullingGroupKey(new uint4(89, 0, 0, 0), 0);
+            using var bindings = new NativeArray<RenderGroupBinding>(new[] { new RenderGroupBinding { Group = key, Main = entity,
+                OriginalShadowMode = ShadowCastingMode.Off, ToggleMode = CullingRenderToggleMode.ForceRenderingOff,
+                InitialRendererEnabled = false } }, Allocator.Persistent);
+            using var empty = new NativeArray<RenderGroupBinding>(0, Allocator.Persistent);
+            EcsRenderVisibilityAdapter adapter = null;
+            try
+            {
+                RenderMeshUtility.AddComponents(entity, manager, new RenderMeshDescription(ShadowCastingMode.Off, layer: 31),
+                    new RenderMeshArray(new[] { material }, new[] { cube.GetComponent<MeshFilter>().sharedMesh }), MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
+                manager.SetComponentData(entity, new LocalToWorld { Value = float4x4.identity });
+                frame.Groups[0] = new CullingGroupSnapshot { Key = key, StateGeneration = 1 };
+                frame.Result[0] = new CullingEvaluationResult { Status = CullingEvaluationStatus.Success };
+                frame.Passes[0] = new CullingViewPass { RenderViewId = 1, ViewIndex = 0 }; frame.PassVolumeApplications[0] = 1;
+                for (int i = 0; i < 3; i++) yield return null;
+                adapter = new EcsRenderVisibilityAdapter(world); adapter.RegisterCamera(camera, 1);
+                adapter.Publish(in frame, ranges, bindings); yield return null;
+                Assert.That(Center(target), Is.EqualTo(new Color32(0, 0, 0, 255)));
+                Assert.That(manager.IsComponentEnabled<MaterialMeshInfo>(entity), Is.True, "Controlled graphics use the view mask.");
+                adapter.Publish(in frame, ranges, empty); yield return null;
+                Assert.That(Center(target), Is.EqualTo(new Color32(0, 0, 0, 255)), "Removing a binding enabled a renderer whose original enabled flag was false.");
+                adapter.Dispose(); yield return null;
+                Assert.That(Center(target), Is.EqualTo(new Color32(0, 0, 0, 255)));
+                Assert.That(manager.IsEnabled(entity), Is.True);
+            }
+            finally
+            {
+                adapter?.Dispose(); manager.CompleteAllTrackedJobs(); if (manager.Exists(entity)) manager.DestroyEntity(entity);
+                frame.Dispose(); camera.targetTexture = null; Object.Destroy(cameraObject); Object.Destroy(cube); Object.Destroy(material);
+                target.Release(); Object.Destroy(target);
+            }
+        }
+
 #if UNITY_EDITOR
         [UnityTest]
         public IEnumerator SubSceneReloadPreservesEveryBakedBindingAndStableKey()

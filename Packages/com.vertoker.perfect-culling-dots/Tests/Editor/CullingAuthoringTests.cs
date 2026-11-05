@@ -82,11 +82,18 @@ namespace PerfectCullingDOTS.Tests
                 {
                     var go = new GameObject("Volume " + v); go.transform.parent = root.transform;
                     var volume = go.AddComponent<CullingVolumeAuthoring>(); volume.Bake = imported.Asset; volume.Size = new Vector3(2, 2, 2); volume.Layers = 1u << v;
-                    var groupObject = new GameObject("Group 0"); groupObject.transform.parent = go.transform;
-                    var filter = groupObject.AddComponent<MeshFilter>(); filter.sharedMesh = mesh;
-                    var renderer = groupObject.AddComponent<MeshRenderer>(); renderer.sharedMaterials = new[] { material, material };
-                    renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                    var group = groupObject.AddComponent<CullingGroupAuthoring>(); group.Volume = volume; group.GroupIndex = 0; group.Renderers = new Renderer[] { renderer };
+                    var renderers = new Renderer[3];
+                    var lods = new LOD[3]; var thresholds = new[] { .6f, .3f, .008268547f };
+                    for (int l = 0; l < renderers.Length; l++)
+                    {
+                        var lodObject = new GameObject("LOD " + l); lodObject.transform.parent = go.transform;
+                        lodObject.AddComponent<MeshFilter>().sharedMesh = mesh;
+                        var renderer = lodObject.AddComponent<MeshRenderer>(); renderer.sharedMaterials = new[] { material, material };
+                        renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                        renderers[l] = renderer; lods[l] = new LOD(thresholds[l], new Renderer[] { renderer });
+                    }
+                    var lodGroup = go.AddComponent<LODGroup>(); lodGroup.SetLODs(lods); lodGroup.RecalculateBounds();
+                    var group = go.AddComponent<CullingGroupAuthoring>(); group.Volume = volume; group.GroupIndex = 0; group.Renderers = renderers;
                 }
                 Bake(world, root, store);
                 using var volumes = world.EntityManager.CreateEntityQuery(typeof(CullingVolume)).ToComponentDataArray<CullingVolume>(Allocator.Temp);
@@ -100,9 +107,13 @@ namespace PerfectCullingDOTS.Tests
                 {
                     Assert.That(world.EntityManager.GetComponentData<CullingGroupDefinition>(group).GroupIndex, Is.Zero);
                     var bindings = world.EntityManager.GetBuffer<CullingBakedRenderBinding>(group);
-                    Assert.That(bindings.Length, Is.EqualTo(2), "Both actual graphics entities from the stock renderer baker must be bound.");
+                    Assert.That(bindings.Length, Is.EqualTo(6), "All three LODs and both material entities from the stock renderer baker must be bound.");
                     Assert.That(bindings[0].Main, Is.Not.EqualTo(bindings[1].Main));
-                    foreach (var binding in bindings) Assert.That(world.EntityManager.HasComponent<MaterialMeshInfo>(binding.Main), Is.True);
+                    foreach (var binding in bindings)
+                    {
+                        Assert.That(world.EntityManager.HasComponent<MaterialMeshInfo>(binding.Main), Is.True);
+                        Assert.That(world.EntityManager.HasComponent<MeshLODComponent>(binding.Main), Is.True);
+                    }
                 }
             }
             finally { Object.DestroyImmediate(root); Object.DestroyImmediate(mesh); Object.DestroyImmediate(material); Object.DestroyImmediate(imported.Asset); }

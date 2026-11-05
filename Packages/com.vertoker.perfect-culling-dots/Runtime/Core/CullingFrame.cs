@@ -27,6 +27,7 @@ namespace PerfectCullingDOTS.Core
         public int VertexCount;
         public byte InitialQueued;
         public byte InitialApplied;
+        public byte InitialAppliedValid;
     }
 
     public struct CullingVolumeSnapshot
@@ -107,6 +108,8 @@ namespace PerfectCullingDOTS.Core
         public NativeArray<byte> Applied;
         // Applied group state before this frame's ordered passes (after an optional restore).
         public NativeArray<byte> StartApplied;
+        public NativeArray<byte> AppliedValid;
+        public NativeArray<byte> StartAppliedValid;
         public NativeArray<CullingViewState> Views;
         public NativeArray<CullingViewPass> Passes;
         public NativeArray<byte> PassStates;
@@ -127,6 +130,8 @@ namespace PerfectCullingDOTS.Core
                 buffer.Queued = new NativeArray<byte>(groups, allocator);
                 buffer.Applied = new NativeArray<byte>(groups, allocator);
                 buffer.StartApplied = new NativeArray<byte>(groups, allocator);
+                buffer.AppliedValid = new NativeArray<byte>(groups, allocator);
+                buffer.StartAppliedValid = new NativeArray<byte>(groups, allocator);
                 buffer.Views = new NativeArray<CullingViewState>(views, allocator);
                 buffer.Passes = new NativeArray<CullingViewPass>(passes, allocator);
                 buffer.PassStates = new NativeArray<byte>(states, allocator);
@@ -146,6 +151,8 @@ namespace PerfectCullingDOTS.Core
             if (Queued.IsCreated) Queued.Dispose();
             if (Applied.IsCreated) Applied.Dispose();
             if (StartApplied.IsCreated) StartApplied.Dispose();
+            if (AppliedValid.IsCreated) AppliedValid.Dispose();
+            if (StartAppliedValid.IsCreated) StartAppliedValid.Dispose();
             if (Views.IsCreated) Views.Dispose();
             if (Passes.IsCreated) Passes.Dispose();
             if (PassStates.IsCreated) PassStates.Dispose();

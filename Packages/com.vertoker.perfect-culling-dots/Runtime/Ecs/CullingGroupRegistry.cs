@@ -60,7 +60,13 @@ namespace PerfectCullingDOTS.Runtime
         private CullingBindingHandle Add(Binding binding)
         {
             ulong id = checked(++nextId);
-            ApplyBinding(in binding, !states.TryGetValue(binding.Group, out bool visible) || visible);
+            if (states.TryGetValue(binding.Group, out bool visible)) ApplyBinding(in binding, visible);
+            else if (binding.Entity != Entity.Null)
+            {
+                var manager = world.EntityManager;
+                bool initial = !binding.HasEnableable || manager.IsComponentEnabled(binding.Entity, binding.Enableable);
+                manager.SetComponentData(binding.Entity, new CullingGroupState { Group = binding.Group, Visible = initial ? (byte)1 : (byte)0 });
+            }
             bindings.Add(id, binding);
             changed();
             return new CullingBindingHandle(world.SequenceNumber, id);
@@ -80,8 +86,12 @@ namespace PerfectCullingDOTS.Runtime
                 if (pair.Value.Group.Equals(group))
                 { var binding = pair.Value; ApplyBinding(in binding, true); removed.Add(pair.Key); }
             foreach (var id in removed) bindings.Remove(id);
-            states.Remove(group);
             changed();
+        }
+        public void ForgetGroup(CullingGroupKey group)
+        {
+            ClearGroup(group);
+            states.Remove(group);
         }
         public void Apply(CullingGroupKey group, bool visible)
         {
@@ -95,7 +105,7 @@ namespace PerfectCullingDOTS.Runtime
         public void RestoreAll()
         {
             CheckAlive();
-            foreach (var pair in bindings) { var binding = pair.Value; ApplyBinding(in binding, true); }
+            foreach (var pair in bindings) { var binding = pair.Value; ApplyBinding(in binding, true); states[binding.Group] = true; }
             var keys = new List<CullingGroupKey>(states.Keys);
             foreach (var key in keys) states[key] = true;
         }

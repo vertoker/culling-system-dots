@@ -23,6 +23,8 @@ namespace PerfectCullingDOTS.Rendering
         private readonly Stack<Scope> scopes = new Stack<Scope>();
         private Dictionary<Entity, bool> physical = new Dictionary<Entity, bool>();
         private HashSet<BindingIdentity> registered = new HashSet<BindingIdentity>();
+        private List<BindingRegistration> registrations = new List<BindingRegistration>();
+        private Dictionary<Entity, RenderGroupBinding> baselines = new Dictionary<Entity, RenderGroupBinding>();
         private PreparedPass[] prepared = Array.Empty<PreparedPass>();
         private Entity[] latest = Array.Empty<Entity>();
         private int nextPass;
@@ -30,6 +32,7 @@ namespace PerfectCullingDOTS.Rendering
 
         private struct PreparedPass { public ulong ViewId; public Entity[] Excluded; }
         private struct Scope { public Camera Camera; public Entity[] Excluded; }
+        private struct BindingRegistration { public BindingIdentity Identity; public RenderGroupBinding Binding; }
         private readonly struct BindingIdentity : IEquatable<BindingIdentity>
         {
             private readonly CullingGroupKey group;
@@ -87,7 +90,8 @@ namespace PerfectCullingDOTS.Rendering
             if (nextPass < prepared.Length) throw new InvalidOperationException("The previous ordered publication was not fully consumed.");
             if (!frame.Result.IsCreated || frame.Result[0].Status != CullingEvaluationStatus.Success)
                 throw new ArgumentException("Only a completed successful Core result can be published.");
-            if (!volumes.IsCreated || !bindings.IsCreated || !frame.StartApplied.IsCreated || frame.StartApplied.Length != frame.Groups.Length || frame.PassStates.Length != checked(frame.Groups.Length * frame.Passes.Length) ||
+            if (!volumes.IsCreated || !bindings.IsCreated || !frame.StartApplied.IsCreated || frame.StartApplied.Length != frame.Groups.Length ||
+                !frame.StartAppliedValid.IsCreated || frame.StartAppliedValid.Length != frame.Groups.Length || frame.PassStates.Length != checked(frame.Groups.Length * frame.Passes.Length) ||
                 frame.PassVolumeApplications.Length != checked(volumes.Length * frame.Passes.Length))
                 throw new ArgumentException("Render publication shapes do not match the Core result.");
             int end = 0;
@@ -106,6 +110,24 @@ namespace PerfectCullingDOTS.Rendering
             var canonical = new Dictionary<Entity, RenderGroupBinding>();
             var nextPhysical = new Dictionary<Entity, bool>();
             var nextRegistered = new HashSet<BindingIdentity>();
+            var nextRegistrations = new List<BindingRegistration>();
+            for (int i = 0; i < bindings.Length; i++)
+            {
+                var binding = bindings[i];
+                if (!groupIndices.TryGetValue(binding.Group, out int index)) throw new ArgumentException("Binding must address a current Core key.");
+                var identity = new BindingIdentity(in binding, frame.Groups[index].StateGeneration);
+                nextRegistered.Add(identity); nextRegistrations.Add(new BindingRegistration { Identity = identity, Binding = binding });
+            }
+            var startingPhysical = new Dictionary<Entity, bool>(physical);
+            foreach (var old in registrations)
+                if (!nextRegistered.Contains(old.Identity))
+                {
+                    var binding = old.Binding; var restored = RenderGroupState.Evaluate(true, in binding);
+                    startingPhysical[binding.Main] = restored.Main;
+                    if (binding.ShadowOnly != Entity.Null) startingPhysical[binding.ShadowOnly] = restored.ShadowOnly;
+                }
+            var normalize = new HashSet<Entity>();
+            var shadowOwners = new Dictionary<Entity, Entity>();
             CullingRenderToggleMode? mode = null;
             for (int i = 0; i < bindings.Length; i++)
             {
@@ -120,6 +142,12 @@ namespace PerfectCullingDOTS.Rendering
                     (binding.ShadowOnly == Entity.Null || !world.EntityManager.Exists(binding.ShadowOnly)))
                     throw new ArgumentException("Original On renderers require a precreated graphics-only ShadowsOnly companion.");
                 if (binding.Main == binding.ShadowOnly) throw new ArgumentException("Main and shadow companion must be distinct entities.");
+                if (binding.ShadowOnly != Entity.Null)
+                {
+                    if (shadowOwners.TryGetValue(binding.ShadowOnly, out var main) && main != binding.Main)
+                        throw new ArgumentException("A shadow companion cannot belong to multiple main renderers.");
+                    shadowOwners[binding.ShadowOnly] = binding.Main;
+                }
                 if (canonical.TryGetValue(binding.Main, out var other) &&
                     (other.ShadowOnly != binding.ShadowOnly || other.ToggleMode != binding.ToggleMode ||
                      other.OriginalShadowMode != binding.OriginalShadowMode || other.InitialRendererEnabled != binding.InitialRendererEnabled ||
@@ -129,20 +157,26 @@ namespace PerfectCullingDOTS.Rendering
                 if (!rows.TryGetValue(binding.Group, out var list)) rows.Add(binding.Group, list = new List<RenderGroupBinding>());
                 list.Add(binding);
                 if (!nextPhysical.ContainsKey(binding.Main))
-                    nextPhysical[binding.Main] = physical.TryGetValue(binding.Main, out bool shown)
+                    nextPhysical[binding.Main] = startingPhysical.TryGetValue(binding.Main, out bool shown)
                         ? shown : binding.InitialRendererEnabled && !binding.InitialForceRenderingOff;
                 if (binding.ShadowOnly != Entity.Null && !nextPhysical.ContainsKey(binding.ShadowOnly))
-                    nextPhysical[binding.ShadowOnly] = physical.TryGetValue(binding.ShadowOnly, out bool shadowShown) && shadowShown;
+                    nextPhysical[binding.ShadowOnly] = startingPhysical.TryGetValue(binding.ShadowOnly, out bool shadowShown) && shadowShown;
                 int groupIndex = groupIndices[binding.Group];
                 var identity = new BindingIdentity(in binding, frame.Groups[groupIndex].StateGeneration);
-                nextRegistered.Add(identity);
                 if (!registered.Contains(identity))
                 {
-                    var inherited = RenderGroupState.Evaluate(frame.StartApplied[groupIndex] != 0, in binding);
-                    nextPhysical[binding.Main] = inherited.Main;
-                    if (binding.ShadowOnly != Entity.Null) nextPhysical[binding.ShadowOnly] = inherited.ShadowOnly;
+                    normalize.Add(binding.Main);
+                    if (binding.ShadowOnly != Entity.Null) normalize.Add(binding.ShadowOnly);
+                    if (frame.StartAppliedValid[groupIndex] != 0)
+                    {
+                        var inherited = RenderGroupState.Evaluate(frame.StartApplied[groupIndex] != 0, in binding);
+                        nextPhysical[binding.Main] = inherited.Main;
+                        if (binding.ShadowOnly != Entity.Null) nextPhysical[binding.ShadowOnly] = inherited.ShadowOnly;
+                    }
                 }
             }
+            foreach (var main in canonical.Keys)
+                if (shadowOwners.ContainsKey(main)) throw new ArgumentException("A shadow companion cannot also be bound as a main renderer.");
             // Build off to the side. A malformed/rejected publication cannot replace the last accepted one.
             if (frame.Control[0].RestoreApplied)
                 for (int g = 0; g < frame.Groups.Length; g++) Apply(frame.Groups[g].Key, true, rows, nextPhysical);
@@ -159,8 +193,19 @@ namespace PerfectCullingDOTS.Rendering
                 }
                 nextPrepared[p] = new PreparedPass { ViewId = frame.Passes[p].RenderViewId, Excluded = Excluded(nextPhysical) };
             }
+            // Registration/removal are lifecycle boundaries. Camera callbacks only read immutable masks.
+            foreach (var old in baselines)
+                if (!canonical.ContainsKey(old.Key))
+                {
+                    var binding = old.Value; var restored = RenderGroupState.Evaluate(true, in binding);
+                    SetBaseVisibility(binding.Main, restored.Main);
+                    if (binding.ShadowOnly != Entity.Null) SetBaseVisibility(binding.ShadowOnly, restored.ShadowOnly);
+                }
+            foreach (var entity in normalize) SetBaseVisibility(entity, true);
             physical = nextPhysical;
             registered = nextRegistered;
+            registrations = nextRegistrations;
+            baselines = canonical;
             prepared = nextPrepared;
             nextPass = 0;
             latest = initial;
@@ -223,15 +268,28 @@ namespace PerfectCullingDOTS.Rendering
 
         private void Fault(string message) { if (LastFault == null) LastFault = message; }
         private void CheckAlive() { if (disposed || !world.IsCreated) throw new ObjectDisposedException(nameof(EcsRenderVisibilityAdapter)); }
+        private void SetBaseVisibility(Entity entity, bool visible)
+        {
+            if (world.IsCreated && world.EntityManager.Exists(entity) && world.EntityManager.HasComponent<MaterialMeshInfo>(entity))
+                world.EntityManager.SetComponentEnabled<MaterialMeshInfo>(entity, visible);
+        }
 
         public void Dispose()
         {
             if (disposed) return;
+            if (scopes.Count != 0) throw new InvalidOperationException("Dispose the adapter outside camera rendering.");
             disposed = true;
             RenderPipelineManager.beginCameraRendering -= BeginCamera;
             RenderPipelineManager.endCameraRendering -= EndCamera;
             if (graphics.CullingFilter == capture) graphics.CullingFilter = null;
-            scopes.Clear(); cameras.Clear(); physical.Clear(); registered.Clear(); prepared = Array.Empty<PreparedPass>(); latest = Array.Empty<Entity>();
+            foreach (var row in registrations)
+            {
+                var binding = row.Binding; var restored = RenderGroupState.Evaluate(true, in binding);
+                SetBaseVisibility(binding.Main, restored.Main);
+                if (binding.ShadowOnly != Entity.Null) SetBaseVisibility(binding.ShadowOnly, restored.ShadowOnly);
+            }
+            scopes.Clear(); cameras.Clear(); physical.Clear(); registered.Clear(); registrations.Clear(); baselines.Clear();
+            prepared = Array.Empty<PreparedPass>(); latest = Array.Empty<Entity>();
         }
     }
 }

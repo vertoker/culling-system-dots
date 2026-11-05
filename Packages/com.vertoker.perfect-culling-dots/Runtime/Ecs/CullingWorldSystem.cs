@@ -127,12 +127,14 @@ namespace PerfectCullingDOTS.Runtime
         public void InvalidatePublication() { EnsureAlive(); revision = checked(revision + 1); }
         public void CancelPending() { EnsureAlive(); ReleasePending(); PruneViewVersions(); }
         public bool TryGetGroupState(CullingGroupKey key, out bool queued, out bool applied)
+            => TryGetGroupState(key, out queued, out applied, out _);
+        public bool TryGetGroupState(CullingGroupKey key, out bool queued, out bool applied, out bool appliedValid)
         {
             EnsureAlive();
             for (int i = 0; i < current.Groups.Length; i++)
                 if (current.Groups[i].Key.Equals(key))
-                { queued = current.Queued[i] != 0; applied = current.Applied[i] != 0; return true; }
-            queued = applied = false; return false;
+                { queued = current.Queued[i] != 0; applied = current.Applied[i] != 0; appliedValid = current.AppliedValid[i] != 0; return true; }
+            queued = applied = appliedValid = false; return false;
         }
         public bool TryGetViewState(ulong viewId, out CullingViewState state)
         {

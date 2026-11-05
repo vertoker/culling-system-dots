@@ -24,6 +24,8 @@ namespace PerfectCullingDOTS.Tests
                 Assert.That(initial.Result[0].Status, Is.EqualTo(CullingEvaluationStatus.Success));
                 CollectionAssert.AreEqual(new byte[] { 1, 0 }, initial.Applied.ToArray());
                 CollectionAssert.AreEqual(new byte[] { 1, 1 }, initial.StartApplied.ToArray());
+                CollectionAssert.AreEqual(new byte[] { 0, 0 }, initial.StartAppliedValid.ToArray());
+                CollectionAssert.AreEqual(new byte[] { 1, 1 }, initial.AppliedValid.ToArray());
                 using var next = new Snapshot(replacement);
                 var view = next.Input.Views[0]; view.InvalidationVersion++; next.Input.Views[0] = view;
                 next.Input.FrameId = 2;
@@ -32,6 +34,7 @@ namespace PerfectCullingDOTS.Tests
                 Assert.That(output.Result[0].Status, Is.EqualTo(CullingEvaluationStatus.Success));
                 CollectionAssert.AreEqual(new byte[] { 0, 1 }, output.Applied.ToArray());
                 CollectionAssert.AreEqual(new byte[] { 1, 0 }, output.StartApplied.ToArray());
+                CollectionAssert.AreEqual(new byte[] { 1, 1 }, output.StartAppliedValid.ToArray());
                 CollectionAssert.AreEqual(new byte[] { 1, 0 }, initial.Applied.ToArray(), "Read-only previous buffer changed.");
                 Assert.That(output.Control[0].SnapshotVersion, Is.EqualTo(20));
             }

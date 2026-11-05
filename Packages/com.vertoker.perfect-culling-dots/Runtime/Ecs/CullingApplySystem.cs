@@ -66,7 +66,11 @@ namespace PerfectCullingDOTS.Runtime
                 prepared[p] = list.ToArray(); preparedViews[p] = frame.Passes[p].RenderViewId;
             }
             publishGraphics?.Invoke();
-            if (frame.Control[0].RestoreApplied) source.Registry.RestoreAll();
+            if (frame.Control[0].RestoreApplied)
+            {
+                source.Registry.RestoreAll();
+                for (int g = 0; g < frame.Groups.Length; g++) source.Registry.Apply(frame.Groups[g].Key, true);
+            }
             owner = source; version = source.AcceptedVersion; revision = source.Revision;
             operations = prepared; views = preparedViews; next = 0;
         }
