@@ -39,6 +39,8 @@ namespace PerfectCullingDOTS.Runtime
         public JobHandle PendingDependency => pendingHandle;
         public CullingGroupRegistry Registry { get; private set; }
         internal CullingFrameState AcceptedFrame => current;
+        internal ulong Revision => revision;
+        internal ulong AcceptedRevision { get; private set; }
 
         protected override void OnCreate()
         {
@@ -105,6 +107,7 @@ namespace PerfectCullingDOTS.Runtime
             current = pending;
             pending = default;
             AcceptedVersion = ticket.Request;
+            AcceptedRevision = ticket.Revision;
             ReleasePending();
             PruneViewVersions();
             return CullingPublicationStatus.Published;

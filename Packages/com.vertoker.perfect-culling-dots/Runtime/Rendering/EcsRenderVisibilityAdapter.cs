@@ -12,7 +12,9 @@ namespace PerfectCullingDOTS.Rendering
     public sealed class EcsRenderVisibilityAdapter : IDisposable
     {
         public string LastFault { get; private set; }
+        public World TargetWorld => world;
         public event Action<BatchCullingViewType, Camera> CullingCaptured;
+        public event Action<int, ulong> ApplyingPass;
         private readonly World world;
         private readonly EntitiesGraphicsSystem graphics;
         private readonly Func<BatchCullingContext, EntitiesGraphicsCullingFilter> capture;
@@ -156,7 +158,11 @@ namespace PerfectCullingDOTS.Rendering
         {
             if (cameras.TryGetValue(camera, out ulong viewId) && nextPass < prepared.Length)
             {
-                if (prepared[nextPass].ViewId == viewId) latest = prepared[nextPass++].Excluded;
+                if (prepared[nextPass].ViewId == viewId)
+                {
+                    ApplyingPass?.Invoke(nextPass, viewId);
+                    latest = prepared[nextPass++].Excluded;
+                }
                 else Fault("Actual camera order differs from the prepared Core pass order.");
             }
             scopes.Push(new Scope { Camera = camera, Excluded = latest });

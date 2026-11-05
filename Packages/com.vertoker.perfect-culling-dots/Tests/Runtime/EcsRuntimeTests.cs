@@ -2,6 +2,7 @@ using System;
 using NUnit.Framework;
 using PerfectCullingDOTS.Core;
 using PerfectCullingDOTS.Runtime;
+using PerfectCullingDOTS.Rendering;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -10,6 +11,38 @@ namespace PerfectCullingDOTS.Tests
 {
     public class EcsRuntimeTests
     {
+        [TestCase(CullingExecutionMode.Sequential), TestCase(CullingExecutionMode.Jobs)]
+        public void ReceiverPassesReplayIntermediateStateInsteadOfFinalFrame(CullingExecutionMode mode)
+        {
+            using var source = new Snapshot();
+            source.Input.Views.Dispose(); source.Input.Passes.Dispose();
+            source.Input.Views = new NativeArray<CullingViewSnapshot>(new[] {
+                new CullingViewSnapshot { ViewId = 1, Position = new float3(-1, 0, 0), Layers = uint.MaxValue },
+                new CullingViewSnapshot { ViewId = 2, Position = new float3(-1, 0, 0), Layers = uint.MaxValue, Invert = true }
+            }, Allocator.Persistent);
+            source.Input.Passes = new NativeArray<CullingViewPass>(new[] {
+                new CullingViewPass { RenderViewId = 1, ViewIndex = 0 },
+                new CullingViewPass { RenderViewId = 2, ViewIndex = 1 }
+            }, Allocator.Persistent);
+            using var world = new World("Ordered receiver replay");
+            var owner = world.GetOrCreateSystemManaged<CullingWorldSystem>();
+            var replay = world.GetOrCreateSystemManaged<CullingApplySystem>();
+            var entity = world.EntityManager.CreateEntity(typeof(CullingRegistryTests.LogicReceiver));
+            var key = source.Input.Groups[0].Key;
+            owner.Registry.RegisterEntity<CullingRegistryTests.LogicReceiver>(key, entity);
+            owner.Registry.Apply(key, false);
+            var ticket = owner.Schedule(in source.Input, mode);
+            Assert.That(owner.CompleteAndPublish(ticket), Is.EqualTo(CullingPublicationStatus.Published));
+            using var ranges = new NativeArray<RenderVolumeRange>(new[] { new RenderVolumeRange { GroupCount = 2 } }, Allocator.Temp);
+            replay.Prepare(owner, ranges);
+            Assert.That(world.EntityManager.IsComponentEnabled<CullingRegistryTests.LogicReceiver>(entity), Is.False, "Preparation must not apply the final state early.");
+            Assert.Throws<InvalidOperationException>(() => replay.ApplyPass(1, 2));
+            replay.ApplyPass(0, 1);
+            Assert.That(world.EntityManager.IsComponentEnabled<CullingRegistryTests.LogicReceiver>(entity), Is.True);
+            replay.ApplyPass(1, 2);
+            Assert.That(world.EntityManager.IsComponentEnabled<CullingRegistryTests.LogicReceiver>(entity), Is.False);
+        }
+
         [TestCase(CullingExecutionMode.Sequential), TestCase(CullingExecutionMode.Jobs)]
         public void WorldsOwnIndependentSnapshotsAndRejectEachOthersTickets(CullingExecutionMode mode)
         {

@@ -15,6 +15,7 @@ namespace PerfectCullingDOTS.Runtime
         [SerializeField] private CullingGroupKey[] groups;
         [SerializeField] private CullingCellRange[] cells;
         [SerializeField] private byte[] compressed;
+        public int GroupCount => groups?.Length ?? 0;
 
         internal void Initialize(int version, uint4 stableVolumeId, CullingBakeLayout bakeLayout,
             CullingGroupKey[] mapping, CullingCellRange[] ranges, byte[] bytes)
