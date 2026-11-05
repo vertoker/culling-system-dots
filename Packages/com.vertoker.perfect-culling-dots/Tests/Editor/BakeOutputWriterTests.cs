@@ -34,6 +34,7 @@ namespace PerfectCullingDOTS.Tests
                     CollectionAssert.AreEqual(new ushort[] { 0,1,17,39 },decoded.AsArray().ToArray());
                     Assert.That(blob.Value.Cells[74].MergeBitmask, Is.EqualTo(profile == BakeMergeMetadata.NativeDefault ? uint.MaxValue : 0x123456u));
                     output.Clear(); LegacyCellDecoder.DecodeCell(ref blob.Value,73,ref output); Assert.That(output.Length, Is.Zero);
+                    Assert.That(blob.Value.Cells[73].MergeBitmask, Is.Zero,"Source inactive cells keep their initial zero metadata, including native input.");
                 }
             }
             finally { UnityEngine.Object.DestroyImmediate(asset); }

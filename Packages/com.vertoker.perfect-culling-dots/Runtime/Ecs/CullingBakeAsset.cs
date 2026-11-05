@@ -15,7 +15,11 @@ namespace PerfectCullingDOTS.Runtime
         [SerializeField] private CullingGroupKey[] groups;
         [SerializeField] private CullingCellRange[] cells;
         [SerializeField] private byte[] compressed;
+        [SerializeField] private string inputFingerprint;
         public int GroupCount => groups?.Length ?? 0;
+        public uint4 VolumeId => volumeId;
+        public string InputFingerprint => inputFingerprint;
+        internal void SetInputFingerprint(string value) { inputFingerprint = value; }
 
         internal void Initialize(int version, uint4 stableVolumeId, CullingBakeLayout bakeLayout,
             CullingGroupKey[] mapping, CullingCellRange[] ranges, byte[] bytes)

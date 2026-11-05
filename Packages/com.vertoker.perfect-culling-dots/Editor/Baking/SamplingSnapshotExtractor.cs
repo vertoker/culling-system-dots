@@ -1,19 +1,16 @@
 using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using PerfectCullingDOTS.Authoring;
 
 namespace PerfectCullingDOTS.Editor.Baking
 {
     public enum SamplingDecision { Continue, Include, Exclude }
-    public interface IBakeSamplingProvider
-    {
-        void Initialize();
-        bool IsActive(float3 worldPosition);
-    }
+    public interface IBakeSamplingProvider : ICullingSamplingProvider { }
     public static class SamplingSnapshotExtractor
     {
         public static BakeSampleLocation[] Capture(IReadOnlyList<float3> fullGrid,
-            IReadOnlyList<IBakeSamplingProvider> providers, Func<float3, SamplingDecision> defaultDecision = null)
+            IReadOnlyList<ICullingSamplingProvider> providers, Func<float3, SamplingDecision> defaultDecision = null)
         {
             if (fullGrid == null || providers == null) throw new ArgumentNullException();
             foreach (var provider in providers)
