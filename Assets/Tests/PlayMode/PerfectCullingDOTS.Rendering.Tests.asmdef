@@ -1,0 +1,5 @@
+{
+  "name": "PerfectCullingDOTS.Rendering.Tests",
+  "references": ["PerfectCullingRuntime", "PerfectCullingDOTS.Core", "PerfectCullingDOTS.Runtime", "PerfectCullingDOTS.Rendering", "Unity.Entities", "Unity.Entities.Graphics", "Unity.Transforms", "Unity.Collections", "Unity.Mathematics", "Unity.RenderPipelines.Universal.Runtime"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

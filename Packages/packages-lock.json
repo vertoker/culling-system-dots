@@ -62,9 +62,9 @@
       }
     },
     "com.unity.entities.graphics": {
-      "version": "6.6.0",
+      "version": "file:com.unity.entities.graphics",
       "depth": 0,
-      "source": "builtin",
+      "source": "embedded",
       "dependencies": {
         "com.unity.entities": "6.6.0",
         "com.unity.modules.particlesystem": "1.0.0",
