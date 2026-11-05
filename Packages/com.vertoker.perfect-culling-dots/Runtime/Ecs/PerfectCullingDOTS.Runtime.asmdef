@@ -1,0 +1,4 @@
+{
+  "name": "PerfectCullingDOTS.Runtime",
+  "references": ["PerfectCullingDOTS.Core", "Unity.Entities", "Unity.Collections", "Unity.Mathematics"]
+}
