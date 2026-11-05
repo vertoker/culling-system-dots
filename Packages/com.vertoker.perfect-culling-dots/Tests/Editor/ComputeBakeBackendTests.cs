@@ -85,5 +85,43 @@ namespace PerfectCullingDOTS.Tests
             { gpu.Tick(); yield return null; }
             Assert.That(gpu.Status, Is.EqualTo(BakeSessionStatus.Completed)); Assert.That(gpu.Complete().Length, Is.EqualTo(3));
         }
+        [TestCase("front",true)] [TestCase("back",false)] [TestCase("double-back",true)]
+        [TestCase("additional",false)] [TestCase("near",false)] [TestCase("beyond-far",false)]
+        [TestCase("within-far",true)] [TestCase("empty",false)] [TestCase("transparent-only",true)]
+        public void AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(string scenario,bool visible)
+        {
+            var scene = EditorSceneManager.NewPreviewScene();
+            bool back = scenario == "back" || scenario == "double-back";
+            var mesh = new Mesh {vertices = new[] {new Vector3(-2,-2,0),new Vector3(-2,2,0),new Vector3(2,2,0),new Vector3(2,-2,0)},triangles = back ? new[] {0,2,1,0,3,2} : new[] {0,1,2,0,2,3}};
+            var material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+            try
+            {
+                var target = new GameObject("analytic visibility"); SceneManager.MoveGameObjectToScene(target,scene);
+                target.transform.position = new Vector3(0,0,scenario == "near" ? .00005f : scenario == "beyond-far" ? 21 : scenario == "within-far" ? 19 : 2);
+                // Every point must lie inside the near radius. A large nearby
+                // plane still has valid hits in the four side cubemap faces.
+                if (scenario == "near") target.transform.localScale = Vector3.one*.00001f;
+                target.AddComponent<MeshFilter>().sharedMesh = mesh; var renderer = target.AddComponent<MeshRenderer>(); renderer.sharedMaterial = material;
+                var tag = target.AddComponent<PerfectCullingDOTS.Authoring.CullingBakeRendererTag>(); tag.DoubleSided = scenario == "double-back";
+                tag.Surface = scenario == "transparent-only" ? PerfectCullingDOTS.Authoring.BakeSurfaceOverride.Transparent : PerfectCullingDOTS.Authoring.BakeSurfaceOverride.Opaque;
+                var additional = Array.Empty<Renderer>();
+                if (scenario == "additional")
+                {
+                    var wall = new GameObject("additional opaque wall"); SceneManager.MoveGameObjectToScene(wall,scene); wall.transform.position = Vector3.forward;
+                    wall.AddComponent<MeshFilter>().sharedMesh = mesh; var wallRenderer = wall.AddComponent<MeshRenderer>(); wallRenderer.sharedMaterial = material; additional = new Renderer[] {wallRenderer};
+                }
+                using var snapshot = MeshSnapshotExtractor.Capture(new BakeSnapshotRequest {Profile = BakeInputProfile.ComputeSoftwareInput,
+                    Groups = new[] {new BakeGroupSource {Key = new CullingGroupKey(new uint4(19,2,3,4),0),Renderers = scenario == "empty" ? Array.Empty<Renderer>() : new Renderer[] {renderer}}},
+                    AdditionalOccluders = additional,Samples = new[] {new BakeSampleLocation {FullGridIndex = 7}},
+                    Rays = new BakeRaySettings {Width = 9,Height = 11,Far = 20,Rotation = quaternion.identity,CellSize = new float3(1)}});
+                var expected = visible ? new ushort[] {0} : Array.Empty<ushort>();
+                foreach (var backend in new IBakeBackend[] {new SourceComputeJobsBackend(),Backend()})
+                {
+                    using var session = backend.Begin(snapshot); var cells = session.Complete(); Assert.That(cells.Length, Is.EqualTo(1),backend.Name);
+                    Assert.That(cells[0].FullGridIndex, Is.EqualTo(7)); CollectionAssert.AreEqual(expected,cells[0].Groups,backend.Name+" "+scenario);
+                }
+            }
+            finally { EditorSceneManager.ClosePreviewScene(scene); Object.DestroyImmediate(mesh); Object.DestroyImmediate(material); }
+        }
     }
 }

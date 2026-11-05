@@ -63,6 +63,7 @@ namespace PerfectCullingDOTS.Editor.Baking.Jobs
         }
         private void Initialize()
         {
+            BakeNumericValidation.Validate(snapshot);
             var settings = snapshot.Rays;
             if (rasterColors != null) NativeRasterCpuReference.Validate(snapshot,rasterColors);
             if (settings.Width <= 0 || settings.Height <= 0 || !math.isfinite(settings.Far) || settings.Far <= 0 ||

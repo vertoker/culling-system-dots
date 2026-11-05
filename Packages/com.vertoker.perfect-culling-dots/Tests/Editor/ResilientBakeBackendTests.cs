@@ -96,5 +96,16 @@ namespace PerfectCullingDOTS.Tests
             Assert.Throws<InvalidOperationException>(()=>session.Complete()); Assert.That(session.Status, Is.EqualTo(BakeSessionStatus.Faulted));
             Assert.Throws<InvalidOperationException>(()=>session.Complete()); Assert.That(primary.Disposed, Is.True);
         }
+        [Test]
+        public void RealGpuUploadBudgetFailureRecoversWithinTheSameBudgetOnCpu()
+        {
+            using var snapshot = ComputeBakeBackendTests.Snapshot();
+            using var session = new ResilientBakeBackend(new PerfectCullingDOTS.Editor.Baking.Gpu.ComputeBakeBackend(),new SourceComputeJobsBackend())
+                .Begin(snapshot,new BakeBackendOptions {MemoryBudgetBytes = 6000,MaxCellsPerBatch = 1});
+            var cells = session.Complete(); Assert.That(cells.Length, Is.EqualTo(3));
+            foreach (var cell in cells) CollectionAssert.AreEqual(new ushort[] {0,1,32},cell.Groups);
+            Assert.That(((IBakeSessionDiagnostics)session).BackendName, Does.StartWith("CPU Jobs/Burst"));
+            Assert.That(((IBakeSessionDiagnostics)session).FallbackReason, Does.Contain("budget"));
+        }
     }
 }

@@ -20,6 +20,9 @@ namespace PerfectCullingDOTS.Editor.Baking.Gpu
     // request view is valid; callers need not tick every Editor frame.
     public sealed class ComputeBakeSession : IBakeSession
     {
+        // Every member is a 16-byte vector or matrix column: the structured
+        // buffer layout does not depend on platform float3/scalar padding.
+        private struct GpuInstance { public float4x4 WorldToLocal; public uint4 BlasRecord; }
         private BakeSnapshot snapshot;
         private readonly BakeBackendOptions options;
         private ComputeShader shader;
@@ -64,6 +67,7 @@ namespace PerfectCullingDOTS.Editor.Baking.Gpu
         }
         private void Initialize()
         {
+            BakeNumericValidation.Validate(snapshot);
             if (snapshot.Profile != BakeInputProfile.ComputeSoftwareInput) throw new ArgumentException("GPU tracing requires the compute snapshot profile.");
             var rays = snapshot.Rays;
             if (rays.Width <= 0 || rays.Height <= 0 || rays.Width > 65535*8 || rays.Height > 65535*8 ||
@@ -78,7 +82,7 @@ namespace PerfectCullingDOTS.Editor.Baking.Gpu
             // Peak includes temporary numeric BVH plus GPU copy, sample upload,
             // output buffer and readback copy. Driver overhead is outside this bound.
             long perCell = checked(32L+words*12L);
-            long available = budget-snapshotBytes-estimate*2-128;
+            long available = budget-snapshotBytes-estimate*2-(long)snapshot.Instances.Length*96-128;
             if (available < perCell && total > 0) throw new InvalidOperationException("GPU memory budget cannot fit snapshot, BVH upload and one cell.");
             batchSize = (int)math.min(options.MaxCellsPerBatch == 0 ? 8 : options.MaxCellsPerBatch,math.min(10922,math.max(1,available/perCell)));
             var asset = AssetDatabase.LoadAssetAtPath<ComputeShader>(ComputeBakeBackend.ShaderPath);
@@ -87,9 +91,13 @@ namespace PerfectCullingDOTS.Editor.Baking.Gpu
             if (!shader.IsSupported(kernel)) throw new NotSupportedException("The bake compute kernel is unsupported on this graphics device.");
             using (var data = CwbvhSnapshotBuilder.Build(snapshot))
             {
-                nodes = Upload(data.Nodes,16); triangles = Upload(data.BlasTriangles,16); tlas = Upload(data.TlasInstances,16); instances = Upload(data.Instances,68);
-                treeBytes = (long)nodes.count*16+(long)triangles.count*16+(long)tlas.count*16+(long)instances.count*68;
-                NativeBytes = treeBytes; PeakNativeBytes = treeBytes+data.Bytes;
+                nodes = Upload(data.Nodes,16); triangles = Upload(data.BlasTriangles,16); tlas = Upload(data.TlasInstances,16);
+                using var gpuInstances = new NativeArray<GpuInstance>(data.Instances.Length,Allocator.Temp);
+                var writableInstances = gpuInstances;
+                for (int i = 0; i < writableInstances.Length; i++) writableInstances[i] = new GpuInstance {WorldToLocal = data.Instances[i].WorldToLocal,BlasRecord = new uint4((uint)data.Instances[i].BlasRoot,0,0,0)};
+                instances = Upload(gpuInstances,80);
+                treeBytes = (long)nodes.count*16+(long)triangles.count*16+(long)tlas.count*16+(long)instances.count*80;
+                NativeBytes = treeBytes; PeakNativeBytes = treeBytes+data.Bytes+(long)gpuInstances.Length*80;
                 shader.SetInt("OpaqueTlasRootNode",data.OpaqueRoot);
                 shader.SetInt("TransparentTlasRootNodeOffset",data.TransparentRoot < 0 ? 0 : data.TransparentRoot-data.OpaqueRoot);
                 shader.SetInt("InstanceCount",data.Instances.Length);
