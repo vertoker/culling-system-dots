@@ -103,6 +103,8 @@ namespace PerfectCullingDOTS.Rendering.Tests
             EcsRenderVisibilityAdapter adapter = null;
             CullingBindingHandle receiver = default;
             int observed = 0;
+            bool expectFirstVisible = true;
+            Entity streamedRenderer = Entity.Null;
             try
             {
                 RenderMeshUtility.AddComponents(entity, manager, new RenderMeshDescription(ShadowCastingMode.Off, layer: 31),
@@ -128,13 +130,32 @@ namespace PerfectCullingDOTS.Rendering.Tests
                     Assert.That(owner.CompleteAndPublish(ticket), Is.EqualTo(CullingPublicationStatus.Published));
                     replay.Publish(owner, adapter, ranges, bindings);
                     if (frame == 0) adapter.ApplyingPass += (pass, id) => {
-                        Assert.That(manager.IsComponentEnabled<Receiver>(entity), Is.EqualTo(pass == 0)); observed++;
+                        Assert.That(manager.IsComponentEnabled<Receiver>(entity), Is.EqualTo(pass == 0 && expectFirstVisible)); observed++;
                     };
                     yield return null;
                     Assert.That(Center(targets[0]).r, Is.GreaterThan(200));
                     Assert.That(Center(targets[1]), Is.EqualTo(new Color32(0, 0, 0, 255)));
                 }
                 Assert.That(observed, Is.EqualTo(6)); Assert.That(adapter.LastFault, Is.Null);
+                // Introduce a new graphics binding while BOTH source camera hashes hit their caches.
+                // It must inherit the already hidden group's state before any subsequent dirty pass.
+                expectFirstVisible = false;
+                streamedRenderer = manager.CreateEntity();
+                RenderMeshUtility.AddComponents(streamedRenderer, manager, new RenderMeshDescription(ShadowCastingMode.Off, layer: 31),
+                    new RenderMeshArray(new[] { material }, new[] { mesh }), MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
+                manager.SetComponentData(streamedRenderer, new LocalToWorld { Value = float4x4.identity });
+                using (var expanded = new NativeArray<RenderGroupBinding>(2, Allocator.Persistent))
+                {
+                    var writer = expanded;
+                    writer[0] = bindings[0]; var added = bindings[0]; added.Main = streamedRenderer; writer[1] = added;
+                    input.FrameId++;
+                    var ticket = owner.Schedule(in input);
+                    Assert.That(owner.CompleteAndPublish(ticket), Is.EqualTo(CullingPublicationStatus.Published));
+                    replay.Publish(owner, adapter, ranges, expanded);
+                    yield return null;
+                    Assert.That(Center(targets[0]), Is.EqualTo(new Color32(0, 0, 0, 255)), "A streamed renderer ignored the hidden group's cached state.");
+                    Assert.That(Center(targets[1]), Is.EqualTo(new Color32(0, 0, 0, 255)));
+                }
                 Assert.That(manager.IsEnabled(entity), Is.True);
                 Assert.That(manager.IsComponentEnabled<MaterialMeshInfo>(entity), Is.True);
             }
@@ -142,6 +163,7 @@ namespace PerfectCullingDOTS.Rendering.Tests
             {
                 replay.Attach(null); adapter?.Dispose(); owner.CancelPending(); owner.Registry.Remove(receiver);
                 manager.CompleteAllTrackedJobs(); if (manager.Exists(entity)) manager.DestroyEntity(entity);
+                if (streamedRenderer != Entity.Null && manager.Exists(streamedRenderer)) manager.DestroyEntity(streamedRenderer);
                 input.Volumes.Dispose(); input.Groups.Dispose(); input.Views.Dispose(); input.Passes.Dispose(); input.Portals.Dispose(); bake.Dispose();
                 for (int i = 0; i < 2; i++) { cameras[i].targetTexture = null; Object.Destroy(cameras[i].gameObject); targets[i].Release(); Object.Destroy(targets[i]); }
                 Object.Destroy(material); Object.Destroy(cube);

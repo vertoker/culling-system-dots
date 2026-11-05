@@ -21,6 +21,7 @@ namespace PerfectCullingDOTS.Rendering
         private readonly Dictionary<Camera, ulong> cameras = new Dictionary<Camera, ulong>();
         private readonly Stack<Scope> scopes = new Stack<Scope>();
         private Dictionary<Entity, bool> physical = new Dictionary<Entity, bool>();
+        private HashSet<BindingIdentity> registered = new HashSet<BindingIdentity>();
         private PreparedPass[] prepared = Array.Empty<PreparedPass>();
         private Entity[] latest = Array.Empty<Entity>();
         private int nextPass;
@@ -28,6 +29,22 @@ namespace PerfectCullingDOTS.Rendering
 
         private struct PreparedPass { public ulong ViewId; public Entity[] Excluded; }
         private struct Scope { public Camera Camera; public Entity[] Excluded; }
+        private readonly struct BindingIdentity : IEquatable<BindingIdentity>
+        {
+            private readonly CullingGroupKey group;
+            private readonly Entity main, shadow;
+            private readonly ulong generation;
+            private readonly int settings;
+            public BindingIdentity(in RenderGroupBinding binding, ulong generation)
+            {
+                group = binding.Group; main = binding.Main; shadow = binding.ShadowOnly; this.generation = generation;
+                settings = (int)binding.ToggleMode | ((int)binding.OriginalShadowMode << 2) |
+                    (binding.InitialRendererEnabled ? 16 : 0) | (binding.InitialForceRenderingOff ? 32 : 0);
+            }
+            public bool Equals(BindingIdentity other) => group.Equals(other.group) && main == other.main && shadow == other.shadow && generation == other.generation && settings == other.settings;
+            public override bool Equals(object obj) => obj is BindingIdentity other && Equals(other);
+            public override int GetHashCode() => unchecked((((group.GetHashCode() * 397 ^ main.GetHashCode()) * 397 ^ shadow.GetHashCode()) * 397 ^ generation.GetHashCode()) * 397 ^ settings);
+        }
 
         public EcsRenderVisibilityAdapter(World world)
         {
@@ -69,7 +86,7 @@ namespace PerfectCullingDOTS.Rendering
             if (nextPass < prepared.Length) throw new InvalidOperationException("The previous ordered publication was not fully consumed.");
             if (!frame.Result.IsCreated || frame.Result[0].Status != CullingEvaluationStatus.Success)
                 throw new ArgumentException("Only a completed successful Core result can be published.");
-            if (!volumes.IsCreated || !bindings.IsCreated || frame.PassStates.Length != checked(frame.Groups.Length * frame.Passes.Length) ||
+            if (!volumes.IsCreated || !bindings.IsCreated || !frame.StartApplied.IsCreated || frame.StartApplied.Length != frame.Groups.Length || frame.PassStates.Length != checked(frame.Groups.Length * frame.Passes.Length) ||
                 frame.PassVolumeApplications.Length != checked(volumes.Length * frame.Passes.Length))
                 throw new ArgumentException("Render publication shapes do not match the Core result.");
             int end = 0;
@@ -83,9 +100,11 @@ namespace PerfectCullingDOTS.Rendering
             if (end != frame.Groups.Length) throw new ArgumentException("Unmapped Core groups.");
             var rows = new Dictionary<CullingGroupKey, List<RenderGroupBinding>>();
             var keys = new HashSet<CullingGroupKey>();
-            for (int g = 0; g < frame.Groups.Length; g++) keys.Add(frame.Groups[g].Key);
+            var groupIndices = new Dictionary<CullingGroupKey, int>();
+            for (int g = 0; g < frame.Groups.Length; g++) { keys.Add(frame.Groups[g].Key); groupIndices.Add(frame.Groups[g].Key, g); }
             var canonical = new Dictionary<Entity, RenderGroupBinding>();
             var nextPhysical = new Dictionary<Entity, bool>();
+            var nextRegistered = new HashSet<BindingIdentity>();
             CullingRenderToggleMode? mode = null;
             for (int i = 0; i < bindings.Length; i++)
             {
@@ -108,10 +127,20 @@ namespace PerfectCullingDOTS.Rendering
                 canonical[binding.Main] = binding;
                 if (!rows.TryGetValue(binding.Group, out var list)) rows.Add(binding.Group, list = new List<RenderGroupBinding>());
                 list.Add(binding);
-                nextPhysical[binding.Main] = physical.TryGetValue(binding.Main, out bool shown)
-                    ? shown : binding.InitialRendererEnabled && !binding.InitialForceRenderingOff;
-                if (binding.ShadowOnly != Entity.Null)
-                    nextPhysical[binding.ShadowOnly] = physical.TryGetValue(binding.ShadowOnly, out shown) && shown;
+                if (!nextPhysical.ContainsKey(binding.Main))
+                    nextPhysical[binding.Main] = physical.TryGetValue(binding.Main, out bool shown)
+                        ? shown : binding.InitialRendererEnabled && !binding.InitialForceRenderingOff;
+                if (binding.ShadowOnly != Entity.Null && !nextPhysical.ContainsKey(binding.ShadowOnly))
+                    nextPhysical[binding.ShadowOnly] = physical.TryGetValue(binding.ShadowOnly, out bool shadowShown) && shadowShown;
+                int groupIndex = groupIndices[binding.Group];
+                var identity = new BindingIdentity(in binding, frame.Groups[groupIndex].StateGeneration);
+                nextRegistered.Add(identity);
+                if (!registered.Contains(identity))
+                {
+                    var inherited = RenderGroupState.Evaluate(frame.StartApplied[groupIndex] != 0, in binding);
+                    nextPhysical[binding.Main] = inherited.Main;
+                    if (binding.ShadowOnly != Entity.Null) nextPhysical[binding.ShadowOnly] = inherited.ShadowOnly;
+                }
             }
             // Build off to the side. A malformed/rejected publication cannot replace the last accepted one.
             if (frame.Control[0].RestoreApplied)
@@ -130,6 +159,7 @@ namespace PerfectCullingDOTS.Rendering
                 nextPrepared[p] = new PreparedPass { ViewId = frame.Passes[p].RenderViewId, Excluded = Excluded(nextPhysical) };
             }
             physical = nextPhysical;
+            registered = nextRegistered;
             prepared = nextPrepared;
             nextPass = 0;
             latest = initial;
@@ -200,7 +230,7 @@ namespace PerfectCullingDOTS.Rendering
             RenderPipelineManager.beginCameraRendering -= BeginCamera;
             RenderPipelineManager.endCameraRendering -= EndCamera;
             if (graphics.CullingFilter == capture) graphics.CullingFilter = null;
-            scopes.Clear(); cameras.Clear(); physical.Clear(); prepared = Array.Empty<PreparedPass>(); latest = Array.Empty<Entity>();
+            scopes.Clear(); cameras.Clear(); physical.Clear(); registered.Clear(); prepared = Array.Empty<PreparedPass>(); latest = Array.Empty<Entity>();
         }
     }
 }

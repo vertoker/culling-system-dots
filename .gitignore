@@ -10,6 +10,8 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
+/Assets/SceneDependencyCache/
+/Assets/SceneDependencyCache.meta
 *.log
 
 # Bullet Hero

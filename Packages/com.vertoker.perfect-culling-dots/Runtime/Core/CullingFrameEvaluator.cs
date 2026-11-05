@@ -78,17 +78,17 @@ namespace PerfectCullingDOTS.Core
                 throw new ArgumentException("All snapshot arrays must be created, including empty arrays.");
             if (!IsCreated(in previous) || !IsCreated(in output) ||
                 output.Groups.Length != input.Groups.Length || output.Queued.Length != input.Groups.Length ||
-                output.Applied.Length != input.Groups.Length || output.Views.Length != input.Views.Length ||
+                output.Applied.Length != input.Groups.Length || output.StartApplied.Length != input.Groups.Length || output.Views.Length != input.Views.Length ||
                 output.Passes.Length != input.Passes.Length || output.PassStatistics.Length != input.Passes.Length ||
                 output.PassStates.Length != checked(input.Passes.Length * input.Groups.Length) ||
                 output.PassVolumeApplications.Length != checked(input.Passes.Length * input.Volumes.Length) ||
                 output.Control.Length != 1 || output.Result.Length != 1 || previous.Control.Length != 1 ||
                 previous.Result.Length != 1 || previous.Queued.Length != previous.Groups.Length ||
-                previous.Applied.Length != previous.Groups.Length)
+                previous.Applied.Length != previous.Groups.Length || previous.StartApplied.Length != previous.Groups.Length)
                 throw new ArgumentException("Buffer shapes do not match the snapshots.");
             if (Aliases(output.Result, previous.Result) || Aliases(output.Control, previous.Control) ||
                 Aliases(output.Groups, previous.Groups) || Aliases(output.Queued, previous.Queued) ||
-                Aliases(output.Applied, previous.Applied) || Aliases(output.Views, previous.Views) ||
+                Aliases(output.Applied, previous.Applied) || Aliases(output.StartApplied, previous.StartApplied) || Aliases(output.Views, previous.Views) ||
                 Aliases(output.Passes, previous.Passes) || Aliases(output.PassStates, previous.PassStates) ||
                 Aliases(output.PassVolumeApplications, previous.PassVolumeApplications) ||
                 Aliases(output.PassStatistics, previous.PassStatistics))
@@ -156,7 +156,7 @@ namespace PerfectCullingDOTS.Core
             => a.Length > 0 && a.Equals(b);
 
         private static bool IsCreated(in CullingFrameState state)
-            => state.Groups.IsCreated && state.Queued.IsCreated && state.Applied.IsCreated && state.Views.IsCreated &&
+            => state.Groups.IsCreated && state.Queued.IsCreated && state.Applied.IsCreated && state.StartApplied.IsCreated && state.Views.IsCreated &&
                 state.Passes.IsCreated && state.PassStates.IsCreated && state.PassVolumeApplications.IsCreated &&
                 state.PassStatistics.IsCreated && state.Control.IsCreated && state.Result.IsCreated;
 
@@ -188,7 +188,7 @@ namespace PerfectCullingDOTS.Core
                 }
                 if (Input.RestoreAllVisibility)
                 {
-                    for (int i = 0; i < Output.Queued.Length; i++) { Output.Queued[i] = 1; Output.Applied[i] = 1; }
+                    for (int i = 0; i < Output.Queued.Length; i++) { Output.Queued[i] = 1; Output.Applied[i] = 1; Output.StartApplied[i] = 1; }
                     var control = Output.Control[0]; control.RestoreApplied = true; Output.Control[0] = control;
                 }
                 for (int passIndex = 0; passIndex < Input.Passes.Length; passIndex++)
@@ -269,6 +269,7 @@ namespace PerfectCullingDOTS.Core
                     bool reuse = OldGroups.TryGetValue(group.Key, out int old) && Previous.Groups[old].StateGeneration == group.StateGeneration;
                     Output.Queued[i] = reuse ? Previous.Queued[old] : group.InitialQueued;
                     Output.Applied[i] = reuse ? Previous.Applied[old] : group.InitialApplied;
+                    Output.StartApplied[i] = Output.Applied[i];
                 }
                 for (int i = 0; i < Input.Views.Length; i++)
                 {
