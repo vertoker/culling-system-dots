@@ -79,6 +79,32 @@ namespace PerfectCullingDOTS.Tests
             finally { UnityEngine.Object.DestroyImmediate(mesh); UnityEngine.Object.DestroyImmediate(material); }
         }
         [Test]
+        public void AdditionalOccludersUseSourceUnrotatedVolumeBoundsAndDoNotBecomeGroups()
+        {
+            var mesh = new Mesh { vertices = new[] { Vector3.zero,Vector3.up,Vector3.right }, triangles = new[] {0,1,2} };
+            var material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+            try
+            {
+                Renderer Make(Vector3 position)
+                {
+                    var go = new GameObject("additional occluder"); SceneManager.MoveGameObjectToScene(go,owned);
+                    go.transform.position = position; go.AddComponent<MeshFilter>().sharedMesh = mesh;
+                    var renderer = go.AddComponent<MeshRenderer>(); renderer.sharedMaterial = material; return renderer;
+                }
+                // With a 90 degree rotated 4x2x2 volume this point lies outside its rotated box,
+                // but inside the source's deliberately axis-aligned Bounds.
+                var included = Make(volume.transform.position+new Vector3(1.5f,0,0));
+                var outside = Make(volume.transform.position+new Vector3(100,0,0));
+                volume.gameObject.AddComponent<CullingBakeInputsAuthoring>().AdditionalOccluders = new[] { outside,included,included };
+                using var input = SceneBakeCollector.Capture(volume,settings);
+                Assert.That(input.Mapping.Length, Is.EqualTo(2));
+                Assert.That(input.Snapshot.Instances.Length, Is.EqualTo(1));
+                Assert.That(input.Snapshot.Instances[0].GroupIndex, Is.EqualTo(-1));
+                Assert.That(input.Snapshot.Instances[0].BoundsMin.x, Is.EqualTo(included.bounds.min.x).Within(.001f));
+            }
+            finally { UnityEngine.Object.DestroyImmediate(mesh); UnityEngine.Object.DestroyImmediate(material); }
+        }
+        [Test]
         public void MissingOrDuplicateGroupIndicesAreDiagnosed()
         {
             var groups = volume.GetComponentsInChildren<CullingGroupAuthoring>(); groups[1].GroupIndex = 0;

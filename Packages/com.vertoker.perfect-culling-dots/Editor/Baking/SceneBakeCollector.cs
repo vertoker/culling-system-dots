@@ -8,6 +8,7 @@ using PerfectCullingDOTS.Core;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 namespace PerfectCullingDOTS.Editor.Baking
 {
     public sealed class CollectedBakeInput : IDisposable
@@ -34,7 +35,13 @@ namespace PerfectCullingDOTS.Editor.Baking
                 !math.all(math.isfinite((float3)settings.CellSize)) || !math.all((float3)settings.CellSize > 0) ||
                 !math.all(math.isfinite((float3)volume.Size)) || !math.all((float3)volume.Size > 0) || settings.MergeAxes == null)
                 throw new ArgumentException("Finite positive volume, cell, ray settings and merge axes are required.");
-            var roots = volume.gameObject.scene.GetRootGameObjects();
+            var sceneRoots = new List<GameObject>(volume.gameObject.scene.GetRootGameObjects());
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                var scene = SceneManager.GetSceneAt(i);
+                if (scene.isLoaded && scene != volume.gameObject.scene) sceneRoots.AddRange(scene.GetRootGameObjects());
+            }
+            var roots = sceneRoots.ToArray();
             var groups = roots.SelectMany(r=>r.GetComponentsInChildren<CullingGroupAuthoring>(true)).Where(g=>g.Volume == volume).OrderBy(g=>g.GroupIndex).ToArray();
             if (groups.Length > ushort.MaxValue) throw new ArgumentException("At most 65535 original groups are supported.");
             for (int i = 0; i < groups.Length; i++) if (groups[i].GroupIndex != i) throw new ArgumentException("Group indices must be unique and contiguous, including empty groups.");
@@ -57,7 +64,9 @@ namespace PerfectCullingDOTS.Editor.Baking
                 else if (Array.IndexOf(explicitProviders,provider) >= 0 && !(provider is ICullingSamplingProvider))
                     throw new ArgumentException("Explicit sampling providers must implement ICullingSamplingProvider.");
             }
-            var regions = roots.SelectMany(r=>r.GetComponentsInChildren<CullingSamplingRegionAuthoring>()).Where(r=>r.isActiveAndEnabled).ToArray();
+            // Source FindObjectsByType includes disabled components on active GameObjects.
+            var regions = roots.SelectMany(r=>r.GetComponentsInChildren<CullingSamplingRegionAuthoring>())
+                .Where(r=>r.gameObject.activeInHierarchy).OrderBy(r=>r.GetEntityId()).ToArray();
             bool RegionContains(CullingSamplingRegionAuthoring region, Vector3 position)
             {
                 if (region.RestrictToVolumes != null && region.RestrictToVolumes.Length > 0 && Array.IndexOf(region.RestrictToVolumes,volume) < 0) return false;
@@ -87,10 +96,15 @@ namespace PerfectCullingDOTS.Editor.Baking
                 fullGrid[i] = volume.transform.position+volume.transform.rotation*local;
             }
             var rotation = volume.transform.rotation;
+            // Source CullAdditionalOccluders uses a world-axis-aligned box, regardless of
+            // volume rotation, and its HashSet removes duplicate renderer references.
+            var additionalBounds = new Bounds(volume.transform.position,volume.Size);
             var snapshot = MeshSnapshotExtractor.Capture(new BakeSnapshotRequest { Profile = settings.InputProfile, Groups = sources,
-                AdditionalOccluders = inputs == null ? Array.Empty<Renderer>() : (inputs.AdditionalOccluders ?? Array.Empty<Renderer>()).Where(Included).ToArray(),
+                AdditionalOccluders = inputs == null ? Array.Empty<Renderer>() : (inputs.AdditionalOccluders ?? Array.Empty<Renderer>())
+                    .Where(Included).Where(r=>additionalBounds.Intersects(r.bounds)).Distinct().ToArray(),
                 Samples = SamplingSnapshotExtractor.Capture(fullGrid,providers,Decision),
-                LodGroups = roots.SelectMany(r=>r.GetComponentsInChildren<LODGroup>()).ToArray(), RenderTransparency = settings.RenderTransparency,
+                LodGroups = roots.SelectMany(r=>r.GetComponentsInChildren<LODGroup>()).Where(r=>r.gameObject.activeInHierarchy)
+                    .OrderBy(r=>r.GetEntityId()).ToArray(), RenderTransparency = settings.RenderTransparency,
                 Rays = new BakeRaySettings { Width = settings.Resolution, Height = settings.Resolution, Far = settings.Far,
                     Rotation = new quaternion(rotation.x,rotation.y,rotation.z,rotation.w), CellSize = settings.CellSize } });
             var result = new CollectedBakeInput { Snapshot = snapshot, Mapping = mapping, VolumeId = id,
