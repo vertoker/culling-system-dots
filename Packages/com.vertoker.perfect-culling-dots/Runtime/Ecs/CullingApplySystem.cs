@@ -94,6 +94,13 @@ namespace PerfectCullingDOTS.Runtime
             if (adapter != null) adapter.ApplyingPass += ApplyPass;
         }
 
+        // Explicit presentation-owner shutdown; no pending operations may leak to a new driver.
+        public void CancelPresentation()
+        {
+            Attach(null); operations = Array.Empty<Operation[]>(); views = Array.Empty<ulong>(); next = 0;
+            owner = null;
+        }
+
         protected override void OnDestroy()
         {
             Attach(null); operations = Array.Empty<Operation[]>(); views = Array.Empty<ulong>(); owner = null;

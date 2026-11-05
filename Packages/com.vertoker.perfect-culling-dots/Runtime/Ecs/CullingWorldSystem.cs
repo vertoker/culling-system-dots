@@ -59,6 +59,13 @@ namespace PerfectCullingDOTS.Runtime
             return ownedRenderAdapter ?? (ownedRenderAdapter = new EcsRenderVisibilityAdapter(World));
         }
 
+        internal void ReleaseRenderingAdapter(EcsRenderVisibilityAdapter adapter)
+        {
+            if (!ReferenceEquals(adapter,ownedRenderAdapter)) return;
+            World.GetExistingSystemManaged<CullingApplySystem>()?.CancelPresentation();
+            ownedRenderAdapter?.Dispose(); ownedRenderAdapter = null;
+        }
+
         public CullingEvaluationTicket Schedule(in CullingFrameInput input, CullingExecutionMode mode = CullingExecutionMode.Jobs,
             JobHandle dependency = default)
         {

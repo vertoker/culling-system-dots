@@ -119,6 +119,32 @@ namespace PerfectCullingDOTS.Tests
             finally { Object.DestroyImmediate(root); Object.DestroyImmediate(mesh); Object.DestroyImmediate(material); Object.DestroyImmediate(imported.Asset); }
         }
 
+        [Test]
+        public void PortalAuthoringBakesAnExplicitVolumeLinkAndStableRegistrationOrder()
+        {
+            var id = new uint4(41,2,3,4);
+            using var imported = LegacyBakeImporter.Import(new LegacyBakeSource { VolumeId = id, DeclaredGroupCount = 0,
+                Layout = new CullingBakeLayout { CellCount = new float3(1), CellSize = new float3(2), BakeOrientation = quaternion.identity },
+                Cells = new[] { new LegacyVisibilityCell { EncodedLength = 0 } }
+            }, Array.Empty<CullingGroupKey>());
+            Assert.That(imported.Success, Is.True,imported.Diagnostic);
+            var root = new GameObject("portal authoring fixture");
+            using var store = new BlobAssetStore(128); using var world = new World("Portal baking",WorldFlags.Conversion);
+            try
+            {
+                var volume = root.AddComponent<CullingVolumeAuthoring>(); volume.Bake = imported.Asset;
+                var portalObject = new GameObject("portal"); portalObject.transform.SetParent(root.transform,false); portalObject.transform.localPosition = new Vector3(3,4,5);
+                var portal = portalObject.AddComponent<CullingPortalAuthoring>(); portal.Volume = volume; portal.RegistrationOrder = 17;
+                Bake(world,root,store);
+                using var query = world.EntityManager.CreateEntityQuery(typeof(CullingPortalLink),typeof(Unity.Transforms.LocalTransform));
+                Assert.That(query.CalculateEntityCount(), Is.EqualTo(1));
+                var entity = query.GetSingletonEntity(); var link = world.EntityManager.GetComponentData<CullingPortalLink>(entity);
+                Assert.That(link.RegistrationOrder, Is.EqualTo(17)); Assert.That(world.EntityManager.HasComponent<CullingVolume>(link.Volume), Is.True);
+                Assert.That(world.EntityManager.GetComponentData<Unity.Transforms.LocalTransform>(entity).Position, Is.EqualTo(new float3(3,4,5)));
+            }
+            finally { Object.DestroyImmediate(root); Object.DestroyImmediate(imported.Asset); }
+        }
+
         // Test-only entry into Unity's exact baking pipeline. No private reflection is used by the package runtime/bakers.
         private static void Bake(World world, GameObject root, BlobAssetStore store)
         {
