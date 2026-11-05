@@ -23,7 +23,8 @@ namespace PerfectCullingDOTS.Editor
             var id = new Unity.Entities.Hash128(UnityEngine.Hash128.Compute(identity).ToString()).Value;
             AddComponent(GetEntity(TransformUsageFlags.Dynamic), new CullingVolume {
                 Bake = blob, InstanceId = id, Size = authoring.Size, Layers = authoring.Layers,
-                OutOfBounds = authoring.OutOfBounds, EmptyCell = authoring.EmptyCell, SearchNonEmpty = authoring.SearchNonEmpty
+                OutOfBounds = authoring.OutOfBounds, EmptyCell = authoring.EmptyCell, SearchNonEmpty = authoring.SearchNonEmpty,
+                RegistrationOrder = authoring.RegistrationOrder
             });
         }
     }

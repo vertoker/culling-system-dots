@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using PerfectCullingDOTS.Core;
+using PerfectCullingDOTS.Rendering;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -23,12 +24,13 @@ namespace PerfectCullingDOTS.Runtime
     [DisableAutoCreation]
     public partial class CullingWorldSystem : SystemBase
     {
-        private ulong request, revision, worldSequence, viewStamp;
+        private ulong request, revision, worldSequence, viewStamp, viewRevision;
         private bool disposed, hasPending;
         private CullingFrameState current, pending;
         private OwnedSnapshot pendingInput;
         private CullingEvaluationTicket pendingTicket;
         private JobHandle pendingHandle;
+        private EcsRenderVisibilityAdapter ownedRenderAdapter;
         private readonly Dictionary<ulong, ViewVersion> viewVersions = new Dictionary<ulong, ViewVersion>();
         private struct ViewVersion { public ulong Source, Revision, Effective; }
 
@@ -38,6 +40,7 @@ namespace PerfectCullingDOTS.Runtime
         public CullingEvaluationResult LastEvaluationResult { get; private set; }
         public JobHandle PendingDependency => pendingHandle;
         public CullingGroupRegistry Registry { get; private set; }
+        public GraphicsShadowCompanions ShadowCompanions { get; private set; }
         internal CullingFrameState AcceptedFrame => current;
         internal ulong Revision => revision;
         internal ulong AcceptedRevision { get; private set; }
@@ -47,8 +50,14 @@ namespace PerfectCullingDOTS.Runtime
             worldSequence = World.SequenceNumber;
             current = CullingFrameState.Create(0, 0, 0, 0, Allocator.Persistent);
             Registry = new CullingGroupRegistry(World, Invalidate);
+            ShadowCompanions = new GraphicsShadowCompanions(World);
         }
         protected override void OnUpdate() { }
+        public EcsRenderVisibilityAdapter GetOrCreateRenderingAdapter()
+        {
+            EnsureAlive();
+            return ownedRenderAdapter ?? (ownedRenderAdapter = new EcsRenderVisibilityAdapter(World));
+        }
 
         public CullingEvaluationTicket Schedule(in CullingFrameInput input, CullingExecutionMode mode = CullingExecutionMode.Jobs,
             JobHandle dependency = default)
@@ -67,9 +76,9 @@ namespace PerfectCullingDOTS.Runtime
                 {
                     var view = snapshot.Views[i];
                     if (!viewVersions.TryGetValue(view.ViewId, out var version) ||
-                        version.Source != view.InvalidationVersion || version.Revision != revision)
+                        version.Source != view.InvalidationVersion || version.Revision != viewRevision)
                     {
-                        version = new ViewVersion { Source = view.InvalidationVersion, Revision = revision, Effective = checked(++viewStamp) };
+                        version = new ViewVersion { Source = view.InvalidationVersion, Revision = viewRevision, Effective = checked(++viewStamp) };
                         viewVersions[view.ViewId] = version;
                     }
                     view.InvalidationVersion = version.Effective;
@@ -113,7 +122,9 @@ namespace PerfectCullingDOTS.Runtime
             return CullingPublicationStatus.Published;
         }
 
-        public void Invalidate() { EnsureAlive(); revision = checked(revision + 1); }
+        public void Invalidate() { InvalidatePublication(); viewRevision = checked(viewRevision + 1); }
+        // Camera registry changes affect the source's computed hash; do not force unrelated cached views dirty.
+        public void InvalidatePublication() { EnsureAlive(); revision = checked(revision + 1); }
         public void CancelPending() { EnsureAlive(); ReleasePending(); PruneViewVersions(); }
         public bool TryGetGroupState(CullingGroupKey key, out bool queued, out bool applied)
         {
@@ -146,7 +157,7 @@ namespace PerfectCullingDOTS.Runtime
             try { ReleasePending(); }
             finally
             {
-                try { Registry?.Dispose(); }
+                try { try { ownedRenderAdapter?.Dispose(); Registry?.Dispose(); } finally { ShadowCompanions?.Dispose(); } }
                 finally { current.Dispose(); current = default; viewVersions.Clear(); disposed = true; }
             }
         }

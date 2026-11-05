@@ -129,7 +129,7 @@ namespace PerfectCullingDOTS.Tests
             Assert.That(q, Is.EqualTo(queued)); Assert.That(a, Is.EqualTo(applied));
         }
 
-        private sealed class Snapshot : IDisposable
+        internal sealed class Snapshot : IDisposable
         {
             public CullingFrameInput Input;
             private BlobAssetReference<CullingVolumeBlob> bake;

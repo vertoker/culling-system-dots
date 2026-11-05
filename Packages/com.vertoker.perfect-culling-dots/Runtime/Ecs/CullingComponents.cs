@@ -14,6 +14,7 @@ namespace PerfectCullingDOTS.Runtime
         public CullingOutOfBoundsPolicy OutOfBounds;
         public CullingEmptyCellPolicy EmptyCell;
         public bool SearchNonEmpty;
+        public int RegistrationOrder;
     }
     public struct CullingGroupDefinition : IComponentData
     {
@@ -21,6 +22,11 @@ namespace PerfectCullingDOTS.Runtime
         public ushort GroupIndex;
         public ulong StateGeneration;
         public int VertexCount;
+    }
+    public struct CullingPortalLink : IComponentData
+    {
+        public Entity Volume;
+        public int RegistrationOrder;
     }
     public struct CullingBakedRenderBinding : IBufferElementData
     {

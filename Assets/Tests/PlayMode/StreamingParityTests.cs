@@ -26,6 +26,12 @@ namespace PerfectCullingDOTS.Rendering.Tests
             var world = World.DefaultGameObjectInjectionWorld;
             var guid = new Unity.Entities.Hash128(UnityEditor.AssetDatabase.AssetPathToGUID("Assets/Tests/Fixtures/Streaming/StreamingVolumes.unity"));
             Assert.That(guid.IsValid, Is.True);
+            var cameraObject = new GameObject("Streaming capture camera");
+            var camera = cameraObject.AddComponent<Camera>(); camera.enabled = false;
+            camera.transform.position = new Vector3(0, 0, -5);
+            var capture = world.GetOrCreateSystemManaged<CullingViewCaptureSystem>();
+            var view = capture.RegisterView(camera, 303);
+            var owner = world.GetOrCreateSystemManaged<CullingWorldSystem>();
             Entity scene = Entity.Null;
             uint4[] ids = null;
             try
@@ -36,6 +42,13 @@ namespace PerfectCullingDOTS.Rendering.Tests
                         Flags = SceneLoadFlags.BlockOnImport | SceneLoadFlags.BlockOnStreamIn });
                     for (int wait = 0; wait < 100 && !SceneSystem.IsSceneLoaded(world.Unmanaged, scene); wait++) yield return null;
                     Assert.That(SceneSystem.IsSceneLoaded(world.Unmanaged, scene), Is.True, "SubScene did not finish loading.");
+                    using (var snapshot = capture.Capture(20 + cycle * 2, 303))
+                    {
+                        Assert.That(snapshot.Input.Groups.Length, Is.EqualTo(2));
+                        Assert.That(snapshot.Bindings.Length, Is.EqualTo(4));
+                    }
+                    view.Invert = false;
+                    Assert.That(capture.EvaluateAndPublish(20 + cycle * 2, null, CullingExecutionMode.Sequential, 303), Is.EqualTo(CullingPublicationStatus.Published));
                     using (var query = world.EntityManager.CreateEntityQuery(typeof(CullingVolume)))
                     using (var volumes = query.ToComponentDataArray<CullingVolume>(Allocator.Temp))
                     {
@@ -43,6 +56,11 @@ namespace PerfectCullingDOTS.Rendering.Tests
                         var current = new[] { volumes[0].InstanceId, volumes[1].InstanceId };
                         if (ids == null) ids = current; else CollectionAssert.AreEquivalent(ids, current, "Reload changed serialized volume identity.");
                         Assert.That(volumes[0].Bake.Value.GroupCount, Is.EqualTo(1));
+                        foreach (var volume in volumes)
+                        {
+                            Assert.That(owner.TryGetGroupState(new CullingGroupKey(volume.InstanceId, 0), out _, out bool applied), Is.True);
+                            Assert.That(applied, Is.True);
+                        }
                     }
                     using (var query = world.EntityManager.CreateEntityQuery(typeof(CullingGroupDefinition), typeof(CullingBakedRenderBinding)))
                     using (var groups = query.ToEntityArray(Allocator.Temp))
@@ -59,13 +77,28 @@ namespace PerfectCullingDOTS.Rendering.Tests
                             }
                         }
                     }
+                    view.Invert = true;
+                    Assert.That(capture.EvaluateAndPublish(21 + cycle * 2, null, CullingExecutionMode.Jobs, 303), Is.EqualTo(CullingPublicationStatus.Published));
+                    using (var query = world.EntityManager.CreateEntityQuery(typeof(CullingVolume)))
+                    using (var volumes = query.ToComponentDataArray<CullingVolume>(Allocator.Temp))
+                        foreach (var volume in volumes)
+                        {
+                            Assert.That(owner.TryGetGroupState(new CullingGroupKey(volume.InstanceId, 0), out _, out bool applied), Is.True);
+                            Assert.That(applied, Is.False);
+                        }
                     SceneSystem.UnloadScene(world.Unmanaged, scene, SceneSystem.UnloadParameters.DestroyMetaEntities); scene = Entity.Null;
                     yield return null;
+                    Assert.That(capture.EvaluateAndPublish(22 + cycle * 2, null, CullingExecutionMode.Jobs, 303), Is.EqualTo(CullingPublicationStatus.Published));
+                    Assert.That(owner.HasPendingEvaluation, Is.False);
                     using (var query = world.EntityManager.CreateEntityQuery(typeof(CullingVolume))) Assert.That(query.CalculateEntityCount(), Is.Zero);
                     using (var query = world.EntityManager.CreateEntityQuery(typeof(CullingGroupDefinition))) Assert.That(query.CalculateEntityCount(), Is.Zero);
                 }
             }
-            finally { if (scene != Entity.Null) SceneSystem.UnloadScene(world.Unmanaged, scene, SceneSystem.UnloadParameters.DestroyMetaEntities); }
+            finally
+            {
+                if (scene != Entity.Null) SceneSystem.UnloadScene(world.Unmanaged, scene, SceneSystem.UnloadParameters.DestroyMetaEntities);
+                capture.UnregisterView(303); Object.Destroy(cameraObject);
+            }
         }
 #endif
 

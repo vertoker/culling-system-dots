@@ -13,5 +13,6 @@ namespace PerfectCullingDOTS.Authoring
         public CullingOutOfBoundsPolicy OutOfBounds;
         public CullingEmptyCellPolicy EmptyCell;
         public bool SearchNonEmpty;
+        public int RegistrationOrder;
     }
 }

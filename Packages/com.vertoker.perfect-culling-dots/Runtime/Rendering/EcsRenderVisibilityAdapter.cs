@@ -13,6 +13,7 @@ namespace PerfectCullingDOTS.Rendering
     {
         public string LastFault { get; private set; }
         public World TargetWorld => world;
+        public bool IsDisposed => disposed;
         public event Action<BatchCullingViewType, Camera> CullingCaptured;
         public event Action<int, ulong> ApplyingPass;
         private readonly World world;
