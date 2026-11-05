@@ -30,6 +30,22 @@ namespace PerfectCullingDOTS.Tests
             finally { Object.DestroyImmediate(a); Object.DestroyImmediate(b); Object.DestroyImmediate(unknown); }
         }
         [Test]
+        public void ExplicitCameraRegistrationOrderSurvivesDifferentObjectActivationOrder()
+        {
+            using var world = new World("Imported camera order"); using var driver = new CullingCameraDriver(world);
+            var a = new GameObject("activated first"); var b = new GameObject("activated second");
+            try
+            {
+                var first = a.AddComponent<CullingCameraAuthoring>(); var second = b.AddComponent<CullingCameraAuthoring>();
+                first.Layers = 1; first.RegistrationOrder = 10; second.Layers = 2; second.RegistrationOrder = -10;
+                driver.Register(first); driver.Register(second);
+                using var frame = driver.Capture(1,a.GetComponent<Camera>(),b.GetComponent<Camera>());
+                Assert.That(frame.Input.Views[0].Layers, Is.EqualTo(2)); Assert.That(frame.Input.Views[1].Layers, Is.EqualTo(1));
+                Assert.That(frame.Input.Passes[0].ViewIndex, Is.EqualTo(1)); Assert.That(frame.Input.Passes[1].ViewIndex, Is.Zero);
+            }
+            finally { Object.DestroyImmediate(a); Object.DestroyImmediate(b); }
+        }
+        [Test]
         public void DisabledOrRemovedViewsRestoreAndWorldDisposalCanPrecedeDriverDisposal()
         {
             var world = new World("Camera lifetime"); var driver = new CullingCameraDriver(world); var go = new GameObject("camera lifetime");

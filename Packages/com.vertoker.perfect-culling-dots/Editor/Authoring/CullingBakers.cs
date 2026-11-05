@@ -59,7 +59,8 @@ namespace PerfectCullingDOTS.Editor
                 if (mesh != null) vertices = checked(vertices + mesh.vertexCount);
             }
             AddComponent(entity, new CullingGroupDefinition { Volume = GetEntity(authoring.Volume, TransformUsageFlags.Dynamic),
-                GroupIndex = (ushort)authoring.GroupIndex, StateGeneration = 1, VertexCount = vertices });
+                GroupIndex = (ushort)authoring.GroupIndex, StateGeneration = 1,
+                VertexCount = authoring.UseImportedVertexCount ? authoring.ImportedVertexCount : vertices });
             AddBuffer<CullingBakedRenderBinding>(entity);
         }
     }

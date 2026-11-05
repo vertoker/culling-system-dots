@@ -7,6 +7,7 @@ namespace PerfectCullingDOTS.Authoring
         public uint Layers = uint.MaxValue;
         public int NeighborRadius;
         public bool Invert;
+        public int RegistrationOrder;
         public ulong InvalidationVersion { get; private set; }
         public void SetDirty() { InvalidationVersion = checked(InvalidationVersion+1); }
         private void OnEnable() => Runtime.CullingCameraDriver.Activate(this);

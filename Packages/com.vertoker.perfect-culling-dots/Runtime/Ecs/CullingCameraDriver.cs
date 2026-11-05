@@ -53,6 +53,7 @@ namespace PerfectCullingDOTS.Runtime
                 var authoring = entry.Key; var record = entry.Value;
                 if (authoring == null || !authoring.isActiveAndEnabled || record.Camera == null) { Unregister(authoring); continue; }
                 record.Settings.Layers = authoring.Layers; record.Settings.NeighborRadius = authoring.NeighborRadius; record.Settings.Invert = authoring.Invert;
+                record.Settings.RegistrationOrder = authoring.RegistrationOrder;
                 if (record.Version != authoring.InvalidationVersion) { record.Version = authoring.InvalidationVersion; record.Settings.SetDirty(); }
             }
             if (renderOrder == null || renderOrder.Length == 0) return Array.Empty<ulong>();

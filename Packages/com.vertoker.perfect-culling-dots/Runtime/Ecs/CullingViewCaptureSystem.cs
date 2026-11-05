@@ -18,6 +18,7 @@ namespace PerfectCullingDOTS.Runtime
         public uint Layers = uint.MaxValue;
         public int NeighborRadius;
         public bool Invert;
+        public int RegistrationOrder;
         public ulong InvalidationVersion;
         public void SetDirty() { InvalidationVersion = checked(InvalidationVersion + 1); }
     }
@@ -189,7 +190,8 @@ namespace PerfectCullingDOTS.Runtime
                 }
                 if (changed) owner.Invalidate();
                 var viewSnapshots = new List<CullingViewSnapshot>();
-                foreach (var view in views)
+                var orderedViews = views.OrderBy(v=>v.Settings.RegistrationOrder).ToArray();
+                foreach (var view in orderedViews)
                 {
                     if (view.Settings.Invert != view.PreviousInvert) { view.Settings.SetDirty(); view.PreviousInvert = view.Settings.Invert; }
                     viewSnapshots.Add(new CullingViewSnapshot { ViewId = view.Id, Position = view.Camera.transform.position,
@@ -197,7 +199,7 @@ namespace PerfectCullingDOTS.Runtime
                         InvalidationVersion = view.Settings.InvalidationVersion });
                 }
                 if (renderOrder == null || renderOrder.Length == 0)
-                    renderOrder = views.Where(v => v.Camera.enabled).OrderBy(v => v.Camera.depth).Select(v => v.Id).ToArray();
+                    renderOrder = orderedViews.Where(v => v.Camera.enabled).OrderBy(v => v.Camera.depth).Select(v => v.Id).ToArray();
                 frame.Input.Volumes = new NativeArray<CullingVolumeSnapshot>(volumeSnapshots.ToArray(), Allocator.Persistent);
                 frame.Input.Groups = new NativeArray<CullingGroupSnapshot>(groupSnapshots.ToArray(), Allocator.Persistent);
                 frame.Input.Views = new NativeArray<CullingViewSnapshot>(viewSnapshots.ToArray(), Allocator.Persistent);

@@ -123,16 +123,17 @@ namespace PerfectCullingDOTS.Tests
         public void PortalAuthoringBakesAnExplicitVolumeLinkAndStableRegistrationOrder()
         {
             var id = new uint4(41,2,3,4);
-            using var imported = LegacyBakeImporter.Import(new LegacyBakeSource { VolumeId = id, DeclaredGroupCount = 0,
+            using var imported = LegacyBakeImporter.Import(new LegacyBakeSource { VolumeId = id, DeclaredGroupCount = 1,
                 Layout = new CullingBakeLayout { CellCount = new float3(1), CellSize = new float3(2), BakeOrientation = quaternion.identity },
                 Cells = new[] { new LegacyVisibilityCell { EncodedLength = 0 } }
-            }, Array.Empty<CullingGroupKey>());
+            }, new[] {new CullingGroupKey(id,0)});
             Assert.That(imported.Success, Is.True,imported.Diagnostic);
             var root = new GameObject("portal authoring fixture");
             using var store = new BlobAssetStore(128); using var world = new World("Portal baking",WorldFlags.Conversion);
             try
             {
                 var volume = root.AddComponent<CullingVolumeAuthoring>(); volume.Bake = imported.Asset;
+                var group = root.AddComponent<CullingGroupAuthoring>(); group.Volume = volume; group.UseImportedVertexCount = true; group.ImportedVertexCount = 42;
                 var portalObject = new GameObject("portal"); portalObject.transform.SetParent(root.transform,false); portalObject.transform.localPosition = new Vector3(3,4,5);
                 var portal = portalObject.AddComponent<CullingPortalAuthoring>(); portal.Volume = volume; portal.RegistrationOrder = 17;
                 Bake(world,root,store);
@@ -141,6 +142,8 @@ namespace PerfectCullingDOTS.Tests
                 var entity = query.GetSingletonEntity(); var link = world.EntityManager.GetComponentData<CullingPortalLink>(entity);
                 Assert.That(link.RegistrationOrder, Is.EqualTo(17)); Assert.That(world.EntityManager.HasComponent<CullingVolume>(link.Volume), Is.True);
                 Assert.That(world.EntityManager.GetComponentData<Unity.Transforms.LocalTransform>(entity).Position, Is.EqualTo(new float3(3,4,5)));
+                using var groupQuery = world.EntityManager.CreateEntityQuery(typeof(CullingGroupDefinition));
+                Assert.That(groupQuery.GetSingleton<CullingGroupDefinition>().VertexCount, Is.EqualTo(42),"Imported source statistics must survive entity baking.");
             }
             finally { Object.DestroyImmediate(root); Object.DestroyImmediate(imported.Asset); }
         }

@@ -1,6 +1,21 @@
 {
   "name": "PerfectCullingDOTS.Editor.Tests",
-  "references": ["PerfectCullingDOTS.Core", "PerfectCullingDOTS.Runtime", "PerfectCullingDOTS.Editor", "Unity.Entities", "Unity.Entities.Hybrid", "Unity.Entities.Graphics", "Unity.Transforms", "Unity.Collections", "Unity.Mathematics"],
-  "includePlatforms": ["Editor"],
-  "optionalUnityReferences": ["TestAssemblies"]
+  "references": [
+    "PerfectCullingDOTS.Core",
+    "PerfectCullingDOTS.Runtime",
+    "PerfectCullingDOTS.Editor",
+    "Unity.Entities",
+    "Unity.Entities.Hybrid",
+    "Unity.Entities.Graphics",
+    "Unity.Transforms",
+    "Unity.Collections",
+    "Unity.Mathematics",
+    "PerfectCullingDOTS.Rendering"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
 }
