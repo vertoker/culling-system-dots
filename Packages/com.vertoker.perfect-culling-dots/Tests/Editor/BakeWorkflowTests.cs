@@ -37,12 +37,20 @@ namespace PerfectCullingDOTS.Tests
             EditorSceneManager.ClosePreviewScene(scene); UnityEngine.Object.DestroyImmediate(settings);
             UnityEngine.Object.DestroyImmediate(mesh); UnityEngine.Object.DestroyImmediate(material); AssetDatabase.DeleteAsset(output);
         }
-        [Test]
-        public void JobsIsDefaultAndPublishedAssetReloadsWithTheSameRuntimeCells()
+        private void SelectMode(BakeExecutionMode mode)
         {
+            var field = typeof(BakeSettingsAsset).GetField("ExecutionMode");
+            Assert.That(field, Is.Not.Null,"Bake execution mode has not been integrated."); field.SetValue(settings,mode);
+        }
+        [TestCase(BakeExecutionMode.Auto)] [TestCase(BakeExecutionMode.Cpu)] [TestCase(BakeExecutionMode.Gpu)]
+        public void SelectedBackendPublishesTheSameRuntimeCellsAndKeepsItsEffectiveName(BakeExecutionMode mode)
+        {
+            SelectMode(mode);
             bool hostDirty = SceneManager.GetActiveScene().isDirty;
             using var controller = new BakeController(volume,settings); controller.Start();
-            Assert.That(controller.BackendName, Does.StartWith("CPU Jobs/Burst")); controller.Complete();
+            string expectedBackend = mode == BakeExecutionMode.Cpu || !PerfectCullingDOTS.Editor.Baking.Gpu.ComputeBakeBackend.IsSupported ? "CPU Jobs/Burst" : "GPU compute";
+            Assert.That(controller.BackendName, Does.StartWith(expectedBackend)); controller.Complete();
+            Assert.That(controller.BackendName, Does.StartWith(expectedBackend),"Effective backend must survive session disposal.");
             Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Ready)); Assert.That(controller.Progress, Is.EqualTo(1));
             var asset = controller.Publish(output); Assert.That(volume.Bake, Is.SameAs(asset));
             Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Published));
@@ -58,6 +66,26 @@ namespace PerfectCullingDOTS.Tests
                 for (int i = 0; i < 2; i++) { groups.Clear(); PerfectCullingDOTS.Core.LegacyCellDecoder.DecodeCell(ref blob.Value,i,ref groups); CollectionAssert.AreEqual(new ushort[] {0},groups.AsArray().ToArray()); }
             }
             Assert.That(SceneManager.GetActiveScene().isDirty, Is.EqualTo(hostDirty));
+        }
+        [Test]
+        public void ModeChangeInvalidatesReadyBakeAndPreservesPreviouslyPublishedAsset()
+        {
+            SelectMode(BakeExecutionMode.Cpu);
+            using (var initial = new BakeController(volume,settings)) { initial.Start(); initial.Complete(); initial.Publish(output); }
+            var previous = volume.Bake; byte[] bytes = File.ReadAllBytes(output);
+            using var next = new BakeController(volume,settings); next.Start(); next.Complete(); SelectMode(BakeExecutionMode.Auto);
+            Assert.Throws<InvalidOperationException>(()=>next.Publish(output));
+            Assert.That(next.Status, Is.EqualTo(BakeControllerStatus.Invalidated)); Assert.That(volume.Bake, Is.SameAs(previous)); CollectionAssert.AreEqual(bytes,File.ReadAllBytes(output));
+        }
+        [Test]
+        public void FailedExecutionCannotReplaceExistingBake()
+        {
+            SelectMode(BakeExecutionMode.Cpu);
+            using (var initial = new BakeController(volume,settings)) { initial.Start(); initial.Complete(); initial.Publish(output); }
+            var previous = volume.Bake; byte[] bytes = File.ReadAllBytes(output); settings.MemoryBudgetMiB = 0;
+            using var next = new BakeController(volume,settings); Assert.Throws<ArgumentException>(()=>next.Start());
+            Assert.That(next.Status, Is.EqualTo(BakeControllerStatus.Faulted)); Assert.Throws<InvalidOperationException>(()=>next.Publish(output));
+            Assert.That(volume.Bake, Is.SameAs(previous)); CollectionAssert.AreEqual(bytes,File.ReadAllBytes(output));
         }
         [Test]
         public void DefaultComputeWorkflowKeepsTheSourceCompressedTraversalTie()

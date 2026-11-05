@@ -32,7 +32,7 @@ namespace PerfectCullingDOTS.Editor.Baking
         public static CollectedBakeInput Capture(CullingVolumeAuthoring volume, BakeSettingsAsset settings)
         {
             if (volume == null || settings == null) throw new ArgumentNullException();
-            if ((uint)settings.InputProfile > 1 || settings.Resolution <= 0 || !math.isfinite(settings.Far) || settings.Far <= 0 ||
+            if ((uint)settings.InputProfile > 1 || (uint)settings.ExecutionMode > 2 || settings.Resolution <= 0 || !math.isfinite(settings.Far) || settings.Far <= 0 ||
                 !math.all(math.isfinite((float3)settings.CellSize)) || !math.all((float3)settings.CellSize > 0) ||
                 !math.all(math.isfinite((float3)volume.Size)) || !math.all((float3)volume.Size > 0) || settings.MergeAxes == null)
                 throw new ArgumentException("Finite positive volume, cell, ray settings and merge axes are required.");
@@ -122,6 +122,7 @@ namespace PerfectCullingDOTS.Editor.Baking
             void F3(float3 v) { writer.Write(v.x); writer.Write(v.y); writer.Write(v.z); }
             void F4(float4 v) { writer.Write(v.x); writer.Write(v.y); writer.Write(v.z); writer.Write(v.w); }
             writer.Write(BakeBackendFactory.AlgorithmId(settings.InputProfile));
+            writer.Write((int)settings.ExecutionMode);
             writer.Write((int)settings.InputProfile); F3(size); F3(settings.CellSize); writer.Write(settings.Resolution);
             writer.Write(settings.Far); writer.Write(settings.RenderTransparency); writer.Write(settings.MemoryBudgetMiB); writer.Write(settings.MaxCellsPerBatch);
             writer.Write(settings.MergeAxes.Length); foreach (var axis in settings.MergeAxes) { writer.Write(axis.x); writer.Write(axis.y); writer.Write(axis.z); }
