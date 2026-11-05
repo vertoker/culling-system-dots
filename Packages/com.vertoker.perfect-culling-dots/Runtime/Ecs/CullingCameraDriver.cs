@@ -22,6 +22,9 @@ namespace PerfectCullingDOTS.Runtime
         private static ulong nextViewId = 1UL<<62;
         private static readonly List<CullingCameraAuthoring> active = new List<CullingCameraAuthoring>();
         private static CullingCameraDriver automatic;
+        /// <summary>Pipeline integration supplies the actual callback order before
+        /// publication. Repeated cameras (for example a shared overlay) are retained.</summary>
+        public static Func<IReadOnlyList<Camera>,Camera[]> AutomaticRenderOrderResolver { get; set; }
         public CullingCameraDriver(World world)
         {
             if (world == null || !world.IsCreated) throw new ArgumentException("A live World is required.");
@@ -118,7 +121,9 @@ namespace PerfectCullingDOTS.Runtime
             if (active.Count == 0 || current == null || !current.IsCreated) return;
             if (automatic == null) automatic = new CullingCameraDriver(current);
             foreach (var camera in active) automatic.Register(camera);
-            automatic.EvaluateAndRender(Time.frameCount,cameras.ToArray());
+            var order = AutomaticRenderOrderResolver == null ? cameras.ToArray() : AutomaticRenderOrderResolver(cameras);
+            if (order == null) throw new InvalidOperationException("The automatic render-order resolver returned null.");
+            if (order.Length != 0) automatic.EvaluateAndRender(Time.frameCount,order);
         }
     }
 }
