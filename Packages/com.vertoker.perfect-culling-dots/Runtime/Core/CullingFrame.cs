@@ -32,6 +32,8 @@ namespace PerfectCullingDOTS.Core
     public struct CullingVolumeSnapshot
     {
         public BlobAssetReference<CullingVolumeBlob> Bake;
+        // Scene/runtime instance identity. Zero keeps the bake's original volume identity.
+        public uint4 InstanceId;
         public CullingGridSnapshot Grid;
         public int GroupOffset;
         public int PortalOffset;

@@ -9,6 +9,32 @@ namespace PerfectCullingDOTS.Core
 {
     public static class CullingFrameEvaluator
     {
+        /// <summary>Managed sequential reference, using the same deterministic replay as the Burst job.</summary>
+        public static void Run(in CullingFrameInput input, in CullingFrameState previous, ref CullingFrameState output)
+        {
+            Validate(in input, in previous, in output);
+            int largestGroupCount = 0;
+            for (int i = 0; i < input.Volumes.Length; i++)
+                largestGroupCount = math.max(largestGroupCount, input.Volumes[i].Bake.Value.GroupCount);
+            NativeArray<byte> visible = default;
+            NativeList<ushort> decoded = default;
+            NativeParallelHashMap<CullingGroupKey, int> oldGroups = default;
+            try
+            {
+                visible = new NativeArray<byte>(largestGroupCount, Allocator.Temp);
+                decoded = new NativeList<ushort>(largestGroupCount, Allocator.Temp);
+                oldGroups = new NativeParallelHashMap<CullingGroupKey, int>(math.max(1, previous.Groups.Length), Allocator.Temp);
+                new EvaluateJob { Input = input, Previous = previous, Output = output,
+                    Visible = visible, Decoded = decoded, OldGroups = oldGroups }.Execute();
+            }
+            finally
+            {
+                if (visible.IsCreated) visible.Dispose();
+                if (decoded.IsCreated) decoded.Dispose();
+                if (oldGroups.IsCreated) oldGroups.Dispose();
+            }
+        }
+
         /// <summary>
         /// Snapshots must be fully captured and immutable before scheduling. Registration/data changes
         /// must increment affected views' InvalidationVersion; SnapshotVersion only identifies publication.
@@ -84,6 +110,7 @@ namespace PerfectCullingDOTS.Core
             }
             int groupOffset = 0;
             var keys = new HashSet<CullingGroupKey>();
+            var volumeIds = new HashSet<uint4>();
             for (int i = 0; i < input.Volumes.Length; i++)
             {
                 var volume = input.Volumes[i];
@@ -93,6 +120,9 @@ namespace PerfectCullingDOTS.Core
                     (uint)volume.OutOfBounds > 2 || (uint)volume.EmptyCell > 1)
                     throw new ArgumentException("Invalid volume range or policy.");
                 ref var blob = ref volume.Bake.Value;
+                var instanceId = math.any(volume.InstanceId != 0) ? volume.InstanceId : blob.VolumeId;
+                if (math.all(instanceId == 0) || !volumeIds.Add(instanceId))
+                    throw new ArgumentException("Volumes require distinct nonzero instance identities, including shared bake instances.");
                 if (blob.GroupCount < 0 || blob.GroupCount > ushort.MaxValue || blob.Groups.Length != blob.GroupCount ||
                     blob.GroupCount > input.Groups.Length - groupOffset)
                     throw new ArgumentException("Invalid group mapping.");
@@ -109,7 +139,9 @@ namespace PerfectCullingDOTS.Core
                 for (int g = 0; g < blob.GroupCount; g++)
                 {
                     var group = input.Groups[groupOffset + g];
-                    if (!group.Key.Equals(blob.Groups[g]) || !keys.Add(group.Key) ||
+                    var sourceKey = blob.Groups[g];
+                    if (sourceKey.GroupIndex != g || !math.all(sourceKey.VolumeId == blob.VolumeId) ||
+                        group.Key.GroupIndex != sourceKey.GroupIndex || !math.all(group.Key.VolumeId == instanceId) || !keys.Add(group.Key) ||
                         group.InitialQueued > 1 || group.InitialApplied > 1)
                         throw new ArgumentException("Snapshot mapping must match the bake, without duplicate keys.");
                 }

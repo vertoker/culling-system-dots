@@ -172,6 +172,47 @@ namespace PerfectCullingDOTS.Tests
             finally { handle.Complete(); next.Dispose(); previous.Dispose(); empty.Dispose(); }
         }
 
+        [Test]
+        public void InstancesSharingOneBakeKeepIndependentStateAndKeys()
+        {
+            using var bake = Bake(0);
+            using var first = new Snapshot(bake, secondBake: bake);
+            using var second = new Snapshot(bake, secondBake: bake);
+            foreach (var snapshot in new[] { first, second })
+            {
+                for (int v = 0; v < 2; v++)
+                {
+                    var volume = snapshot.Input.Volumes[v];
+                    volume.InstanceId = new uint4((uint)(10 + v), 0, 0, 0);
+                    volume.Layers = 1u << v; snapshot.Input.Volumes[v] = volume;
+                    for (int g = 0; g < 2; g++)
+                    {
+                        var group = snapshot.Input.Groups[v * 2 + g];
+                        group.Key = new CullingGroupKey(volume.InstanceId, (ushort)g);
+                        snapshot.Input.Groups[v * 2 + g] = group;
+                    }
+                }
+            }
+            var view = first.Input.Views[0]; view.Layers = 1; first.Input.Views[0] = view;
+            view = second.Input.Views[0]; view.Layers = 2; view.InvalidationVersion++; second.Input.Views[0] = view;
+            second.Input.FrameId = 2;
+            var empty = CullingFrameState.Create(0, 0, 0, 0, Allocator.Persistent);
+            var previous = CullingFrameState.Create(4, 1, 2, 1, Allocator.Persistent);
+            var next = CullingFrameState.Create(4, 1, 2, 1, Allocator.Persistent);
+            try
+            {
+                CullingFrameEvaluator.Schedule(in first.Input, in empty, ref previous).Complete();
+                Assert.That(previous.Result[0].Status, Is.EqualTo(CullingEvaluationStatus.Success));
+                CollectionAssert.AreEqual(new byte[] { 1, 0, 1, 1 }, previous.Applied.ToArray());
+                CollectionAssert.AreEqual(new byte[] { 1, 0, 0, 0 }, previous.Queued.ToArray());
+                CullingFrameEvaluator.Schedule(in second.Input, in previous, ref next).Complete();
+                CollectionAssert.AreEqual(new byte[] { 1, 0, 1, 0 }, next.Applied.ToArray());
+                CollectionAssert.AreEqual(new byte[] { 0, 0, 1, 0 }, next.Queued.ToArray());
+                Assert.That(bake.Value.Groups[0].VolumeId, Is.EqualTo(new uint4(1, 0, 0, 0)), "Shared immutable bake identity changed.");
+            }
+            finally { next.Dispose(); previous.Dispose(); empty.Dispose(); }
+        }
+
         private static BlobAssetReference<CullingVolumeBlob> Bake(int selectedGroup, bool corrupt = false, uint volumeId = 1)
         {
             using var builder = new BlobBuilder(Allocator.Temp);
