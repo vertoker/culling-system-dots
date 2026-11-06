@@ -3,6 +3,7 @@ using UnityEngine;
 
 [assembly: InternalsVisibleTo("CullingSystemDOTS.Dynamic.Rendering.Tests")]
 [assembly: InternalsVisibleTo("CullingSystemDOTS.Dynamic.Editor")]
+[assembly: InternalsVisibleTo("CullingSystemDOTS.Dynamic.URP")]
 
 namespace CullingSystemDOTS.Dynamic.Gpu
 {

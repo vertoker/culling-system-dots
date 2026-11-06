@@ -27,7 +27,7 @@ namespace CullingSystemDOTS.Dynamic.Ecs
         {
             var job = new CaptureJob { Rows = rows, Transforms = GetComponentLookup<LocalToWorld>(true),
                 Options = GetComponentLookup<DynamicOcclusionBinding>(true), Graphics = GetComponentLookup<MaterialMeshInfo>(true),
-                Disabled = GetComponentLookup<Disabled>(true) };
+                Disabled = GetComponentLookup<Disabled>(true), Lods=GetComponentLookup<MeshLODComponent>(true) };
             // Complete the registered component writers once, rather than synchronizing through
             // several EntityManager accessors per Entity. The Burst job reads hidden graphics too.
             Dependency.Complete(); job.Run();
@@ -42,6 +42,7 @@ namespace CullingSystemDOTS.Dynamic.Ecs
             [ReadOnly] public ComponentLookup<DynamicOcclusionBinding> Options;
             [ReadOnly] public ComponentLookup<MaterialMeshInfo> Graphics;
             [ReadOnly] public ComponentLookup<Disabled> Disabled;
+            [ReadOnly] public ComponentLookup<MeshLODComponent> Lods;
             public void Execute()
             {
                 for (int i = 0; i < Rows.Length; i++)
@@ -57,7 +58,8 @@ namespace CullingSystemDOTS.Dynamic.Ecs
                     float3 extents = row.LocalBounds.extents;
                     float3 center = math.transform(matrix, (float3)row.LocalBounds.center);
                     float3 size = 2 * (math.abs(matrix.c0.xyz) * extents.x + math.abs(matrix.c1.xyz) * extents.y + math.abs(matrix.c2.xyz) * extents.z);
-                    bool valid = math.all(math.isfinite(matrix.c0)) && math.all(math.isfinite(matrix.c1)) && math.all(math.isfinite(matrix.c2)) &&
+                    bool valid = !Lods.HasComponent(entity) && !Graphics[entity].HasMaterialMeshIndexRange &&
+                        math.all(math.isfinite(matrix.c0)) && math.all(math.isfinite(matrix.c1)) && math.all(math.isfinite(matrix.c2)) &&
                         math.all(math.isfinite(matrix.c3)) && matrix.c0.w == 0 && matrix.c1.w == 0 && matrix.c2.w == 0 && matrix.c3.w == 1 &&
                         math.all(math.isfinite(center)) && math.all(math.isfinite(size)) && math.all(math.isfinite(center - size * 0.5f)) &&
                         math.all(math.isfinite(center + size * 0.5f)) && math.all(math.isfinite(options.Color)) && ((int)options.Roles & ~7) == 0 &&

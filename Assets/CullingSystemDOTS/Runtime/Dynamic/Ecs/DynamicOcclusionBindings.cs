@@ -28,6 +28,7 @@ namespace CullingSystemDOTS.Dynamic.Ecs
         private readonly DynamicOcclusionCaptureSystem captureSystem;
         private readonly Dictionary<Entity, Binding> bindings = new Dictionary<Entity, Binding>();
         private readonly List<Entity> removed = new List<Entity>();
+        private readonly HashSet<InstanceHandle> requestedOwnership = new HashSet<InstanceHandle>();
         private readonly int thread = Thread.CurrentThread.ManagedThreadId;
         private bool disposed;
         public DynamicOcclusionBindings(World world, OcclusionWorld registry)
@@ -39,12 +40,52 @@ namespace CullingSystemDOTS.Dynamic.Ecs
         }
         public int Count => bindings.Count;
         public string LastFault { get; private set; }
+        /// <summary>Transfer only selected bound handles; omitted bindings recover their captured stock baseline.</summary>
+        internal void ApplyGraphicsOwnership(IReadOnlyList<InstanceHandle> handles)
+        {
+            CheckAlive(); if(handles==null)throw new ArgumentNullException(nameof(handles));
+            requestedOwnership.Clear();foreach(var handle in handles)requestedOwnership.Add(handle);
+            bool changed=false;
+            foreach(var pair in bindings)
+                if(pair.Value.GraphicsOwned!=(pair.Value.CaptureValid && requestedOwnership.Contains(pair.Value.Handle))) {changed=true;break;}
+            if(!changed)return;
+            var manager=world.EntityManager;manager.CompleteAllTrackedJobs();
+            foreach(var pair in bindings)
+            {
+                var entity=pair.Key;var binding=pair.Value;
+                bool own=binding.CaptureValid && requestedOwnership.Contains(binding.Handle);
+                if(own==binding.GraphicsOwned)continue;
+                bool available=manager.Exists(entity) && manager.HasComponent<MaterialMeshInfo>(entity);
+                if(!own)
+                {
+                    if(available)manager.SetComponentEnabled<MaterialMeshInfo>(entity,binding.Baseline);
+                    binding.GraphicsOwned=false;continue;
+                }
+                if(!available || !manager.IsEnabled(entity) || !manager.HasComponent<DynamicOcclusionBinding>(entity) ||
+                    !manager.IsComponentEnabled<DynamicOcclusionBinding>(entity))continue;
+                binding.Baseline=manager.IsComponentEnabled<MaterialMeshInfo>(entity);
+                if(!binding.Baseline)continue;
+                manager.SetComponentEnabled<MaterialMeshInfo>(entity,false);binding.GraphicsOwned=true;
+            }
+        }
         public InstanceHandle Bind(Entity entity, in OcclusionInstanceDescriptor descriptor)
         {
             CheckAlive(); var manager = world.EntityManager;
             if (!manager.Exists(entity) || !manager.HasComponent<LocalToWorld>(entity) || !manager.HasComponent<MaterialMeshInfo>(entity) ||
                 manager.HasComponent<Prefab>(entity) || manager.HasComponent<DynamicOcclusionBinding>(entity) || bindings.ContainsKey(entity))
                 throw new ArgumentException("An unbound live graphics Entity with LocalToWorld is required.", nameof(entity));
+            if(manager.HasComponent<MeshLODComponent>(entity) || manager.HasComponent<LightMaps>(entity) ||
+                manager.GetComponentData<MaterialMeshInfo>(entity).HasMaterialMeshIndexRange)
+                throw new ArgumentException("LOD, lightmapped and material-range renderers retain stock graphics.",nameof(entity));
+            // Public ECS component metadata identifies deformation markers without accessing any
+            // renderer internals. Unknown deformation providers must use the explicit rigid-data contract.
+            using(var types=manager.GetComponentTypes(entity))
+                foreach(var component in types)
+                {
+                    string name=component.GetManagedType().Name;
+                    if(name.Contains("Deformed") || name.Contains("SkinMatrix") || name.Contains("BlendShape"))
+                        throw new ArgumentException("Deformed renderers retain stock graphics.",nameof(entity));
+                }
             // Authored legacy bindings reserve their graphics even before their first publication.
             using (var query = manager.CreateEntityQuery(new EntityQueryDesc { All = new[] { ComponentType.ReadOnly<CullingBakedRenderBinding>() },
                 Options = EntityQueryOptions.IncludeDisabledEntities | EntityQueryOptions.IncludePrefab }))

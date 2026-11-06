@@ -4,6 +4,7 @@ using Unity.Mathematics;
 
 [assembly: InternalsVisibleTo("CullingSystemDOTS.Dynamic.ECS.Tests")]
 [assembly: InternalsVisibleTo("CullingSystemDOTS.Dynamic.GPU")]
+[assembly: InternalsVisibleTo("CullingSystemDOTS.Dynamic.URP")]
 
 namespace CullingSystemDOTS.Dynamic.Ecs
 {

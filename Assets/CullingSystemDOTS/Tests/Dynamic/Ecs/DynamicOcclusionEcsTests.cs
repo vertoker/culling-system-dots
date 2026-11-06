@@ -55,6 +55,26 @@ namespace CullingSystemDOTS.Dynamic.Ecs.Tests
             system.Bindings.Unbind(e);
             Assert.That(world.EntityManager.IsComponentEnabled<MaterialMeshInfo>(e), Is.True);
         }
+        [Test] public void BatchOwnershipSwitchRestoresOmittedBindingsWithoutDisablingSimulation()
+        {
+            var first=Create();var second=Create();var a=Bind(first);var b=Bind(second);system.Update();
+            system.Bindings.ApplyGraphicsOwnership(new[]{a});
+            Assert.That(world.EntityManager.IsComponentEnabled<MaterialMeshInfo>(first),Is.False);
+            Assert.That(world.EntityManager.IsComponentEnabled<MaterialMeshInfo>(second),Is.True);
+            system.Bindings.ApplyGraphicsOwnership(new[]{b});
+            Assert.That(world.EntityManager.IsComponentEnabled<MaterialMeshInfo>(first),Is.True);
+            Assert.That(world.EntityManager.IsComponentEnabled<MaterialMeshInfo>(second),Is.False);
+            system.Bindings.ApplyGraphicsOwnership(Array.Empty<InstanceHandle>());
+            Assert.That(world.EntityManager.IsComponentEnabled<MaterialMeshInfo>(second),Is.True);
+            Assert.That(world.EntityManager.GetComponentData<Logic>(second).Tick,Is.EqualTo(42));
+        }
+        [Test] public void UnsupportedLodBindingLeavesStockGraphicsUnclaimed()
+        {
+            var entity=Create();world.EntityManager.AddComponent<MeshLODComponent>(entity);
+            Assert.Throws<ArgumentException>(()=>Bind(entity,OcclusionRole.Occluder));
+            Assert.That(system.Bindings.Count,Is.Zero);
+            Assert.That(world.EntityManager.IsComponentEnabled<MaterialMeshInfo>(entity),Is.True);
+        }
         [Test] public void RemovingOldEntityDoesNotRestoreOrBindAReplacementVersion()
         {
             var old = Create(); Bind(old); system.Bindings.SetGraphicsOwned(old, true);

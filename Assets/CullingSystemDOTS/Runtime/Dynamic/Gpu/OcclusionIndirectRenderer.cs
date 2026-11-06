@@ -63,13 +63,16 @@ namespace CullingSystemDOTS.Dynamic.Gpu
         private readonly Dictionary<Camera,OcclusionFallbackReason> reasons=new Dictionary<Camera,OcclusionFallbackReason>();
         private readonly int thread=Thread.CurrentThread.ManagedThreadId,limit;
         private Slot active;
-        private bool disposed,awaitingContext;
+        private bool disposed,awaitingContext,suspended;
         private ulong currentFrame;
         internal int UploadedBytes => upload.Used;
         internal int SlotCount => slots.Count;
         internal int PacketCreations {get;private set;}
         internal int ViewCreations {get;private set;}
         internal string LastFault {get;private set;}
+        internal ulong PublicationRevision => active?.Snapshot.Revision??0;
+        internal void Suspend()
+        {CheckAlive();suspended=true;if(!awaitingContext)RetireActive();}
         internal OcclusionIndirectRenderer(OcclusionWorld registry,OcclusionShaderResources resources)
         {
             this.registry=registry??throw new ArgumentNullException(nameof(registry));
@@ -82,9 +85,9 @@ namespace CullingSystemDOTS.Dynamic.Gpu
         internal IReadOnlyList<InstanceHandle> PrepareFrame(ulong frame)
         {
             CheckAlive();
-            if(frame==currentFrame && active!=null)return active.Packet.Handles;
+            if(frame==currentFrame && active!=null && !suspended)return active.Packet.Handles;
             if(awaitingContext)throw new InvalidOperationException("Prepare the next snapshot only after the preceding render context has finished.");
-            upload.BeginFrame(frame);currentFrame=frame;LastFault=null;RetireActive();OcclusionGpuRetirement.Poll();
+            upload.BeginFrame(frame);currentFrame=frame;LastFault=null;suspended=true;RetireActive();OcclusionGpuRetirement.Poll();
             OcclusionSnapshotLease snapshot=null;OcclusionGpuMeshSet meshes=null;
             try
             {
@@ -99,7 +102,7 @@ namespace CullingSystemDOTS.Dynamic.Gpu
                 foreach(var camera in removed){slot.Views[camera].Dispose();slot.Views.Remove(camera);}
                 if(!ReferenceEquals(packet,slot.Packet))PacketCreations++;
                 slot.Packet=packet;slot.Snapshot=snapshot;slot.Meshes=meshes;slot.HasFence=false;slot.Touched.Clear();slot.Busy=true;
-                snapshot=null;meshes=null;active=slot;
+                snapshot=null;meshes=null;active=slot;suspended=false;
                 return packet.Handles;
             }
             catch(Exception exception)when(Expected(exception)){LastFault=exception.Message;return Array.Empty<InstanceHandle>();}
@@ -115,7 +118,7 @@ namespace CullingSystemDOTS.Dynamic.Gpu
         internal OcclusionFallbackReason ViewFallback(Camera camera) => reasons.TryGetValue(camera,out var reason)?reason:OcclusionFallbackReason.MissingSetup;
         private void Begin(ScriptableRenderContext context,Camera camera)
         {
-            if(disposed || active==null || camera==null)return;
+            if(disposed || suspended || active==null || camera==null)return;
             awaitingContext=true;
             var slot=active;var packet=slot.Packet;
             var ids=packet.Ids;var arguments=packet.Arguments;

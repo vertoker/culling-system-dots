@@ -18,3 +18,4 @@ capture withdraws its old occluder immediately; unknown state must not preserve 
 
 - [Ecs](Ecs/AGENTS.md) owns full-Entity capture and explicit graphics registration.
 - [Gpu](Gpu/AGENTS.md) owns current-view depth, hierarchy and GPU resource lifetimes.
+- [Urp](Urp/AGENTS.md) owns optional current-frame presentation and stock restoration.

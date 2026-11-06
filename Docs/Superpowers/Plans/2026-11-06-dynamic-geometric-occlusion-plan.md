@@ -407,6 +407,14 @@ original render settings and retires pending GPU work. Do not route dynamic resu
 
 ## Task 5: ship the minimal dynamic construction sample
 
+**Task 4 bridge checkpoint:** Optional Dynamic.URP presentation now transfers only ready packet
+handles before Entities Graphics and restores stock baselines on disable, missing setup, TAA,
+camera stacks and late registry mutation. LOD/lightmap/material-range/known deformation bindings
+retain stock graphics. Coupled EditMode `1220c130c73e407880bfc6c12c08338d`: 117/117; PlayMode
+`328ddc70f3b34773a4f2e4c0a2d580d8`: 54/54. See
+[presentation evidence](../../Validation/DynamicOcclusion-Presentation.md). Full sample-based
+image/shadow/motion acceptance and Player delivery still remain; this is not plan completion.
+
 **Files:** `Samples~/DynamicCity` files from the map, its local guides, sample registration in
 `package.json`, and root-only `Assets/Tests/PlayMode/DynamicCitySampleTests.cs` if integration
 with repository delivery tests is needed. Do not duplicate production source into the sample.
