@@ -3,8 +3,8 @@
 > For agentic workers: execute sequentially with the repository's `execute-plan` skill and, when
 > available, `superpowers:executing-plans`. Keep one owner for live Unity. No branches or worktrees.
 
-**Status:** Planning deliverable only; implementation has not started. Task 0 is the integration
-investigation. Tasks 1-7 are conditional on Gate G1, not authorization to build a replacement renderer.
+**Status:** Execution authorized; Task 0 integration investigation is in progress. Tasks 1-7 remain
+conditional on Gate G1, not authorization to build a replacement renderer.
 
 **Goal:** Implement independent algorithm 3: configurable runtime geometric occlusion for a
 changing ECS world, with incremental block geometry updates and a reproducible construction demo.

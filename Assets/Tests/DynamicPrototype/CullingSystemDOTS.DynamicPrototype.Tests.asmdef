@@ -1,0 +1,5 @@
+{
+  "name": "CullingSystemDOTS.DynamicPrototype.Tests",
+  "references": ["Unity.Entities", "Unity.Entities.Graphics", "Unity.Transforms", "Unity.Collections", "Unity.Mathematics", "Unity.RenderPipelines.Universal.Runtime"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}
