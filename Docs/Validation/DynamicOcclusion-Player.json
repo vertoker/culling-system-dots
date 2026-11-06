@@ -1,0 +1,72 @@
+{
+    "Revision": "908bc3e9eda23921f95a393a49b38f84771f5151",
+    "Unity": "6000.6.8f1",
+    "Api": "Direct3D12",
+    "Gpu": "NVIDIA GeForce RTX 4060 Ti",
+    "Cpu": "AMD Ryzen 7 7700 8-Core Processor ",
+    "Failure": "",
+    "Passed": true,
+    "InitialAgents": 512,
+    "InitialPieces": 689,
+    "Reloads": 3,
+    "GpuFrames": 12,
+    "FallbackFrames": 36,
+    "Cases": [
+        {
+            "Scenario": 0,
+            "ReferenceIds": 13,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0
+        },
+        {
+            "Scenario": 1,
+            "ReferenceIds": 15,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0
+        },
+        {
+            "Scenario": 2,
+            "ReferenceIds": 20,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0
+        },
+        {
+            "Scenario": 3,
+            "ReferenceIds": 19,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0
+        },
+        {
+            "Scenario": 4,
+            "ReferenceIds": 14,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0
+        },
+        {
+            "Scenario": 5,
+            "ReferenceIds": 5,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0
+        },
+        {
+            "Scenario": 6,
+            "ReferenceIds": 19,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0
+        },
+        {
+            "Scenario": 7,
+            "ReferenceIds": 19,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0
+        }
+    ]
+}
