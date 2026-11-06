@@ -365,6 +365,14 @@ masks and independent full-shadow arguments pass. Coupled functional PlayMode
 [color/shadow evidence](../../Validation/DynamicOcclusion-Color.md). This does not complete
 production ECS submission, frame/view rings or sample/Player acceptance.
 
+**Instance payload checkpoint:** A bounded packet now groups current uploaded supported rigid
+instances, uploads exact transform/color/bounds/group data and exposes only selected handles.
+Compatible buffers can be reused after completion; the production ring must still enforce fences.
+An interleaved-material regression corrected model-ID permutation during GPU compaction.
+Coupled PlayMode `e33d4eda73694859a7dd515a5ef05e3c`: 52/52, no failures/skips. See the
+[packet checkpoint](../../Validation/DynamicOcclusion-Color.md#bounded-instance-packet-checkpoint).
+Production frame/view rings, ECS transfer, view gates and demo/Player acceptance remain open.
+
 ## Task 4: present safely through the proven renderer route
 
 **Files:** G1-approved presentation file, URP feature/pass/assembly, rendering/lifetime tests.

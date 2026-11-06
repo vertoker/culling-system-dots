@@ -11,10 +11,12 @@ uint InstanceCount, GroupCount, ArgumentStride;
 }
 [numthreads(64,1,1)] void Compact(uint id:SV_DispatchThreadID)
 {
-    if (id>=InstanceCount || Visible[id]==0) return;
-    uint group=GroupIds[id]; if (group>=GroupCount) return;
+    if (id>=InstanceCount) return;
+    uint instance=InputIds[id];
+    if (instance>=InstanceCount || Visible[instance]==0) return;
+    uint group=GroupIds[instance]; if (group>=GroupCount) return;
     uint offset=group*ArgumentStride, index;
     Arguments.InterlockedAdd(offset+4,1,index);
     uint first=Arguments.Load(offset+16);
-    OutputIds[first+index]=InputIds[id];
+    OutputIds[first+index]=instance;
 }
