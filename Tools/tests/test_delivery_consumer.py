@@ -50,6 +50,8 @@ class DeliveryConsumerTests(unittest.TestCase):
         self.assertEqual("1.0.0", manifest["dependencies"]["com.unity.entities.graphics"])
         self.assertEqual(["manifest.json"], sorted(p.name for p in (target / "Packages").iterdir()))
         self.assertNotIn("com.unity.pipeline", manifest["dependencies"])
+        self.assertNotIn("com.unity.modules.ai", manifest["dependencies"])
+        self.assertNotIn("com.unity.modules.imageconversion", manifest["dependencies"])
         self.assertEqual("committed-sample", (target / "Assets/Samples/CullingSystemDOTS/Basic/Basic.unity").read_text())
 
     def test_only_one_named_consumer_and_no_overwriting(self):

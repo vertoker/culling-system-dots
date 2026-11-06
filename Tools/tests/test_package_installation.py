@@ -26,6 +26,11 @@ class PackageInstallationTests(unittest.TestCase):
                     bad.append(str(path.relative_to(PACKAGE)))
         self.assertEqual([], bad, "Resolve package assets from their assembly/script location.")
 
+    def test_unconditional_engine_module_usage_is_declared(self):
+        dependencies = json.loads((PACKAGE / "package.json").read_text())["dependencies"]
+        for module in ("ai", "imageconversion", "physics", "imgui"):
+            self.assertEqual("1.0.0", dependencies.get("com.unity.modules." + module), module)
+
 
 if __name__ == "__main__":
     unittest.main()

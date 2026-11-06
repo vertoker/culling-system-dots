@@ -21,7 +21,6 @@ def create(project_root: Path, destination: Path, revision: str = "master") -> P
     original = json.loads((project_root / "Packages/manifest.json").read_text(encoding="utf-8-sig"))["dependencies"]
     names = ("com.coplaydev.unity-mcp", "com.unity.entities.graphics", "com.unity.physics", "com.unity.render-pipelines.universal", "com.unity.test-framework")
     dependencies = {name: original[name] for name in names}
-    dependencies.update({key: value for key, value in original.items() if key.startswith("com.unity.modules.")})
     dependencies[PACKAGE] = (project_root / ".git").as_uri() + "?path=/" + SUBPATH + "#" + commit
     (destination / "Packages").mkdir(parents=True)
     (destination / "Packages/manifest.json").write_text(json.dumps({"dependencies": dependencies, "testables": [PACKAGE]}, indent=2)+"\n", encoding="utf-8")

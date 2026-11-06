@@ -18,6 +18,7 @@ namespace CullingSystemDOTS.Editor.Baking
         public static BakeCellResult[] Bake(BakeSnapshot snapshot)
         {
             if (snapshot == null) throw new ArgumentNullException(nameof(snapshot));
+            BakeNumericValidation.Validate(snapshot);
             var settings = snapshot.Rays;
             if (!math.isfinite(settings.Far) || settings.Far <= 0 || !math.all(math.isfinite(settings.Rotation.value)))
                 throw new ArgumentException("Finite bake ray settings are required.");
