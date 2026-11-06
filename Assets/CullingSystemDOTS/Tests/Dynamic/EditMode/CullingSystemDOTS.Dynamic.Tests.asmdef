@@ -1,6 +1,0 @@
-{
-  "name": "CullingSystemDOTS.Dynamic.Tests",
-  "references": ["CullingSystemDOTS.Dynamic", "Unity.Collections", "Unity.Mathematics", "Unity.Burst"],
-  "includePlatforms": ["Editor"],
-  "optionalUnityReferences": ["TestAssemblies"]
-}

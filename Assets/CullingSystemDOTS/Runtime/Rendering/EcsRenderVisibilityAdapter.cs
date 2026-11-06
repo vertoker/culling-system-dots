@@ -16,7 +16,6 @@ namespace CullingSystemDOTS.Rendering
         public bool IsDisposed => disposed;
         public event Action<int, ulong> ApplyingPass;
         private readonly World world;
-        private readonly GraphicsVisibilityOwner ownership;
         private readonly Dictionary<Camera, ulong> cameras = new Dictionary<Camera, ulong>();
         private readonly Stack<Scope> scopes = new Stack<Scope>();
         private Dictionary<Entity, bool> physical = new Dictionary<Entity, bool>();
@@ -54,7 +53,6 @@ namespace CullingSystemDOTS.Rendering
             this.world = world;
             if (world.GetExistingSystemManaged<EntitiesGraphicsSystem>() == null)
                 throw new ArgumentException("World has no active Entities Graphics system.");
-            ownership = new GraphicsVisibilityOwner(world);
             RenderPipelineManager.beginCameraRendering += BeginCamera;
             RenderPipelineManager.endCameraRendering += EndCamera;
         }
@@ -189,7 +187,6 @@ namespace CullingSystemDOTS.Rendering
                 }
                 nextPrepared[p] = new PreparedPass { ViewId = frame.Passes[p].RenderViewId, Excluded = Excluded(nextPhysical) };
             }
-            ownership.EnsureAvailable(nextPhysical.Keys);
             // Registration/removal are lifecycle boundaries. Camera masks are applied
             // before SRP schedules culling, through the stock enableable render component.
             foreach (var old in baselines)
@@ -200,7 +197,6 @@ namespace CullingSystemDOTS.Rendering
                     if (binding.ShadowOnly != Entity.Null) SetBaseVisibility(binding.ShadowOnly, restored.ShadowOnly);
                 }
             foreach (var entity in normalize) SetBaseVisibility(entity, true);
-            ownership.RetainOnly(nextPhysical.Keys);
             physical = nextPhysical;
             registered = nextRegistered;
             registrations = nextRegistrations;
@@ -287,7 +283,6 @@ namespace CullingSystemDOTS.Rendering
             }
             scopes.Clear(); cameras.Clear(); physical.Clear(); registered.Clear(); registrations.Clear(); baselines.Clear();
             prepared = Array.Empty<PreparedPass>(); latest = Array.Empty<Entity>();
-            ownership.Dispose();
         }
     }
 }

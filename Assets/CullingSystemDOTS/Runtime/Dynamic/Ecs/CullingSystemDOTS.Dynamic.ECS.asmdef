@@ -1,4 +1,0 @@
-{
-  "name": "CullingSystemDOTS.Dynamic.ECS",
-  "references": ["CullingSystemDOTS.Dynamic", "CullingSystemDOTS.Runtime", "CullingSystemDOTS.Rendering", "Unity.Entities", "Unity.Entities.Graphics", "Unity.Transforms", "Unity.Collections", "Unity.Mathematics", "Unity.Burst"]
-}

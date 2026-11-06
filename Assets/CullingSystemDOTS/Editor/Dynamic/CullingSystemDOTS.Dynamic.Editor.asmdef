@@ -1,5 +1,0 @@
-{
-  "name": "CullingSystemDOTS.Dynamic.Editor",
-  "references": ["CullingSystemDOTS.Dynamic.GPU"],
-  "includePlatforms": ["Editor"]
-}

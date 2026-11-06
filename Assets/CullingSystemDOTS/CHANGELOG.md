@@ -2,14 +2,12 @@
 
 ## Unreleased
 
-### Added
+### Removed
 
-- Experimental dynamic geometric occlusion: versioned runtime geometry, independent ECS capture,
-  bounded GPU uploads/frame resources, conservative current-view depth/Hi-Z and explicit indirect
-  rendering with independent full-caster shadows. Optional URP 17.6 integration restores stock
-  graphics for unsupported configuration. No Player performance improvement is assumed.
-- Dynamic City sample with a separate ECS World, editable building pieces, indoor/street agents,
-  first-person/tour controls, diagnostics and ordinary-rendering comparison.
+- Retired the experimental algorithm-3 GPU geometric occlusion renderer, its ECS/URP integration
+  and Dynamic City sample after the full-population Player comparison failed the performance gate.
+  The dynamic API and sample are no longer shipped. Existing imported Dynamic City copies must be
+  removed before updating; the static baker, runtime evaluator and Basic sample remain available.
 
 ### Changed
 

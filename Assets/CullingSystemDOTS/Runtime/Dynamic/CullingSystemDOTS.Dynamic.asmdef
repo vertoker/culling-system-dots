@@ -1,4 +1,0 @@
-{
-  "name": "CullingSystemDOTS.Dynamic",
-  "references": ["Unity.Collections", "Unity.Mathematics", "Unity.Burst"]
-}

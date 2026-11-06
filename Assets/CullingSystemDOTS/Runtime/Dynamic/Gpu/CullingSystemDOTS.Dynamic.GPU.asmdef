@@ -1,4 +1,0 @@
-{
-  "name": "CullingSystemDOTS.Dynamic.GPU",
-  "references": ["CullingSystemDOTS.Dynamic", "Unity.Collections", "Unity.Mathematics"]
-}

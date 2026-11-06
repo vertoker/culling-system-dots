@@ -5,10 +5,6 @@ C#/HLSL baker; GPU compute is the primary path, with a CPU Jobs/Burst fallback.
 Runtime integration uses unmodified Entities Graphics from UPM and changes rendering
 visibility without disabling entities, physics or gameplay logic.
 
-The independent experimental [dynamic geometric renderer](Documentation~/DynamicOcclusion.md)
-uses current triangle depth and GPU indirect submission for explicit rigid opaque objects.
-Import **Dynamic City construction** to try individual wall/door/floor edits and moving ECS agents.
-
 ## Install and try the sample
 
 Use the Unity 6000.6.8f1 baseline described in [Compatibility](Documentation~/Compatibility.md).

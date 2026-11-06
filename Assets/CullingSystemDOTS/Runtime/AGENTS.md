@@ -7,7 +7,6 @@ Read [the package guide](../AGENTS.md) first.
   [authoring components](Ecs/Authoring/AGENTS.md).
 - [Rendering](Rendering/AGENTS.md) owns graphics presentation and companions.
 - [Urp](Urp/AGENTS.md) owns optional pipeline-specific camera order.
-- [Dynamic](Dynamic/AGENTS.md) owns the independent runtime geometric registry and snapshots.
 
 Keep these assembly boundaries intact. Runtime must compile without Editor APIs or developer
 tooling. Serialized/data and ownership changes must reconcile the evaluator, authoring and tests.

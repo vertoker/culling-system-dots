@@ -5,7 +5,6 @@ Read [the package guide](../AGENTS.md) first.
 - [Authoring](Authoring/AGENTS.md) owns ECS conversion and compressed-data import.
 - [Baking](Baking/AGENTS.md) owns capture, orchestration, validation and output, with separate
   [Jobs](Baking/Jobs/AGENTS.md) and [GPU](Baking/Gpu/AGENTS.md) backend contracts.
-- [Dynamic](Dynamic/AGENTS.md) owns Editor polling/reload cleanup for runtime GPU retirement.
 
 Keep Editor-only APIs in this assembly boundary. Snapshot Unity objects on the main thread before
 worker execution. Do not make installed-package behavior depend on root developer tools, settings

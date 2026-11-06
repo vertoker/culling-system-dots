@@ -1,7 +1,0 @@
-{
-  "name":"CullingSystemDOTS.Dynamic.URP.Tests",
-  "references":["CullingSystemDOTS.Dynamic","CullingSystemDOTS.Dynamic.ECS","CullingSystemDOTS.Dynamic.GPU","CullingSystemDOTS.Dynamic.URP","Unity.Entities","Unity.Entities.Graphics","Unity.Transforms","Unity.Collections","Unity.Mathematics","Unity.RenderPipelines.Universal.Runtime"],
-  "defineConstraints":["CULLING_DYNAMIC_URP_17_6"],
-  "versionDefines":[{"name":"com.unity.render-pipelines.universal","expression":"[17.6.0,17.7.0)","define":"CULLING_DYNAMIC_URP_17_6"}],
-  "optionalUnityReferences":["TestAssemblies"]
-}

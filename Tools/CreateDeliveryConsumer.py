@@ -46,7 +46,7 @@ def create(project_root: Path, destination: Path, revision: str = "master") -> P
             target = sample / relative
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(contents.extractfile(member).read())
-    for name in ("PlayMode", "Fixtures", "Delivery/PlayMode", "DynamicCity"):
+    for name in ("PlayMode", "Fixtures", "Delivery/PlayMode"):
         source = project_root / "Assets/Tests" / name
         if source.exists():
             shutil.copytree(source, assets / "Tests" / name)
