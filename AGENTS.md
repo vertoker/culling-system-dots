@@ -38,6 +38,8 @@ not assumptions imported from another project.
   a test run. Unity CLI/Pipeline tooling is disabled in this repository.
 - Use available tools rather than assuming a particular agent client, plugin or shell. Optional
   skills assist the workflow; they do not grant permissions or override these instructions.
+- Use `AGENTS.md` as the only instruction entry-point filename throughout the repository.
+  Keep reusable skills in `.agents`; do not add client-specific instruction adapters.
 
 ## Read when relevant
 

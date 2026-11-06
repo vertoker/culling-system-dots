@@ -9,8 +9,9 @@ using Bullet Hero's navigator/rules/local-skills structure with package-specific
 self-contained package instructions, operation-specific rule documents and a small local skill
 catalog. Avoid copied game policies, vendor-specific hooks and duplicated encyclopedic rules.
 Client entry-point and assembly-ownership preferences were asked separately. With no reply during
-implementation, the stated defaults are thin root Claude/Gemini entry points and in-scope agent
-maintenance of asmdefs. These defaults are reversible; no client-specific configuration is installed.
+implementation, thin client entry points and in-scope agent maintenance of asmdefs were the stated
+defaults. The user subsequently requested removal of client entry points; only AGENTS.md remains.
+No client-specific configuration is installed.
 
 **Constraints:** Work/commit on master; preserve unrelated deletions; no push, runtime change,
 scene save, paid source, embedded dependency, native baker binary or retained project copy.
@@ -28,7 +29,8 @@ are planned, so a full Unity test/build run is not required. Existing validation
 ## Outcome
 
 - 43 AGENTS.md files, including guidance for all 22 maintained code directories.
-- Five portable skills and thin root CLAUDE.md/GEMINI.md entry points; no client hooks/configuration.
+- Five portable skills. Client entry points from the initial delivery were subsequently removed
+  at the user's request; AGENTS.md is the sole instruction entry-point filename.
 - 162 relative Markdown links checked, including exact path casing and package-local references.
 - Largest inherited AGENTS chain: 13,323 bytes, below a 32 KiB instruction budget.
 - Unity generated all 29 required new imported Markdown metadata files; no new GUID collisions.
