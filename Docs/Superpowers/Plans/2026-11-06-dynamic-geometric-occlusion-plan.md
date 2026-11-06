@@ -347,8 +347,16 @@ budgets, ready-reader leases and automatic runtime/Editor retirement. The direct
 matches GPU bytes and rendered depth. Final coupled PlayMode
 `b94d4ab952844bf8be42b58388cc4f0c`: 40/40; snapshot-retain coupled EditMode
 `e125c52c52df437486fa828571a7ad5c`: 115/115. See [upload evidence](../../Validation/DynamicOcclusion-Upload.md).
-Next: revision-aware geometry-cache integration into the prepass, instance data, resource rings
-and view capability gates. The production prepass still uses its earlier direct Mesh recording.
+At that checkpoint the prepass still used its earlier direct Mesh recording; cache integration
+was the next prerequisite before instance data, resource rings and view capability gates.
+
+**Cache integration outcome:** `e6b67fe` removes the direct Core Mesh prepass route. Only uploaded,
+matching-revision GPU leases contribute depth. Replacement/removal retains earlier readers;
+shared upload and creation limits keep pending geometry unavailable. Coupled EditMode
+`f8398daada8a4511ab753017c7fbd752`: 115/115; PlayMode
+`92a76300da5b4202a00557d2d103daaf`: 48/48. See [cache evidence](../../Validation/DynamicOcclusion-Cache.md).
+Per-instance payload, reusable frame/view resources, capability gates and final presentation
+remain pending; Task 3 is not marked complete.
 
 ## Task 4: present safely through the proven renderer route
 
