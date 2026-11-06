@@ -18,7 +18,7 @@ namespace PerfectCullingDOTS.Editor.Baking.Jobs
         private NativeArray<NativeRasterPixel> rasterPixels;
         private long TreeBytes => rasterColors != null ? (rasterPalette.IsCreated ? rasterPalette.Length*2L : 0) : compatibleBvh != null ? compatibleBvh.Bytes : bvh == null ? 0 : bvh.Bytes;
         private NativeArray<uint> tileBits, tileNeighbors, cellBits, cellNeighbors;
-        private NativeArray<byte> burstFlags;
+        private NativeArray<byte> burstFlags, tileErrors;
         private JobHandle dependency;
         private BakeCellResult[] result;
         private Exception failure;
@@ -70,7 +70,7 @@ namespace PerfectCullingDOTS.Editor.Baking.Jobs
                 !math.all(math.isfinite(settings.Rotation.value))) throw new ArgumentException("Finite positive ray settings required.");
             if (options.MemoryBudgetBytes < 0 || options.MaxCellsPerBatch < 0) throw new ArgumentOutOfRangeException(nameof(options));
             words = (snapshot.Groups.Length+31)/32; tilesPerFace = checked((settings.Height+7)/8);
-            long perCell = checked(6L*tilesPerFace*(words*4L+5 + (rasterColors == null ? 0 : settings.Width*8L*8)) + words*4L+4);
+            long perCell = checked(6L*tilesPerFace*(words*4L+5 + (sourceCompatible ? 1 : 0) + (rasterColors == null ? 0 : settings.Width*8L*8)) + words*4L+4);
             long snapshotBytes = SnapshotBytes(snapshot), estimate = rasterColors != null ? rasterColors.Length*2L : sourceCompatible ? CwbvhSnapshotBuilder.EstimateNativeBytes(snapshot) : BvhBuilder.EstimateNativeBytes(snapshot);
             long budget = options.MemoryBudgetBytes == 0 ? 64L*1024*1024 : options.MemoryBudgetBytes;
             long available = budget - snapshotBytes - estimate;
@@ -89,10 +89,11 @@ namespace PerfectCullingDOTS.Editor.Baking.Jobs
             tileBits = new NativeArray<uint>(checked(work*words),Allocator.Persistent);
             tileNeighbors = new NativeArray<uint>(work,Allocator.Persistent);
             burstFlags = new NativeArray<byte>(work,Allocator.Persistent);
+            if (sourceCompatible) tileErrors = new NativeArray<byte>(work,Allocator.Persistent);
             cellBits = new NativeArray<uint>(checked(activeCount*words),Allocator.Persistent);
             cellNeighbors = new NativeArray<uint>(activeCount,Allocator.Persistent);
             if (rasterColors != null) rasterPixels = new NativeArray<NativeRasterPixel>(checked(work*snapshot.Rays.Width*8),Allocator.Persistent);
-            NativeBytes = TreeBytes + (long)(tileBits.Length+tileNeighbors.Length+cellBits.Length+cellNeighbors.Length)*4+burstFlags.Length+(rasterPixels.IsCreated ? rasterPixels.Length*8L : 0);
+            NativeBytes = TreeBytes + (long)(tileBits.Length+tileNeighbors.Length+cellBits.Length+cellNeighbors.Length)*4+burstFlags.Length+(tileErrors.IsCreated ? tileErrors.Length : 0)+(rasterPixels.IsCreated ? rasterPixels.Length*8L : 0);
             PeakNativeBytes = math.max(PeakNativeBytes,NativeBytes);
             if (rasterColors != null)
                 dependency = new NativeRasterTileJob {Vertices = snapshot.Vertices,Indices = snapshot.Indices,Geometry = snapshot.Geometry,Instances = snapshot.Instances,
@@ -102,7 +103,7 @@ namespace PerfectCullingDOTS.Editor.Baking.Jobs
                 dependency = new CwbvhRayTraversalJob {Nodes = compatibleBvh.Nodes.AsReadOnly(),BlasTriangles = compatibleBvh.BlasTriangles.AsReadOnly(),
                     TlasInstances = compatibleBvh.TlasInstances.AsReadOnly(),Instances = compatibleBvh.Instances.AsReadOnly(),Samples = snapshot.Samples,
                     Settings = snapshot.Rays,SampleStart = processed,TilesPerFace = tilesPerFace,Words = words,GroupCount = snapshot.Groups.Length,
-                    OpaqueRoot = compatibleBvh.OpaqueRoot,TransparentRoot = compatibleBvh.TransparentRoot,TileBits = tileBits,TileNeighbors = tileNeighbors,BurstFlags = burstFlags}.Schedule(work,1);
+                    OpaqueRoot = compatibleBvh.OpaqueRoot,TransparentRoot = compatibleBvh.TransparentRoot,TileBits = tileBits,TileNeighbors = tileNeighbors,BurstFlags = burstFlags,TileErrors = tileErrors}.Schedule(work,1);
             else dependency = new BakeRayTraversalJob { Nodes = bvh.Nodes.AsReadOnly(), Order = bvh.Order.AsReadOnly(),
                 GeometryRoots = bvh.GeometryRoots.AsReadOnly(), Triangles = bvh.Triangles.AsReadOnly(), Instances = snapshot.Instances,
                 Samples = snapshot.Samples, Settings = snapshot.Rays, SampleStart = processed, TilesPerFace = tilesPerFace,
@@ -117,6 +118,9 @@ namespace PerfectCullingDOTS.Editor.Baking.Jobs
         }
         private void Collect()
         {
+            if (tileErrors.IsCreated)
+                for (int i = 0; i < tileErrors.Length; i++)
+                    if (tileErrors[i] != 0) throw new InvalidOperationException("CPU CWBVH traversal stack exhausted; unpublished bake discarded.");
             for (int i = 0; i < burstFlags.Length; i++) { anyExecuted = true; allExecutedInBurst &= burstFlags[i] != 0; }
             for (int cell = 0; cell < activeCount; cell++)
             {
@@ -156,7 +160,7 @@ namespace PerfectCullingDOTS.Editor.Baking.Jobs
         {
             if (tileBits.IsCreated) tileBits.Dispose(); if (tileNeighbors.IsCreated) tileNeighbors.Dispose();
             if (cellBits.IsCreated) cellBits.Dispose(); if (cellNeighbors.IsCreated) cellNeighbors.Dispose();
-            if (burstFlags.IsCreated) burstFlags.Dispose(); if (rasterPixels.IsCreated) rasterPixels.Dispose(); NativeBytes = TreeBytes;
+            if (burstFlags.IsCreated) burstFlags.Dispose(); if (tileErrors.IsCreated) tileErrors.Dispose(); if (rasterPixels.IsCreated) rasterPixels.Dispose(); NativeBytes = TreeBytes;
         }
         private void Cleanup()
         {

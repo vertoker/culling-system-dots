@@ -29,8 +29,9 @@ namespace PerfectCullingDOTS.Editor.Baking
                 foreach (var renderer in group.Renderers ?? Array.Empty<Renderer>())
                 {
                     if (renderer == null || mapping.ContainsKey(renderer)) continue;
-                    // Source compute constructor filters missing/empty MeshFilter before SoftwareRT.
-                    if (request.Profile == BakeInputProfile.ComputeSoftwareInput)
+                    // Static-pose skinned groups use the same BakeMesh path as skinned
+                    // occluders. The source's MeshFilter prefilter silently omitted them.
+                    if (request.Profile == BakeInputProfile.ComputeSoftwareInput && !(renderer is SkinnedMeshRenderer))
                     {
                         var filter = renderer.GetComponent<MeshFilter>();
                         if (filter == null || filter.sharedMesh == null || filter.sharedMesh.vertexCount == 0 || filter.sharedMesh.subMeshCount == 0) continue;

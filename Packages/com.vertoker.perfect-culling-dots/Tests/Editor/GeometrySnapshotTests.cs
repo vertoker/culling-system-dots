@@ -31,7 +31,7 @@ namespace PerfectCullingDOTS.Tests
         }
 
         [Test]
-        public void SkinnedPoseIsCopiedWithoutAddingMeshFilterAndComputeGroupPrefilterStaysExplicit()
+        public void SkinnedPoseIsCopiedForBothProfilesWithoutAddingMeshFilter()
         {
             using var f = new Fixture(); var root = new GameObject("Snapshot skin fixture"); root.SetActive(false);
             var mesh = Object.Instantiate(f.Mesh); var expected = new Mesh();
@@ -44,8 +44,9 @@ namespace PerfectCullingDOTS.Tests
                 using var native = MeshSnapshotExtractor.Capture(f.Request(BakeInputProfile.NativeVulkanInput, skin));
                 Assert.That(native.Instances.Length, Is.EqualTo(1));
                 for (int i = 0; i < 3; i++) Assert.That(native.Vertices[i], Is.EqualTo((float3)expected.vertices[i]));
-                using var filtered = MeshSnapshotExtractor.Capture(f.Request(BakeInputProfile.ComputeSoftwareInput, skin));
-                Assert.That(filtered.Instances.Length, Is.Zero, "The source compute constructor filters group Skinned renderers without MeshFilter before SoftwareRT.");
+                using var compute = MeshSnapshotExtractor.Capture(f.Request(BakeInputProfile.ComputeSoftwareInput, skin));
+                Assert.That(compute.Instances.Length, Is.EqualTo(1), "A grouped skinned renderer must not silently disappear from the production bake.");
+                for (int i = 0; i < 3; i++) Assert.That(compute.Vertices[i], Is.EqualTo((float3)expected.vertices[i]));
                 var additional = f.Request(BakeInputProfile.ComputeSoftwareInput); additional.AdditionalOccluders = new Renderer[] { skin };
                 using var computeOccluder = MeshSnapshotExtractor.Capture(additional);
                 Assert.That(computeOccluder.Instances.Length, Is.EqualTo(1));
