@@ -56,3 +56,7 @@ normal frame submission still uses fences without blocking visibility readback.
 
 The independent whole-feature review's important shadow-only-depth finding was
 fixed in `751ec24`. See [review evidence](DynamicOcclusion-Review.md).
+
+Subsequent user feedback exposed a camera-inside-solid and one-sided-depth
+orientation defect beyond this report's eight-state scope. See the
+[correction and expanded oracle](DynamicOcclusion-InsideGeometry.md).
