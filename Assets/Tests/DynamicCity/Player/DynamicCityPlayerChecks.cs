@@ -12,6 +12,7 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace CullingSystemDOTS.DynamicCity.PlayerChecks
 {
@@ -24,6 +25,7 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
             public string Revision,Unity,Api,Gpu,Cpu,Failure;
             public bool Passed;
             public int InitialAgents,InitialPieces,Reloads;
+            public int GpuFrames,FallbackFrames;
             public List<Case> Cases=new List<Case>();
         }
         private readonly Report report=new Report();
@@ -70,10 +72,19 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
             Require(report.InitialAgents==512 && report.InitialPieces>600,"The shipped scene must construct the full default workload.");
             sample.ShowHud=false;sample.AutomaticEdits=false;sample.View.GetComponent<DynamicCityCamera>().Tour=false;
             sample.PauseSimulation(true);var target=new RenderTexture(320,240,24);target.Create();sample.View.targetTexture=target;
+            int renderedFrame=-1;bool renderedGpu=false;
+            Action<ScriptableRenderContext,List<Camera>> observed=(context,views)=>
+            {
+                if(sample.View==null || !views.Contains(sample.View))return;
+                renderedFrame=Time.frameCount;renderedGpu=sample.Presentation.ReadyInstances>0 && sample.Presentation.ViewFallback(sample.View)==OcclusionFallbackReason.None;
+                if(renderedGpu)report.GpuFrames++;else report.FallbackFrames++;
+            };
+            RenderPipelineManager.endContextRendering+=observed;
             try
             {
-                for(int i=0;i<12;i++)yield return null;
-                Require(sample.Presentation.ReadyInstances>0,sample.Presentation.LastFault??"No ready indirect instances.");
+                int first=Time.frameCount;
+                for(int i=0;i<120 && (renderedFrame<first || !renderedGpu);i++)yield return null;
+                Require(renderedFrame>=first && renderedGpu,sample.Presentation.LastFault??"No rendered GPU frame.");
                 Capture(target,"normal-city.png");
                 int ids=0;var manager=sample.World.EntityManager;
                 using(var query=manager.CreateEntityQuery(typeof(DynamicOcclusionBinding)))
@@ -95,8 +106,13 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
                     sample.View.transform.position=home+(scenario<4?new Vector3(-1.5f,1.7f,-10):scenario==4?new Vector3(-1.5f,1.7f,-5.9f):scenario==5?new Vector3(2,1.7f,2):new Vector3(15,5,15));
                     sample.View.transform.LookAt(home+new Vector3(-1.5f,1.7f,0));
                     sample.SetFeatureEnabled(false);for(int i=0;i<4;i++)yield return null;var reference=Capture(target,"reference-"+scenario+".png");
-                    sample.SetFeatureEnabled(true);for(int i=0;i<5;i++)yield return null;var actual=Capture(target,"culled-"+scenario+".png");
-                    Require(sample.Presentation.ReadyInstances>0 && sample.Presentation.ViewFallback(sample.View)==OcclusionFallbackReason.None,"The Player must use real GPU occlusion.");
+                    sample.SetFeatureEnabled(true);int begin=Time.frameCount;
+                    for(int i=0;i<120 && (renderedFrame<begin || !renderedGpu);i++)yield return null;
+                    var actual=Capture(target,"culled-"+scenario+".png");
+                    Require(renderedFrame>=begin && renderedGpu,
+                        "The Player must use real GPU occlusion. scenario="+scenario+", ready="+sample.Presentation.ReadyInstances+", view="+sample.Presentation.ViewFallback(sample.View)+
+                        ", fault="+sample.Presentation.LastFault+", frame="+Time.frameCount+", size="+sample.View.pixelWidth+"x"+sample.View.pixelHeight+
+                        ", scaled="+sample.View.scaledPixelWidth+"x"+sample.View.scaledPixelHeight+", equalProjection="+sample.View.projectionMatrix.Equals(sample.View.nonJitteredProjectionMatrix));
                     var expectedIds=reference.Select(Id).Where(id=>id>0 && id<=ids).Distinct().ToArray();var actualIds=actual.Select(Id).ToHashSet();
                     var result=new Case{Scenario=scenario,ReferenceIds=expectedIds.Length,LostIds=expectedIds.Count(id=>!actualIds.Contains(id))};
                     for(int y=1;y<target.height-1;y++)for(int x=1;x<target.width-1;x++)
@@ -114,11 +130,12 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
                 {
                     sample.View.targetTexture=null;sample.Shutdown();for(int i=0;i<8;i++)yield return null;
                     sample.Initialize();sample.AutomaticEdits=false;sample.PauseSimulation(true);sample.View.GetComponent<DynamicCityCamera>().Tour=false;
-                    sample.View.targetTexture=target;sample.SetFeatureEnabled(true);for(int i=0;i<12;i++)yield return null;
-                    Require(sample.Presentation.ReadyInstances>0 && sample.World.IsCreated,"World replacement lost the renderer.");report.Reloads++;
+                    sample.View.targetTexture=target;sample.SetFeatureEnabled(true);int restart=Time.frameCount;
+                    for(int i=0;i<120 && (renderedFrame<restart || !renderedGpu);i++)yield return null;
+                    Require(renderedFrame>=restart && renderedGpu && sample.World.IsCreated,"World replacement lost the renderer.");report.Reloads++;
                 }
             }
-            finally{if(sample!=null && sample.View!=null)sample.View.targetTexture=null;target.Release();UnityEngine.Object.Destroy(target);}
+            finally{RenderPipelineManager.endContextRendering-=observed;if(sample!=null && sample.View!=null)sample.View.targetTexture=null;target.Release();UnityEngine.Object.Destroy(target);}
             var finalRegistry=sample.Culling.Registry;sample.Shutdown();for(int i=0;i<12;i++)yield return null;
             Require(finalRegistry.AccountedResourceBytes==0,"World teardown retained accounted payloads.");
             Require(errors.Count==0,string.Join("\n",errors));

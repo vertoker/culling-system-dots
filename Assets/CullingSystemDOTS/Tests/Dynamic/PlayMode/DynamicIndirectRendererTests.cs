@@ -86,7 +86,9 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
                 for(int i=0;i<4;i++)yield return null;
                 Assert.That(Red(targets[0]),Is.GreaterThan(200),"Demolition must not retain the old hidden result.");
                 RenderPipelineManager.beginContextRendering-=prepare;prepare=null;
-                renderer.Dispose();renderer=null;registry.Dispose();
+                OcclusionGpuRetirement.DrainForApplicationQuit();registry.Dispose();
+                Assert.That(registry.AccountedResourceBytes,Is.Zero,"Application shutdown must retire the active publication before MonoBehaviour destruction.");
+                renderer.Dispose();renderer=null;
                 for(int i=0;i<4;i++)yield return null;
                 OcclusionGpuRetirement.DrainForShutdown();Assert.That(registry.AccountedResourceBytes,Is.Zero,"Teardown must release retained frame/view payloads.");
             }

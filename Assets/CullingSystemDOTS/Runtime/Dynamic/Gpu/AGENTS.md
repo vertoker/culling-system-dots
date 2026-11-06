@@ -20,4 +20,8 @@ independent of camera compaction. Occluder depth respects the current camera's l
 The presentation bridge must validate actual pipeline configuration and transfer only current
 packet handles; raw Camera flags alone do not establish URP render-scale/stack support.
 
+Application.quitting precedes World/MonoBehaviour destruction. Register live renderer owners with
+the application shutdown coordinator so active publications retire before the sentinel barrier.
+Draining only the already-retired queue cannot release a still-published frame.
+
 - [Shaders](Shaders/AGENTS.md) owns coverage and the GPU numeric contract.

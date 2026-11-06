@@ -72,7 +72,7 @@ namespace CullingSystemDOTS.Dynamic.Gpu
         internal string LastFault {get;private set;}
         internal ulong PublicationRevision => active?.Snapshot.Revision??0;
         internal void Suspend()
-        {CheckAlive();suspended=true;if(!awaitingContext)RetireActive();}
+        {CheckThread();if(disposed)return;suspended=true;if(!awaitingContext)RetireActive();}
         internal OcclusionIndirectRenderer(OcclusionWorld registry,OcclusionShaderResources resources)
         {
             this.registry=registry??throw new ArgumentNullException(nameof(registry));
@@ -81,6 +81,7 @@ namespace CullingSystemDOTS.Dynamic.Gpu
                 throw new NotSupportedException("Complete supported runtime indirect shader resources are required.");
             limit=registry.InFlightLimit;upload=new OcclusionGpuUploadBudget(registry.UploadByteLimit);cache=new OcclusionGpuGeometryCache(registry);
             RenderPipelineManager.beginCameraRendering+=Begin;RenderPipelineManager.endContextRendering+=End;
+            OcclusionGpuRetirement.RegisterShutdownOwner(ShutdownForApplication);
         }
         internal IReadOnlyList<InstanceHandle> PrepareFrame(ulong frame)
         {
@@ -179,9 +180,17 @@ namespace CullingSystemDOTS.Dynamic.Gpu
         public void Dispose()
         {
             CheckThread();if(disposed)return;disposed=true;RenderPipelineManager.beginCameraRendering-=Begin;cache.Dispose();
+            OcclusionGpuRetirement.UnregisterShutdownOwner(ShutdownForApplication);
             foreach(var slot in slots)if(!slot.Busy)slot.Dispose();
             if(!awaitingContext){RetireActive();RenderPipelineManager.endContextRendering-=End;}
             registered.Clear();reasons.Clear();
+        }
+        private void ShutdownForApplication()
+        {
+            Dispose();
+            // No later render context can consume this publication during application shutdown.
+            // Seal even an interrupted context so the lifecycle barrier owns every buffer.
+            RetireActive();awaitingContext=false;RenderPipelineManager.endContextRendering-=End;
         }
         private void CheckAlive(){CheckThread();if(disposed)throw new ObjectDisposedException(nameof(OcclusionIndirectRenderer));}
         private void CheckThread(){if(Thread.CurrentThread.ManagedThreadId!=thread)throw new InvalidOperationException("Indirect rendering belongs to its creating thread.");}

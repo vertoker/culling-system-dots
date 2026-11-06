@@ -16,6 +16,9 @@ namespace CullingSystemDOTS.Dynamic.Gpu
         private static readonly List<IOcclusionGpuRetirement> Pending = new List<IOcclusionGpuRetirement>();
         private static readonly HashSet<IOcclusionGpuRetirement> Registered = new HashSet<IOcclusionGpuRetirement>();
         private static readonly HashSet<IOcclusionGpuRetirement> Faulted = new HashSet<IOcclusionGpuRetirement>();
+        private static readonly HashSet<Action> ShutdownOwners = new HashSet<Action>();
+        internal static void RegisterShutdownOwner(Action shutdown) => ShutdownOwners.Add(shutdown);
+        internal static void UnregisterShutdownOwner(Action shutdown) => ShutdownOwners.Remove(shutdown);
         private static OcclusionGpuRetirementPump pump;
         private static bool polling;
         private static ulong mutation;
@@ -46,6 +49,15 @@ namespace CullingSystemDOTS.Dynamic.Gpu
             }
             finally { polling = false; }
         }
+        internal static void DrainForApplicationQuit()
+        {
+            // Application.quitting precedes MonoBehaviour/World destruction. Published frames
+            // are still live owners at this point and must join the retirement queue first.
+            foreach(var shutdown in new List<Action>(ShutdownOwners))
+                try{shutdown();}catch(Exception exception){Debug.LogException(exception);}
+            DrainForShutdown();
+        }
+
         // Only at Editor reload / Play exit / application shutdown. This lifecycle barrier
         // reads a separate sentinel, never visibility, and is absent from frame submission.
         internal static void DrainForShutdown()
@@ -74,7 +86,8 @@ namespace CullingSystemDOTS.Dynamic.Gpu
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void InitializeRuntime()
         {
-            Application.quitting -= DrainForShutdown; Application.quitting += DrainForShutdown;
+            Application.quitting -= DrainForShutdown;
+            Application.quitting -= DrainForApplicationQuit; Application.quitting += DrainForApplicationQuit;
         }
     }
 }
