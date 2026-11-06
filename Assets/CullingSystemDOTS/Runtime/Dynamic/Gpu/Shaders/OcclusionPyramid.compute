@@ -1,0 +1,20 @@
+#pragma kernel Reduce
+Texture2D<float> Source;
+RWTexture2D<float> Destination;
+int2 SourceSize, DestinationSize;
+float FarDepth;
+[numthreads(8,8,1)]
+void Reduce(uint2 id : SV_DispatchThreadID)
+{
+    if (any(id >= (uint2)DestinationSize)) return;
+    float farthest = 0;
+    [unroll] for (uint y = 0; y < 2; y++)
+    [unroll] for (uint x = 0; x < 2; x++)
+    {
+        uint2 sample = id * 2 + uint2(x, y);
+        float depth = all(sample < (uint2)SourceSize) ? Source.Load(int3(sample, 0)) : FarDepth;
+        if (!isfinite(depth) || depth <= 0 || depth >= FarDepth) depth = FarDepth;
+        farthest = max(farthest, depth);
+    }
+    Destination[id] = farthest;
+}

@@ -5,8 +5,8 @@
 
 **Status:** Task 0 stock investigation completed; Gate G1 failed. At the planned boundary the user
 selected and authorized a package-owned GPU indirect continuation. Task 0b passed its transport
-proof; Task 1 registry foundation and Task 2 block/ECS capture are complete. Task 3 GPU depth
-and retirement are next. See the
+proof; Task 1 registry foundation and Task 2 block/ECS capture are complete. Task 3 CPU/GPU depth
+foundation is verified; upload scheduling and production resource lifetime are in progress. See the
 [integration evidence and continuation options](../../Validation/DynamicOcclusion-Integration.md).
 
 **Goal:** Implement independent algorithm 3: configurable runtime geometric occlusion for a
@@ -334,6 +334,14 @@ required by the algorithm contract; readback for automated assertions occurs out
   it from the feature; verify runtime code has no AssetDatabase or assumed install-path lookup.
 - [ ] Run the CPU/reference and GPU fixtures; record actual GPU skips/failures, then commit on master.
 
+**Foundation outcome (Task 3 still open):** Full-grid positive linear R32 depth, ceil-sized maximum
+hierarchy, exhaustive CPU predicate and GPU World-AABB projection. Numeric/coverage and low-level
+retirement tests pass: coupled EditMode `d6418df8162d44d3992be4a2ade752c8` 115/115;
+PlayMode `e4f1e8634ac34db990d7558a4226df58` 34/34, zero failed/skipped. Shader references are
+serialized and runtime code has no AssetDatabase lookup. See [depth evidence](../../Validation/DynamicOcclusion-Depth.md).
+Remaining: actual bounded mesh/instance uploads, resource rings/automatic retirement, MSAA/view
+capabilities and the rendered-object oracle. Current direct Mesh recording is not an upload-budget proof.
+
 ## Task 4: present safely through the proven renderer route
 
 **Files:** G1-approved presentation file, URP feature/pass/assembly, rendering/lifetime tests.
@@ -431,13 +439,13 @@ guides, consumer helper only if needed to import the second sample, and this pla
 
 The design's ownership, independence, incremental blocks, conservative coverage, current-view
 validity, demo, budgets, measurements and delivery each have an owning task. Review-focus cases
-map to the task numbers above. The renderer route failed G1; the probe tests and measurements
-are recorded above. No shipped feature or new Player results exist. Continue only after selecting
-a renderer/backend scope; preserve the unexecuted Tasks 1-7 until that decision is incorporated.
+map to the task numbers above. The stock route failed G1; the user selected the indirect
+continuation, Task 0b passed and Tasks 1-2 are implemented. Task 3 is in progress. No complete
+runtime renderer/demo, full-frame performance acceptance or new Player acceptance is claimed.
 
 This is one algorithm's plan. Algorithm 2, including evaluation of a dynamic/loose octree versus
 sparse blocks and structure-derived visibility, will be planned separately after this work.
-The current implementation is limited to the root-only Task 0 investigation.
+Current acceptance is limited to the scoped outcomes recorded for each task above.
 
 Independent design review raised one important question, resolved before handoff: initial
 coverage is explicitly single-sample, with MSAA fail-open. The renderer feasibility gate remains

@@ -1,0 +1,5 @@
+{
+  "name": "CullingSystemDOTS.Dynamic.Rendering.Tests",
+  "references": ["CullingSystemDOTS.Dynamic", "CullingSystemDOTS.Dynamic.GPU", "Unity.Collections", "Unity.Mathematics"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

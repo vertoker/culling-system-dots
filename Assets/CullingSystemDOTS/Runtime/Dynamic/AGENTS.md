@@ -17,3 +17,4 @@ have separate keys. Moving an occludee must not dirty an occluder block. Rejecte
 capture withdraws its old occluder immediately; unknown state must not preserve a hidden result.
 
 - [Ecs](Ecs/AGENTS.md) owns full-Entity capture and explicit graphics registration.
+- [Gpu](Gpu/AGENTS.md) owns current-view depth, hierarchy and GPU resource lifetimes.

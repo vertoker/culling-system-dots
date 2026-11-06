@@ -37,7 +37,7 @@ namespace CullingSystemDOTS.Dynamic
         public ulong Revision { get; private set; } = 1;
         public ulong OccluderEpoch { get; private set; } = 1;
         public long AccountedResourceBytes => budget.Used;
-        internal OcclusionMemoryBudget ResourceBudget => budget;
+        internal OcclusionMemoryBudget ResourceBudget { get { CheckAlive(); return budget; } }
 
         public OcclusionWorld(OcclusionSettings settings = null)
         {
