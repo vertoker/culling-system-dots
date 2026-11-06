@@ -72,9 +72,9 @@ namespace CullingSystemDOTS.DynamicPrototype.Tests
             camera.enabled = false; camera.orthographic = true;
             var target = new RenderTexture(128, 128, 24); target.Create(); camera.targetTexture = target;
             camera.transform.position = new Vector3(-1, 0, -5);
-            using var gpu = new GpuWallMask(new[] { new Vector4(-1, 0, 4, .1f), new Vector4(1, 0, 4, .1f) });
             try
             {
+                using var gpu = new GpuWallMask(new[] { new Vector4(-1, 0, 4, .1f), new Vector4(1, 0, 4, .1f) });
                 gpu.Submit(camera, 1, 1, true);
                 uint[] bits = null;
                 for (int i = 0; i < 120 && bits == null; i++) { yield return null; bits = gpu.Read(camera, 1, 1); }
@@ -134,6 +134,56 @@ namespace CullingSystemDOTS.DynamicPrototype.Tests
             {
                 Assert.That(stand.World.EntityManager.IsEnabled(entity), Is.True);
                 Assert.That(stand.World.EntityManager.IsComponentEnabled<MaterialMeshInfo>(entity), Is.True, "Camera masks must restore after rendering.");
+            }
+        }
+
+        [Test]
+        public void FailedGpuAllocationReleasesPreviouslyAllocatedBuffers()
+        {
+            ComputeBuffer first = null;
+            try
+            {
+                Assert.Throws<InvalidOperationException>(() => new GpuWallMask(new[] { new Vector4(-1, 0, 4, .1f) }, (count, stride) => {
+                    if (first != null) throw new InvalidOperationException("Owned G1 allocation failure");
+                    return first = new ComputeBuffer(count, stride);
+                }));
+                Assert.That(first.IsValid(), Is.False, "Constructor must release an earlier successful allocation.");
+            }
+            finally { first?.Dispose(); }
+        }
+
+        [UnityTest]
+        public IEnumerator FailedStandConstructionReleasesEarlierOwners()
+        {
+            var world = World.DefaultGameObjectInjectionWorld; var manager = world.EntityManager;
+            manager.CompleteAllTrackedJobs();
+            var originalEntities = new HashSet<Entity>();
+            using (var snapshot = manager.UniversalQuery.ToEntityArray(Unity.Collections.Allocator.Temp))
+                foreach (var entity in snapshot) originalEntities.Add(entity);
+            var originalObjects = new HashSet<GameObject>(Object.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None));
+            var originalTargets = new HashSet<RenderTexture>(Resources.FindObjectsOfTypeAll<RenderTexture>());
+            GpuWallMask first = null;
+            IntegrationStand failed = null;
+            try
+            {
+                Assert.Throws<InvalidOperationException>(() => new IntegrationStand(2, 2, (owner, bounds) => {
+                    failed = owner;
+                    if (first != null) throw new InvalidOperationException("Owned G1 second view allocation failure");
+                    return first = new GpuWallMask(bounds);
+                }));
+                Assert.Throws<ObjectDisposedException>(() => first.Read(null, 1, 1), "Earlier GPU owner must be disposed.");
+                Assert.That(manager.UniversalQuery.CalculateEntityCount(), Is.EqualTo(originalEntities.Count), "Failed setup must remove owned Entities.");
+                yield return null;
+                foreach (var go in Object.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                    if (go.name.StartsWith("Owned G1", StringComparison.Ordinal))
+                        Assert.That(originalObjects.Contains(go), Is.True, "Failed setup left a GameObject: " + go.name);
+                foreach (var target in Resources.FindObjectsOfTypeAll<RenderTexture>())
+                    Assert.That(originalTargets.Contains(target), Is.True, "Failed setup left a render target.");
+            }
+            finally
+            {
+                // Also clean the deliberately broken RED implementation, without touching pre-existing state.
+                failed?.Dispose(); first?.Dispose();
             }
         }
 

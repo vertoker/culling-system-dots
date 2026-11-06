@@ -3,8 +3,10 @@
 > For agentic workers: execute sequentially with the repository's `execute-plan` skill and, when
 > available, `superpowers:executing-plans`. Keep one owner for live Unity. No branches or worktrees.
 
-**Status:** Execution authorized; Task 0 integration investigation is in progress. Tasks 1-7 remain
-conditional on Gate G1, not authorization to build a replacement renderer.
+**Status:** Task 0 stock investigation completed; Gate G1 failed. At the planned boundary the user
+selected and authorized a package-owned GPU indirect continuation. Its concrete addendum/proof
+must precede Tasks 1-7, which have not started. See the
+[integration evidence and continuation options](../../Validation/DynamicOcclusion-Integration.md).
 
 **Goal:** Implement independent algorithm 3: configurable runtime geometric occlusion for a
 changing ECS world, with incremental block geometry updates and a reproducible construction demo.
@@ -106,24 +108,45 @@ availability, waits, tracked-job completion and restoration results.
   visible after deleting its wall, stays visible through a camera turn/teleport, and retains its
   normal shadow on a visible receiver. Compare same-state ordinary rendering; a missing API is a
   recorded capability failure, never a skipped-success result.
-- [ ] Run the probe assertions through the live PlayMode runner and capture RED/capability evidence.
-- [ ] Inspect stock renderer source read-only and the public 6000.6 APIs. Prototype a supported
+- [x] Run the probe assertions through the live PlayMode runner and capture RED/capability evidence.
+- [x] Inspect stock renderer source read-only and the public 6000.6 APIs. Prototype a supported
   extension only if one exists. Separately measure strict asynchronous readback/stock masks and
   optional blocking-readback diagnostic; do not use private callback replacement.
-- [ ] For the strict async reference, reject on any view signature/global occluder epoch/bounds
+- [x] For the strict async reference, reject on any view signature/global occluder epoch/bounds
   revision mismatch; verify it does not incorrectly hide during continuous motion. Record the
   fraction of movement frames with useful accepted occlusion, including zero.
-- [ ] Run idle/moving-camera and 0/10/100-edits-per-second cases for 512/4,096 targets; measure the
+- [x] Run idle/moving-camera and 0/10/100-edits-per-second cases for 512/4,096 targets; measure the
   complete path, not just the compute dispatch. Record source revision/hardware/settings.
-- [ ] Write Gate G1 verdict: demonstrated stock fast path, safe but ineffective reference, or no
+- [x] Write Gate G1 verdict: demonstrated stock fast path, safe but ineffective reference, or no
   acceptable stock route. An acceptable fast path must avoid missing visible objects and provide
   useful culling while moving; asynchronous output invalidated every movement frame is not enough.
-- [ ] If G1 fails, report the limitation and choices to the user, stop feature implementation and
+- [x] If G1 fails, report the limitation and choices to the user, stop feature implementation and
   leave Tasks 1-7 unchecked. A package-owned BRG indirect renderer or CPU rasterizer requires an
   explicit new decision; a prototype is not release acceptance.
 - [ ] If G1 passes, freeze the concrete rendering/dataflow addendum described above and rerun its
   tests. Commit exact owned prototype/evidence paths on master. Retain the probe as development
   evidence, separate from shipped code, without a second retained Unity project.
+
+**Outcome:** Root-only probe/source commit `39f782f`; 3 new functional tests and 15 existing
+rendering/sample tests passed (18/18), plus 72 diagnostic cases against committed probe source.
+Strict async accepted 0/1,800 moving view samples; blocking consumption worked but remains a
+diagnostic. No stock GPU-resident hook was found in installed public API/source. Broad job
+completion and per-entity masks are measured costs, not an accepted fast path.
+
+Ruling: use a restricted orthographic wall GPU classifier to isolate presentation rather than
+implementing general Hi-Z before finding its consumer. This preserves the G1 question but leaves
+full geometry/GPU algorithm cost unmeasured. Image assertions compare same-state opposite views,
+wall removal, turn/teleport and render restoration. The probe has shadows off; existing shadow
+companion parity passed separately. No new shadow-capable path is claimed. Stock counters are
+sampled World snapshots, not isolated per-view draw counts. The source/evidence report records
+these limits. The successful-G1 addendum above is inapplicable; Tasks 1-7 remain pending a new
+renderer/backend decision. See the linked report for job IDs, hardware, timings and alternatives.
+
+The first checkbox remains partial: render removal/reveal, movement and opposite-view checks
+exist, but there is no new shadow-capable GPU route to exercise. The legacy shadow regression
+was rerun, and new-route shadow acceptance remains deferred rather than marked passed.
+Independent review found constructor cleanup leaks; two injected allocation-failure regressions
+went RED then GREEN, and the coupled suite passed 20/20. The evidence report records the jobs.
 
 ## Task 1: define live registry, validity and ownership
 
@@ -310,12 +333,13 @@ guides, consumer helper only if needed to import the second sample, and this pla
 
 The design's ownership, independence, incremental blocks, conservative coverage, current-view
 validity, demo, budgets, measurements and delivery each have an owning task. Review-focus cases
-map to the task numbers above. The critical unresolved fact is the renderer route; G1 explicitly
-prevents pretending it is solved. No implementation tests or new Player results exist yet.
+map to the task numbers above. The renderer route failed G1; the probe tests and measurements
+are recorded above. No shipped feature or new Player results exist. Continue only after selecting
+a renderer/backend scope; preserve the unexecuted Tasks 1-7 until that decision is incorporated.
 
 This is one algorithm's plan. Algorithm 2, including evaluation of a dynamic/loose octree versus
 sparse blocks and structure-derived visibility, will be planned separately after this work.
-No code implementation follows from this planning-only turn.
+The current implementation is limited to the root-only Task 0 investigation.
 
 Independent design review raised one important question, resolved before handoff: initial
 coverage is explicitly single-sample, with MSAA fail-open. The renderer feasibility gate remains

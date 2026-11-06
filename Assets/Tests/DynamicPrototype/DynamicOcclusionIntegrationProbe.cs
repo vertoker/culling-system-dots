@@ -41,18 +41,32 @@ namespace CullingSystemDOTS.DynamicPrototype.Tests
         private bool hasResult, disposed;
         public int Issued, Completed, Errors, Saturated, TeardownWaits;
 
-        public GpuWallMask(Vector4[] values)
+        public GpuWallMask(Vector4[] values, Func<int, int, ComputeBuffer> createBuffer = null)
+        {
+            if (values == null || values.Length == 0) throw new ArgumentException("Nonempty fixture bounds are required.", nameof(values));
+            shader = RequireShader();
+            try
+            {
+                bits = new uint[values.Length];
+                bounds = createBuffer != null ? createBuffer(values.Length, 16) : new ComputeBuffer(values.Length, 16);
+                bounds.SetData(values);
+                for (int i = 0; i < slots.Length; i++) slots[i] = new Slot {
+                    Buffer = createBuffer != null ? createBuffer(values.Length, 4) : new ComputeBuffer(values.Length, 4) };
+            }
+            catch { Dispose(); throw; }
+        }
+
+        internal static ComputeShader RequireShader()
         {
             if (!SystemInfo.supportsComputeShaders || !SystemInfo.supportsAsyncGPUReadback)
                 throw new NotSupportedException("G1 readback probe requires compute and async readback.");
+            ComputeShader fixture = null;
             #if UNITY_EDITOR
-            shader = UnityEditor.AssetDatabase.LoadAssetAtPath<ComputeShader>(
+            fixture = UnityEditor.AssetDatabase.LoadAssetAtPath<ComputeShader>(
                 "Assets/Tests/DynamicPrototype/FixtureWallMask.compute");
             #endif
-            if (shader == null) throw new InvalidOperationException("The root-only GPU fixture shader is missing.");
-            bits = new uint[values.Length];
-            bounds = new ComputeBuffer(values.Length, 16); bounds.SetData(values);
-            for (int i = 0; i < slots.Length; i++) slots[i] = new Slot { Buffer = new ComputeBuffer(values.Length, 4) };
+            if (fixture == null) throw new InvalidOperationException("The root-only GPU fixture shader is missing.");
+            return fixture;
         }
 
         public void Submit(Camera camera, uint epoch, uint revision, bool wall)
@@ -110,10 +124,11 @@ namespace CullingSystemDOTS.DynamicPrototype.Tests
             if (disposed) return;
             foreach (var slot in slots)
             {
+                if (slot == null) continue;
                 if (slot.Pending && !slot.Request.done) { slot.Request.WaitForCompletion(); TeardownWaits++; }
-                slot.Buffer.Dispose();
+                slot.Buffer?.Dispose();
             }
-            bounds.Dispose(); disposed = true;
+            bounds?.Dispose(); disposed = true;
         }
     }
 
@@ -177,47 +192,59 @@ namespace CullingSystemDOTS.DynamicPrototype.Tests
         private readonly bool[] baselines;
         private bool disposed;
 
-        public IntegrationStand(int count, int cameras)
+        public IntegrationStand(int count, int cameras, Func<IntegrationStand, Vector4[], GpuWallMask> createMask = null)
         {
+            if (count <= 0) throw new ArgumentOutOfRangeException(nameof(count));
+            if (cameras <= 0) throw new ArgumentOutOfRangeException(nameof(cameras));
+            GpuWallMask.RequireShader();
             World = Unity.Entities.World.DefaultGameObjectInjectionWorld;
             if (World?.GetExistingSystemManaged<EntitiesGraphicsSystem>() == null)
                 throw new InvalidOperationException("The main World needs stock Entities Graphics.");
-            var manager = World.EntityManager;
-            cube = GameObject.CreatePrimitive(PrimitiveType.Cube); cube.SetActive(false);
-            red = new Material(Shader.Find("Universal Render Pipeline/Unlit")); red.SetColor("_BaseColor", Color.red);
-            blue = new Material(red); blue.SetColor("_BaseColor", Color.blue);
-            wall = GameObject.CreatePrimitive(PrimitiveType.Cube); wall.name = "Owned G1 wall"; wall.layer = 31;
-            wall.transform.position = new Vector3(-8.125f, 0, 1); wall.transform.localScale = new Vector3(15.75f, 32, .25f);
-            wall.GetComponent<Renderer>().sharedMaterial = blue;
-            Entities = new NativeArray<Entity>(count, Allocator.Persistent);
-            var prototype = manager.CreateEntity();
-            RenderMeshUtility.AddComponents(prototype, manager, new RenderMeshDescription(ShadowCastingMode.Off, layer: 31),
-                new RenderMeshArray(new[] { red }, new[] { cube.GetComponent<MeshFilter>().sharedMesh }),
-                MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
-            manager.Instantiate(prototype, Entities); manager.DestroyEntity(prototype);
-            var bounds = new Vector4[count]; baselines = new bool[count];
-            for (int i = 0; i < count; i++)
+            try
             {
-                var center = count == 2 ? new float3(i == 0 ? -1 : 1, 0, 4)
-                    : new float3((i % 64 - 31.5f) * .45f, (i / 64 - (count / 64 - 1) * .5f) * .45f, 4);
-                float size = count == 2 ? 1 : .24f;
-                manager.SetComponentData(Entities[i], new LocalToWorld { Value = float4x4.TRS(center, quaternion.identity, new float3(size)) });
-                bounds[i] = new Vector4(center.x, center.y, center.z, size * .5f);
-                baselines[i] = manager.IsComponentEnabled<MaterialMeshInfo>(Entities[i]);
+                var manager = World.EntityManager;
+                cube = GameObject.CreatePrimitive(PrimitiveType.Cube); cube.SetActive(false);
+                cube.name = "Owned G1 mesh source";
+                red = new Material(Shader.Find("Universal Render Pipeline/Unlit")); red.SetColor("_BaseColor", Color.red);
+                blue = new Material(red); blue.SetColor("_BaseColor", Color.blue);
+                wall = GameObject.CreatePrimitive(PrimitiveType.Cube); wall.name = "Owned G1 wall"; wall.layer = 31;
+                wall.transform.position = new Vector3(-8.125f, 0, 1); wall.transform.localScale = new Vector3(15.75f, 32, .25f);
+                wall.GetComponent<Renderer>().sharedMaterial = blue;
+                Entities = new NativeArray<Entity>(count, Allocator.Persistent);
+                var prototype = manager.CreateEntity();
+                try
+                {
+                    RenderMeshUtility.AddComponents(prototype, manager, new RenderMeshDescription(ShadowCastingMode.Off, layer: 31),
+                        new RenderMeshArray(new[] { red }, new[] { cube.GetComponent<MeshFilter>().sharedMesh }),
+                        MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
+                    manager.Instantiate(prototype, Entities);
+                }
+                finally { if (manager.Exists(prototype)) manager.DestroyEntity(prototype); }
+                var bounds = new Vector4[count]; baselines = new bool[count];
+                for (int i = 0; i < count; i++)
+                {
+                    var center = count == 2 ? new float3(i == 0 ? -1 : 1, 0, 4)
+                        : new float3((i % 64 - 31.5f) * .45f, (i / 64 - (count / 64 - 1) * .5f) * .45f, 4);
+                    float size = count == 2 ? 1 : .24f;
+                    manager.SetComponentData(Entities[i], new LocalToWorld { Value = float4x4.TRS(center, quaternion.identity, new float3(size)) });
+                    bounds[i] = new Vector4(center.x, center.y, center.z, size * .5f);
+                    baselines[i] = manager.IsComponentEnabled<MaterialMeshInfo>(Entities[i]);
+                }
+                Cameras = new Camera[cameras]; Targets = new RenderTexture[cameras]; Masks = new GpuWallMask[cameras];
+                for (int i = 0; i < cameras; i++)
+                {
+                    Cameras[i] = new GameObject("Owned G1 camera " + i).AddComponent<Camera>();
+                    Cameras[i].transform.position = new Vector3(count == 2 ? -1 : i * .01f, 0, -8);
+                    Cameras[i].depth = 100 + i; Cameras[i].cullingMask = 1 << 31;
+                    Cameras[i].orthographic = true; Cameras[i].orthographicSize = count == 2 ? 2 : 18;
+                    Cameras[i].clearFlags = CameraClearFlags.SolidColor; Cameras[i].backgroundColor = Color.black;
+                    Targets[i] = new RenderTexture(128, 128, 24); Targets[i].Create(); Cameras[i].targetTexture = Targets[i];
+                    Masks[i] = createMask != null ? createMask(this, bounds) : new GpuWallMask(bounds);
+                }
+                RenderPipelineManager.beginCameraRendering += Begin;
+                RenderPipelineManager.endCameraRendering += End;
             }
-            Cameras = new Camera[cameras]; Targets = new RenderTexture[cameras]; Masks = new GpuWallMask[cameras];
-            for (int i = 0; i < cameras; i++)
-            {
-                Cameras[i] = new GameObject("Owned G1 camera " + i).AddComponent<Camera>();
-                Cameras[i].transform.position = new Vector3(count == 2 ? -1 : i * .01f, 0, -8);
-                Cameras[i].depth = 100 + i; Cameras[i].cullingMask = 1 << 31;
-                Cameras[i].orthographic = true; Cameras[i].orthographicSize = count == 2 ? 2 : 18;
-                Cameras[i].clearFlags = CameraClearFlags.SolidColor; Cameras[i].backgroundColor = Color.black;
-                Targets[i] = new RenderTexture(128, 128, 24); Targets[i].Create(); Cameras[i].targetTexture = Targets[i];
-                Masks[i] = new GpuWallMask(bounds);
-            }
-            RenderPipelineManager.beginCameraRendering += Begin;
-            RenderPipelineManager.endCameraRendering += End;
+            catch { Dispose(); throw; }
         }
 
         public void SetWall(bool present)
@@ -282,14 +309,17 @@ namespace CullingSystemDOTS.DynamicPrototype.Tests
         {
             if (disposed) return; disposed = true;
             RenderPipelineManager.beginCameraRendering -= Begin; RenderPipelineManager.endCameraRendering -= End;
-            foreach (var mask in Masks) mask.Dispose();
-            var manager = World.EntityManager; manager.CompleteAllTrackedJobs();
-            foreach (var entity in Entities) if (manager.Exists(entity)) manager.DestroyEntity(entity);
-            Entities.Dispose();
-            for (int i = 0; i < Cameras.Length; i++)
+            if (Masks != null) foreach (var mask in Masks) mask?.Dispose();
+            if (World != null && World.IsCreated)
             {
-                Cameras[i].targetTexture = null; UnityEngine.Object.Destroy(Cameras[i].gameObject);
-                Targets[i].Release(); UnityEngine.Object.Destroy(Targets[i]);
+                var manager = World.EntityManager; manager.CompleteAllTrackedJobs();
+                if (Entities.IsCreated) foreach (var entity in Entities) if (manager.Exists(entity)) manager.DestroyEntity(entity);
+            }
+            if (Entities.IsCreated) Entities.Dispose();
+            for (int i = 0; Cameras != null && i < Cameras.Length; i++)
+            {
+                if (Cameras[i] != null) { Cameras[i].targetTexture = null; UnityEngine.Object.Destroy(Cameras[i].gameObject); }
+                if (Targets != null && Targets[i] != null) { Targets[i].Release(); UnityEngine.Object.Destroy(Targets[i]); }
             }
             UnityEngine.Object.Destroy(wall); UnityEngine.Object.Destroy(cube);
             UnityEngine.Object.Destroy(red); UnityEngine.Object.Destroy(blue);
