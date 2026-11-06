@@ -74,9 +74,27 @@ Candidate Project(WorldCandidate bounds)
     result.nearest = nearest; result.valid = all(result.maximum > result.minimum) ? 1 : 0;
     return result;
 }
+bool OutsideFrustum(WorldCandidate bounds)
+{
+    if (bounds.valid == 0 || !all(isfinite(bounds.center)) || !all(isfinite(bounds.extents)) || any(bounds.extents < 0)) return false;
+    bool left = true, right = true, bottom = true, top = true, lowZ = true, highZ = true;
+    [unroll] for (uint i = 0; i < 8; i++)
+    {
+        float3 sign = float3((i & 1) ? 1 : -1, (i & 2) ? 1 : -1, (i & 4) ? 1 : -1);
+        float4 clip = mul(CameraProjection, mul(CameraView, float4(bounds.center + bounds.extents * sign, 1)));
+        if (!all(isfinite(clip))) return false;
+        float margin = 0.00001 * max(1, abs(clip.w));
+        left = left && clip.x < -clip.w - margin; right = right && clip.x > clip.w + margin;
+        bottom = bottom && clip.y < -clip.w - margin; top = top && clip.y > clip.w + margin;
+        // Accepted DX12 homogeneous depth range is [0,w] in either Z direction.
+        lowZ = lowZ && clip.z < -margin; highZ = highZ && clip.z > clip.w + margin;
+    }
+    return left || right || bottom || top || lowZ || highZ;
+}
 [numthreads(64,1,1)]
 void TestWorld(uint id : SV_DispatchThreadID)
 {
     if (id >= (uint)CandidateCount) return;
-    Visible[id] = Hidden(Project(WorldCandidates[id])) ? 0 : 1;
+    WorldCandidate bounds = WorldCandidates[id];
+    Visible[id] = OutsideFrustum(bounds) || Hidden(Project(bounds)) ? 0 : 1;
 }

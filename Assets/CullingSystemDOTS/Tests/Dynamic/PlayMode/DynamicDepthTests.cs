@@ -229,6 +229,49 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
             finally { UnityEngine.Object.Destroy(resources); }
         }
 
+        [UnityTest] public IEnumerator WorldFrustumRejectsOnlyFullyOutsideKnownBounds()
+        {
+            var resources=LoadResources();
+            try
+            {
+                using (var registry=new OcclusionWorld())
+                using (var pipeline=new OcclusionGpuPipeline(registry,resources,new int2(33,19),100))
+                {
+                    var rows=new[] {
+                        new WorldCandidate { Center=new float3(1000,0,-5), Extents=new float3(.2f), Valid=1 },
+                        new WorldCandidate { Center=new float3(0,1000,-5), Extents=new float3(.2f), Valid=1 },
+                        new WorldCandidate { Center=new float3(0,0,5), Extents=new float3(.2f), Valid=1 },
+                        new WorldCandidate { Center=new float3(0,0,-200), Extents=new float3(.2f), Valid=1 },
+                        new WorldCandidate { Center=new float3(0,0,-.02f), Extents=new float3(.001f), Valid=1 },
+                        new WorldCandidate { Center=new float3(0,0,-.1f), Extents=new float3(.2f), Valid=1 },
+                        new WorldCandidate { Center=0, Extents=new float3(1), Valid=1 },
+                        new WorldCandidate { Center=new float3(0,0,-5), Extents=new float3(.2f), Valid=1 },
+                        new WorldCandidate { Center=new float3(float.NaN,0,-5), Extents=new float3(.2f), Valid=1 },
+                        new WorldCandidate { Center=new float3(1000,0,-5), Extents=new float3(.2f), Valid=0 } };
+                    using (var candidates=new GraphicsBuffer(GraphicsBuffer.Target.Structured,rows.Length,32))
+                    using (var visible=new GraphicsBuffer(GraphicsBuffer.Target.Structured,rows.Length,4))
+                    {
+                        candidates.SetData(rows);
+                        foreach (bool orthographic in new[] { false,true })
+                        foreach (bool reversed in new[] { false,true })
+                        {
+                            var projection=GL.GetGPUProjectionMatrix(orthographic?Matrix4x4.Ortho(-4,4,-3,3,.1f,100):Matrix4x4.Perspective(60,33f/19,.1f,100),false);
+                            if (reversed) for (int c=0;c<4;c++) projection[2,c]=projection[3,c]-projection[2,c];
+                            using (var command=new CommandBuffer())
+                            {
+                                command.SetRenderTarget(pipeline.Depth.Levels[0]); command.ClearRenderTarget(false,true,new Color(100,0,0,0));
+                                pipeline.RecordHierarchy(command); pipeline.RecordWorldTests(command,candidates,visible,rows.Length,Matrix4x4.identity,projection,.1f);
+                                Graphics.ExecuteCommandBuffer(command);
+                            }
+                            var request=AsyncGPUReadback.Request(visible); while (!request.done) yield return null;
+                            Assert.That(request.hasError,Is.False); var actual=request.GetData<uint>();
+                            for (int i=0;i<rows.Length;i++) Assert.That(actual[i],Is.EqualTo(i<5?0u:1u),"Conservative frustum row "+i+", ortho="+orthographic+", reversed="+reversed);
+                        }
+                    }
+                }
+            }
+            finally { AsyncGPUReadback.WaitAllRequests(); UnityEngine.Object.Destroy(resources); }
+        }
         [Test] public void FailedPartialDepthAllocationReleasesTexturesAndBudget()
         {
             using (var registry = new OcclusionWorld())
