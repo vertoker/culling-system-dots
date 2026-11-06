@@ -17,7 +17,7 @@ def create(project_root: Path, destination: Path, revision: str = "master") -> P
     if destination != allowed or destination.exists():
         raise ValueError("Only a new .superpowers/consumers/GitInstall destination is supported.")
     commit = subprocess.check_output(["git", "-C", str(project_root), "rev-parse", "--verify", revision + "^{commit}"], text=True).strip()
-    archive = subprocess.check_output(["git", "-C", str(project_root), "archive", "--format=tar", commit, SUBPATH + "/Samples~/Basic"])
+    archive = subprocess.check_output(["git", "-C", str(project_root), "archive", "--format=tar", commit, SUBPATH + "/Samples~"])
     original = json.loads((project_root / "Packages/manifest.json").read_text(encoding="utf-8-sig"))["dependencies"]
     names = ("com.coplaydev.unity-mcp", "com.unity.entities.graphics", "com.unity.physics", "com.unity.render-pipelines.universal", "com.unity.test-framework")
     dependencies = {name: original[name] for name in names}
@@ -32,8 +32,8 @@ def create(project_root: Path, destination: Path, revision: str = "master") -> P
     assets.mkdir()
     shutil.copytree(project_root / "Assets/Settings", assets / "Settings")
     shutil.copy2(project_root / "Assets/Settings.meta", assets / "Settings.meta")
-    prefix = SUBPATH + "/Samples~/Basic/"
-    sample = assets / "Samples/CullingSystemDOTS/Basic"
+    prefix = SUBPATH + "/Samples~/"
+    sample = assets / "Samples/CullingSystemDOTS"
     with tarfile.open(fileobj=io.BytesIO(archive)) as contents:
         for member in contents:
             if not member.name.startswith(prefix) or member.isdir():
@@ -41,10 +41,12 @@ def create(project_root: Path, destination: Path, revision: str = "master") -> P
             relative = Path(member.name[len(prefix):])
             if not member.isfile() or relative.is_absolute() or ".." in relative.parts:
                 raise ValueError("Unsupported sample archive entry.")
+            if len(relative.parts) == 1 and relative.suffix != ".meta":
+                continue
             target = sample / relative
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(contents.extractfile(member).read())
-    for name in ("PlayMode", "Fixtures", "Delivery/PlayMode"):
+    for name in ("PlayMode", "Fixtures", "Delivery/PlayMode", "DynamicCity"):
         source = project_root / "Assets/Tests" / name
         if source.exists():
             shutil.copytree(source, assets / "Tests" / name)

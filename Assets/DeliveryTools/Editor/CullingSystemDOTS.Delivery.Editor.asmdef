@@ -1,5 +1,5 @@
 {
   "name": "CullingSystemDOTS.Delivery.Editor",
-  "references": ["CullingSystemDOTS.Core", "CullingSystemDOTS.Runtime", "CullingSystemDOTS.Editor", "CullingSystemDOTS.Sample", "Unity.Entities", "Unity.Scenes", "Unity.Collections", "Unity.Mathematics"],
+  "references": ["CullingSystemDOTS.Core", "CullingSystemDOTS.Runtime", "CullingSystemDOTS.Editor", "CullingSystemDOTS.Sample", "CullingSystemDOTS.DynamicCity", "CullingSystemDOTS.Dynamic.GPU", "Unity.RenderPipelines.Universal.Runtime", "Unity.Entities", "Unity.Scenes", "Unity.Collections", "Unity.Mathematics"],
   "includePlatforms": ["Editor"]
 }

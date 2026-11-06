@@ -6,6 +6,7 @@ Read [the repository guide](../AGENTS.md) first. Asset ownership has two distinc
 |---|---|
 | [CullingSystemDOTS](CullingSystemDOTS/AGENTS.md) | Complete shipped UPM package |
 | [DeliverySample](DeliverySample/AGENTS.md) | Development mirror of the importable sample |
+| [DeliveryDynamic](DeliveryDynamic/AGENTS.md) | Development mirror of Dynamic City |
 | [DeliveryTools](DeliveryTools/AGENTS.md) | Development-only fixture generation |
 | [Tests](Tests/AGENTS.md) | Development integration tests and synthetic assets |
 | [Scenes](Scenes/AGENTS.md) | Root-only development scenes |

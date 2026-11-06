@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Added
+
+- Experimental dynamic geometric occlusion: versioned runtime geometry, independent ECS capture,
+  bounded GPU uploads/frame resources, conservative current-view depth/Hi-Z and explicit indirect
+  rendering with independent full-caster shadows. Optional URP 17.6 integration restores stock
+  graphics for unsupported configuration. No Player performance improvement is assumed.
+- Dynamic City sample with a separate ECS World, editable building pieces, indoor/street agents,
+  first-person/tour controls, diagnostics and ordinary-rendering comparison.
+
 ### Changed
 
 - Bake window uses incremental scene/sample/mesh capture, background numeric BVH construction

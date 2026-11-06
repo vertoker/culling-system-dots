@@ -9,3 +9,9 @@ The independent binary tracer defines its own deterministic coincident-hit order
 GPU support requires compute shaders and asynchronous readback; Auto/Gpu can recover to CPU when unavailable. Other GPU APIs/platforms, XR, reflection cameras, custom SRPs, animated occluders and deformed shadow companions need separate validation. Native payload budgets are not total-memory caps. Stock per-camera integration synchronizes outstanding ECS readers and may cost CPU time.
 
 Only fresh reports under the repository's Docs/Validation apply to this revision. A successful Editor test run does not establish Player/platform support by itself.
+
+The independent experimental [dynamic geometric renderer](DynamicOcclusion.md) has a narrower
+explicit rigid-opaque/unlit, URP 17.6, Windows DX12 scope. It owns indirect graphics for opted-in
+bindings; other objects retain stock rendering. Its camera/material/lifetime rules and sample
+setup are separate from the static-bake adapter. Dynamic Player acceptance and performance must
+be assessed from their own evidence rather than inferred from bake/backend tests.

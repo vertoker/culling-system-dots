@@ -3,6 +3,7 @@
 Read [the package guide](../AGENTS.md) first.
 
 - [Basic](Basic/AGENTS.md) is the importable package sample declared in `package.json`.
+- [DynamicCity](DynamicCity/AGENTS.md) demonstrates independent runtime geometric occlusion.
 - Keep it self-contained after import into an arbitrary consumer folder. Do not depend on root
   development scenes, fixture generators or tools.
 - Preserve sample asset GUIDs and coordinate behavior/assets with the source checkout's

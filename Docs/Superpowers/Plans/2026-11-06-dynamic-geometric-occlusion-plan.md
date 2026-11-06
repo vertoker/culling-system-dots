@@ -441,6 +441,15 @@ dependency: use existing engine input support or a sample-only declared integrat
 
 ## Task 6: correctness oracle, Player measurement and decision
 
+**Task 5 implementation checkpoint:** Dynamic City scene, serialized resources/URP settings,
+owned ECS World, 689 editable pieces, 512 agents, first-person/tour controls and diagnostics are
+implemented. An eight-state frozen color/shadow/unique-ID oracle exercises actual GPU occlusion.
+The sample exposed and fixed a missing external-writer dependency import in production capture.
+EditMode `c4164009178e4395a1287a5c65a4b4a6`: 258/258; coupled PlayMode
+`3cd142f8088247f7b33b72d2b75ad28f`: 56/56, zero failed/skipped. See
+[sample evidence](../../Validation/DynamicOcclusion-Sample.md). Actual Git import and Player
+execution still gate delivery; performance comparison follows functional completion as requested.
+
 **Files:** Explicit performance tests, rendering oracle helpers, and new scoped
 `Docs/Validation/DynamicOcclusion-*` reports. Preserve historical readiness evidence.
 

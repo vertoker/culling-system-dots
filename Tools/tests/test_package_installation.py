@@ -14,7 +14,7 @@ class PackageInstallationTests(unittest.TestCase):
         for folder in ("Runtime", "Editor", "Tests", "Samples~", "Documentation~"):
             self.assertTrue((PACKAGE / folder).is_dir(), folder)
         for sample in descriptor["samples"]:
-            self.assertTrue((PACKAGE / sample["path"] / "Basic.unity").is_file())
+            self.assertTrue(any((PACKAGE / sample["path"]).glob("*.unity")), sample["path"])
         self.assertFalse(any((ROOT / "Packages").glob("com.vertoker.*")))
 
     def test_no_hardcoded_development_location_in_production_code(self):

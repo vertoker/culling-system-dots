@@ -25,12 +25,17 @@ namespace CullingSystemDOTS.Dynamic.Ecs
     {
         internal void Capture(NativeArray<OcclusionCaptureRow> rows)
         {
+            // This manually invoked helper has no BeforeOnUpdate dependency import. Complete
+            // the actual read types explicitly, including writers scheduled by other systems.
+            EntityManager.CompleteDependencyBeforeRO<LocalToWorld>();
+            EntityManager.CompleteDependencyBeforeRO<DynamicOcclusionBinding>();
+            EntityManager.CompleteDependencyBeforeRO<MaterialMeshInfo>();
+            EntityManager.CompleteDependencyBeforeRO<Disabled>();
+            EntityManager.CompleteDependencyBeforeRO<MeshLODComponent>();
             var job = new CaptureJob { Rows = rows, Transforms = GetComponentLookup<LocalToWorld>(true),
                 Options = GetComponentLookup<DynamicOcclusionBinding>(true), Graphics = GetComponentLookup<MaterialMeshInfo>(true),
                 Disabled = GetComponentLookup<Disabled>(true), Lods=GetComponentLookup<MeshLODComponent>(true) };
-            // Complete the registered component writers once, rather than synchronizing through
-            // several EntityManager accessors per Entity. The Burst job reads hidden graphics too.
-            Dependency.Complete(); job.Run();
+            job.Run();
         }
         protected override void OnUpdate() { }
 

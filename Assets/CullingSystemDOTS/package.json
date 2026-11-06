@@ -33,6 +33,11 @@
       "displayName": "Two rooms with LOD and materials",
       "description": "CPU-baked SubScene with runtime camera and inversion controls.",
       "path": "Samples~/Basic"
+    },
+    {
+      "displayName": "Dynamic City construction",
+      "description": "Experimental current-frame GPU occlusion with editable building pieces and independent ECS agents.",
+      "path": "Samples~/DynamicCity"
     }
   ]
 }

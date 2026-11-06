@@ -18,6 +18,9 @@ class DeliveryConsumerTests(unittest.TestCase):
         (package / "package.json").write_text('{"name":"com.vertoker.culling-system-dots","version":"0.1.0"}')
         (package / "Samples~/Basic/Basic.unity").write_text("committed-sample")
         (package / "Samples~/Basic/Basic.unity.meta").write_text("guid: retained-scene-guid")
+        (package / "Samples~/DynamicCity").mkdir()
+        (package / "Samples~/DynamicCity/DynamicCity.unity").write_text("committed-dynamic-sample")
+        (package / "Samples~/DynamicCity/DynamicCity.unity.meta").write_text("guid: retained-dynamic-guid")
         (self.root / "ProjectSettings").mkdir()
         for name in ("ProjectVersion.txt", "GraphicsSettings.asset", "QualitySettings.asset", "ProjectSettings.asset"):
             (self.root / "ProjectSettings" / name).write_text(name)
@@ -53,6 +56,8 @@ class DeliveryConsumerTests(unittest.TestCase):
         self.assertNotIn("com.unity.modules.ai", manifest["dependencies"])
         self.assertNotIn("com.unity.modules.imageconversion", manifest["dependencies"])
         self.assertEqual("committed-sample", (target / "Assets/Samples/CullingSystemDOTS/Basic/Basic.unity").read_text())
+        self.assertEqual("committed-dynamic-sample", (target / "Assets/Samples/CullingSystemDOTS/DynamicCity/DynamicCity.unity").read_text())
+        self.assertEqual("guid: retained-dynamic-guid", (target / "Assets/Samples/CullingSystemDOTS/DynamicCity/DynamicCity.unity.meta").read_text())
 
     def test_only_one_named_consumer_and_no_overwriting(self):
         target = self.root / ".superpowers/consumers/GitInstall"
