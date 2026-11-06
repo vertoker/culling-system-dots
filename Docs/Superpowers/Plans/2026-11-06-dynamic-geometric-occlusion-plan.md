@@ -342,6 +342,14 @@ serialized and runtime code has no AssetDatabase lookup. See [depth evidence](..
 Remaining: actual bounded mesh/instance uploads, resource rings/automatic retirement, MSAA/view
 capabilities and the rendered-object oracle. Current direct Mesh recording is not an upload-budget proof.
 
+**Streaming/lifetime outcome:** `56326ec` adds independently owned GPU mesh streams, shared upload
+budgets, ready-reader leases and automatic runtime/Editor retirement. The direct-stream transport
+matches GPU bytes and rendered depth. Final coupled PlayMode
+`b94d4ab952844bf8be42b58388cc4f0c`: 40/40; snapshot-retain coupled EditMode
+`e125c52c52df437486fa828571a7ad5c`: 115/115. See [upload evidence](../../Validation/DynamicOcclusion-Upload.md).
+Next: revision-aware geometry-cache integration into the prepass, instance data, resource rings
+and view capability gates. The production prepass still uses its earlier direct Mesh recording.
+
 ## Task 4: present safely through the proven renderer route
 
 **Files:** G1-approved presentation file, URP feature/pass/assembly, rendering/lifetime tests.
