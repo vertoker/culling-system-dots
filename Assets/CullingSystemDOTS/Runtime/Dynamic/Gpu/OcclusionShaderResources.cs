@@ -11,5 +11,7 @@ namespace CullingSystemDOTS.Dynamic.Gpu
     {
         public Shader Depth;
         public ComputeShader Pyramid, Bounds;
+        public Shader Indirect;
+        public ComputeShader IndirectArguments;
     }
 }

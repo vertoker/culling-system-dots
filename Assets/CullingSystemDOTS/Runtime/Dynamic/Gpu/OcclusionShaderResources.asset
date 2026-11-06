@@ -15,3 +15,5 @@ MonoBehaviour:
   Depth: {fileID: 4800000, guid: 505cbee33ccbe3c4295af7d6057c8f8b, type: 3}
   Pyramid: {fileID: 7200000, guid: 509349800ac04c64fb65b49056ac55b4, type: 3}
   Bounds: {fileID: 7200000, guid: 97f02f1fbc3fada4ba47079825b5b92b, type: 3}
+  Indirect: {fileID: 4800000, guid: e9c123de988ee994d8befb3a42eee0c6, type: 3}
+  IndirectArguments: {fileID: 7200000, guid: ec64d846239d0c547a4214a2142f33be, type: 3}

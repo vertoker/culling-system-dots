@@ -358,6 +358,13 @@ shared upload and creation limits keep pending geometry unavailable. Coupled Edi
 Per-instance payload, reusable frame/view resources, capability gates and final presentation
 remain pending; Task 3 is not marked complete.
 
+**Indirect material prerequisite:** The package shader/compaction helper now has real rendered
+color and directional-shadow tests. Two groups, nonzero start-instance offsets, opposite camera
+masks and independent full-shadow arguments pass. Coupled functional PlayMode
+`bd9c0330939349129b6691648b1b4dbc`: 51/51, no failures/skips. See
+[color/shadow evidence](../../Validation/DynamicOcclusion-Color.md). This does not complete
+production ECS submission, frame/view rings or sample/Player acceptance.
+
 ## Task 4: present safely through the proven renderer route
 
 **Files:** G1-approved presentation file, URP feature/pass/assembly, rendering/lifetime tests.
