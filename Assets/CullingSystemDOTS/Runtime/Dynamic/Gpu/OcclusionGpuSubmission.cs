@@ -20,9 +20,10 @@ namespace CullingSystemDOTS.Dynamic.Gpu
         internal void SealAfterLastConsumer()
         {
             CheckThread(); if (hasFence || Released) return;
-            fence = Graphics.CreateGraphicsFence(GraphicsFenceType.AsyncQueueSynchronisation, SynchronisationStageFlags.AllGPUOperations);
-            hasFence = true; Poll();
+            SealAfterLastConsumer(Graphics.CreateGraphicsFence(GraphicsFenceType.AsyncQueueSynchronisation, SynchronisationStageFlags.AllGPUOperations));
         }
+        internal void SealAfterLastConsumer(GraphicsFence lastConsumer)
+        { CheckThread(); if (hasFence || Released) return; fence=lastConsumer; hasFence=true; Poll(); }
         internal void Poll()
         {
             CheckThread(); if (Released || !disposeRequested || !hasFence || !fence.passed) return;

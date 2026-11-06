@@ -14,4 +14,10 @@ budget across writers/views for a frame. Partially uploaded geometry cannot be p
 The retirement queue outlives Worlds; normal polling never waits. A sentinel readback is reserved
 for lifecycle shutdown/reload, outside frame submission and performance measurements.
 
+Frame publications retain their latest end-context fence until retirement. Never rewrite a busy
+slot or a camera buffer already consumed by that publication. Full-color/shadow arguments stay
+independent of camera compaction. Occluder depth respects the current camera's layer mask.
+The presentation bridge must validate actual pipeline configuration and transfer only current
+packet handles; raw Camera flags alone do not establish URP render-scale/stack support.
+
 - [Shaders](Shaders/AGENTS.md) owns coverage and the GPU numeric contract.

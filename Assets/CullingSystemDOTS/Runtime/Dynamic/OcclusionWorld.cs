@@ -40,6 +40,7 @@ namespace CullingSystemDOTS.Dynamic
         internal OcclusionMemoryBudget ResourceBudget { get { CheckAlive(); return budget; } }
         internal int UploadByteLimit => settings.MaxUploadBytesPerFrame;
         internal int GeometryCreationLimit => settings.MaxGeometryCreationsPerFrame;
+        internal int InFlightLimit => settings.MaxInFlightSubmissions;
 
         public OcclusionWorld(OcclusionSettings settings = null)
         {

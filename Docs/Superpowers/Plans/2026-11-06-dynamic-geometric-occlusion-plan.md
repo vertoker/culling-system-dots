@@ -5,8 +5,9 @@
 
 **Status:** Task 0 stock investigation completed; Gate G1 failed. At the planned boundary the user
 selected and authorized a package-owned GPU indirect continuation. Task 0b passed its transport
-proof; Task 1 registry foundation and Task 2 block/ECS capture are complete. Task 3 CPU/GPU depth
-foundation is verified; upload scheduling and production resource lifetime are in progress. See the
+proof; Task 1 registry foundation and Task 2 block/ECS capture are complete. Task 3 GPU depth,
+bounded uploads and internal reusable frame/view resources are verified. The ECS/URP presentation
+bridge, full view gates, sample and Player acceptance remain pending. See the
 [integration evidence and continuation options](../../Validation/DynamicOcclusion-Integration.md).
 
 **Goal:** Implement independent algorithm 3: configurable runtime geometric occlusion for a
@@ -372,6 +373,15 @@ An interleaved-material regression corrected model-ID permutation during GPU com
 Coupled PlayMode `e33d4eda73694859a7dd515a5ef05e3c`: 52/52, no failures/skips. See the
 [packet checkpoint](../../Validation/DynamicOcclusion-Color.md#bounded-instance-packet-checkpoint).
 Production frame/view rings, ECS transfer, view gates and demo/Player acceptance remain open.
+
+**Internal renderer checkpoint:** The current-view depth/test/compaction/color path now uses
+bounded reusable frame/view resources and final-context fences. Real opposite-view, MSAA full-draw,
+layer-mask, resize-budget, demolition and teardown checks pass. Coupled EditMode
+`1bac852666d9473da6161662af665e62`: 115/115; PlayMode
+`3ea664a042f5444f8b700479f7f8c8fa`: 53/53, zero failed/skipped. See
+[renderer evidence](../../Validation/DynamicOcclusion-Renderer.md). This owner is internal;
+ECS graphics transfer, actual URP configuration/stack gates and stale-publication restoration
+remain Task 4 work. Tasks 3-4 are not marked complete by this checkpoint.
 
 ## Task 4: present safely through the proven renderer route
 
