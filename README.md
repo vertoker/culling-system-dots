@@ -17,3 +17,10 @@ Validated baseline: Unity 6000.6.8f1, Entities / Entities Graphics / Collections
 Import **Two rooms with LOD and materials** from the package Samples tab. Open Basic.unity and enter Play Mode. For baking, create Bake Settings and use **Tools → Culling System DOTS → Bake**. See [Setup](Assets/CullingSystemDOTS/Documentation~/Setup.md) and [Baking workflow](Assets/CullingSystemDOTS/Documentation~/BakingWorkflow.md).
 
 Development tests and scenes stay in the root project. A single disposable Git-install consumer is used only for installation and Player verification; it is generated on demand and is not part of the deliverable. Fresh validation is recorded under Docs/Validation. Do not interpret earlier validation of a different implementation as validation of this package revision.
+
+## Contributing with agents
+
+Start with [AGENTS.md](AGENTS.md) for repository navigation and working rules. Each maintained code
+directory has local instructions. The package's [own guide](Assets/CullingSystemDOTS/AGENTS.md)
+also works after Git URL installation. Reusable, client-independent procedures are listed in
+[.agents/README.md](.agents/README.md); no workflow plugin is required.

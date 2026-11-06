@@ -88,9 +88,11 @@ flags are cleared; the previous buffer itself remains read-only. Reject that out
 A job depending on a rejected result reports `InvalidPreviousState`, so a failed
 frame cannot silently become a successful publication farther down a job chain.
 
-Reference acceptance and its limits are recorded in `Docs/Parity/FrameEvaluatorResults.json`
-in the development project. Native raster, graphics, lifecycle across Unity worlds
-and bake pipeline acceptance remain independent checks.
+The ownership and failure contracts above are covered by the package tests. The development
+repository records historical acceptance evidence under `Docs/Validation`; that evidence is
+optional context and is not included in a Git URL package installation. Rendering, lifecycle
+across Unity worlds and bake pipeline acceptance remain independent checks. See
+[Compatibility](Compatibility.md) for the validated scope.
 
 ## Per-World ownership
 
