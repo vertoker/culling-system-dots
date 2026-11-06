@@ -6,10 +6,15 @@ namespace CullingSystemDOTS.Samples.DynamicCity
     public sealed class DynamicCityCamera : MonoBehaviour
     {
         public DynamicCityBootstrap Sample;
-        public bool Tour=true;
+        public bool Tour;
         private readonly HashSet<KeyCode> held=new HashSet<KeyCode>();
         private float elapsed,yaw,pitch;
         private bool wasTour=true;
+        public void SetPose(Vector3 position,Vector3 lookAt)
+        {
+            Tour=wasTour=false;held.Clear();transform.position=position;transform.LookAt(lookAt);
+            yaw=transform.eulerAngles.y;pitch=Mathf.DeltaAngle(0,transform.eulerAngles.x);
+        }
         private void Update()
         {
             if(Sample==null)return;
@@ -18,8 +23,8 @@ namespace CullingSystemDOTS.Samples.DynamicCity
             {
                 elapsed+=Time.deltaTime;float phase=elapsed*.12f;
                 var home=(Vector3)DynamicCityBootstrap.Home(0);
-                transform.position=home+new Vector3(-1.5f+Mathf.Sin(phase)*2,1.7f,-8+Mathf.Sin(phase*.7f)*5);
-                transform.rotation=Quaternion.Euler(Mathf.Sin(phase*.6f)*8,Mathf.Sin(phase*.4f)*45,0);return;
+                transform.position=home+new Vector3(Mathf.Sin(phase)*11,1.7f,-Mathf.Cos(phase)*11);
+                transform.LookAt(home+new Vector3(0,1.7f,0));return;
             }
             float speed=(held.Contains(KeyCode.LeftShift)?12:4)*Time.deltaTime;
             var forward=Vector3.ProjectOnPlane(transform.forward,Vector3.up).normalized;var right=Vector3.ProjectOnPlane(transform.right,Vector3.up).normalized;

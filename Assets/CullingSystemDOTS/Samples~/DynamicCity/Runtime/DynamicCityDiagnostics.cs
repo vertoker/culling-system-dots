@@ -9,11 +9,12 @@ namespace CullingSystemDOTS.Samples.DynamicCity
         private void OnGUI()
         {
             if(Sample==null || !Sample.ShowHud)return;
-            GUILayout.BeginArea(new Rect(12,12,390,420),GUI.skin.box);
+            GUILayout.BeginArea(new Rect(12,12,390,540),GUI.skin.box);
             GUILayout.Label("Dynamic geometric occlusion — experimental demo");
             if(!Sample.Initialized){GUILayout.Label(Sample.Fault??"Starting...");GUILayout.EndArea();return;}
             var presentation=Sample.Presentation;
             GUILayout.Label("Agents: "+Sample.Agents.Length+" | Pieces: "+Sample.Construction.Pieces.Count);
+            GUILayout.Label("Interior fixtures: "+Sample.InteriorDetails.Length);
             GUILayout.Label("Ready indirect instances: "+presentation.ReadyInstances+" | Slots: "+presentation.InFlightSlots);
             GUILayout.Label("Upload: "+presentation.UploadedBytes+" bytes | Accounted: "+(presentation.AccountedResourceBytes/1048576f).ToString("F1")+" MiB");
             if(presentation.LastFault!=null)GUILayout.Label("Ordinary rendering: "+presentation.LastFault);
@@ -21,7 +22,12 @@ namespace CullingSystemDOTS.Samples.DynamicCity
             Sample.AutomaticEdits=GUILayout.Toggle(Sample.AutomaticEdits,"Seeded automatic construction/demolition");
             bool paused=GUILayout.Toggle(Sample.AgentsPaused,"Pause agents");if(paused!=Sample.AgentsPaused)Sample.PauseSimulation(paused);
             var controller=Sample.View.GetComponent<DynamicCityCamera>();controller.Tour=GUILayout.Toggle(controller.Tour,"Guided first-person tour");
-            GUILayout.Label("Manual: WASD, Shift, Space/Ctrl; hold RMB to look. T toggles tour.");
+            GUILayout.Label("WASD, Shift, Space/Ctrl; RMB look. T toggles tour.");
+            GUILayout.Label("Free camera; no game physics or collision response.");
+            var home=(Vector3)DynamicCityBootstrap.Home(0);
+            if(GUILayout.Button("Street view"))controller.SetPose(home+new Vector3(-1.5f,1.7f,-18),home+new Vector3(0,1.7f,0));
+            if(GUILayout.Button("Visit ground-floor workshop"))controller.SetPose(home+new Vector3(2,1.7f,-3.5f),home+new Vector3(4,1.4f,3));
+            if(GUILayout.Button("Visit upper-floor workshop"))controller.SetPose(home+new Vector3(2,4.95f,-3.5f),home+new Vector3(4,4.65f,3));
             var selected=Sample.Construction.Pick(Sample.View.ViewportPointToRay(new Vector3(.5f,.5f)));
             GUILayout.Label(selected==null?"Aim at a building piece.":"Aimed piece: "+selected.Id+" ("+selected.Kind+")");
             if(GUILayout.Button("Remove aimed piece") && selected!=null)

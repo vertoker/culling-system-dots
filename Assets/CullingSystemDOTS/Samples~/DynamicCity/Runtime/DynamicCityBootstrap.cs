@@ -20,13 +20,15 @@ namespace CullingSystemDOTS.Samples.DynamicCity
         public Mesh CubeMesh;
         public bool AutoStart=true;
         public int AgentCount=512,BuildingCount=16,Layer;
-        public bool IncludeRotatedFixture=true,CreateView=true,AgentsPaused,AutomaticEdits=true,ShowHud=true;
+        public bool IncludeRotatedFixture=true,IncludeInteriorDetails=true,CreateView=true,AgentsPaused,AutomaticEdits,ShowHud=true;
+        public OcclusionSettings Settings=new OcclusionSettings{MaxUploadBytesPerFrame=16*1024*1024,MaxResourceBytes=256L*1024*1024};
         public int Seed=12345;
         public Material GroundMaterial;
         public Camera View {get;private set;}
         public World World {get;private set;}
         public DynamicCityConstruction Construction {get;private set;}
         public Entity[] Agents {get;private set;}
+        public Entity[] InteriorDetails {get;private set;}
         public DynamicOcclusionPresentation Presentation {get;private set;}
         public DynamicOcclusionSystem Culling {get;private set;}
         public bool Initialized => World!=null && World.IsCreated;
@@ -51,7 +53,7 @@ namespace CullingSystemDOTS.Samples.DynamicCity
             {
                 var systems=DefaultWorldInitialization.GetAllSystems(WorldSystemFilterFlags.Default);
                 DefaultWorldInitialization.AddSystemsToRootLevelSystemGroups(World,systems);
-                Presentation=DynamicOcclusionPresentation.Install(World,ShaderResources,new OcclusionSettings {MaxUploadBytesPerFrame=16*1024*1024,MaxResourceBytes=256L*1024*1024});
+                Presentation=DynamicOcclusionPresentation.Install(World,ShaderResources,Settings);
                 Culling=Presentation.System;geometry=Culling.Registry.RegisterGeometry(CubeMesh);
                 agentSystem=World.GetOrCreateSystemManaged<DynamicCityAgents>();
                 var simulation=World.GetOrCreateSystemManaged<SimulationSystemGroup>();simulation.AddSystemToUpdateList(agentSystem);simulation.SortSystems();
@@ -66,13 +68,15 @@ namespace CullingSystemDOTS.Samples.DynamicCity
                 Construction=new DynamicCityConstruction(this);
                 for(int i=0;i<BuildingCount;i++)Construction.Build(i,Home(i));
                 if(IncludeRotatedFixture)Construction.Add(PieceKind.Wall,float4x4.TRS(new float3(-30.3f,1.5f,-42.7f),quaternion.RotateY(.61f),new float3(5,3,.25f)),0);
+                InteriorDetails=IncludeInteriorDetails?DynamicCityInteriors.Build(this):Array.Empty<Entity>();
                 Agents=new Entity[AgentCount];
+                int homes=math.max(1,BuildingCount),perHome=AgentCount==0?1:1+(AgentCount-1)/homes;
                 for(int i=0;i<AgentCount;i++)
                 {
-                    var home=Home(i%math.max(1,BuildingCount));
-                    var data=new DynamicCityAgent {Home=home,Phase=(i*.618034f)%6,Upper=(byte)(i%4==0?1:0)};
+                    int local=i/homes;var home=Home(i%homes);
+                    var data=new DynamicCityAgent {Home=home,Phase=local*6f/perHome,Upper=(byte)(local%4==0?1:0)};
                     var matrix=DynamicCityAgents.Pose(data);
-                    var entity=CreateRenderEntity(matrix,i%StockPalette.Length,OcclusionRole.Renderable|OcclusionRole.Occludee);
+                    var entity=CreateRenderEntity(matrix,(local*3+5)%StockPalette.Length,OcclusionRole.Renderable|OcclusionRole.Occludee);
                     manager.AddComponentData(entity,data);Agents[i]=entity;
                 }
                 if(CreateView)
@@ -80,7 +84,7 @@ namespace CullingSystemDOTS.Samples.DynamicCity
                     var cameraObject=new GameObject("Dynamic City first-person camera");ownedObjects.Add(cameraObject);cameraObject.transform.SetParent(transform,false);
                     View=cameraObject.AddComponent<Camera>();View.nearClipPlane=.05f;View.farClipPlane=256;View.fieldOfView=70;View.allowMSAA=false;
                     View.clearFlags=CameraClearFlags.SolidColor;View.backgroundColor=new Color(.035f,.045f,.065f);View.cullingMask=1<<Layer;
-                    View.transform.position=(Vector3)Home(0)+new Vector3(-1.5f,1.7f,-12);View.transform.rotation=Quaternion.identity;
+                    View.transform.position=(Vector3)Home(0)+new Vector3(-1.5f,1.7f,-18);View.transform.LookAt((Vector3)Home(0)+new Vector3(0,1.7f,0));
                     var controller=cameraObject.AddComponent<DynamicCityCamera>();controller.Sample=this;Presentation.RegisterView(View);
                     var diagnostics=GetComponent<DynamicCityDiagnostics>();if(diagnostics==null)diagnostics=gameObject.AddComponent<DynamicCityDiagnostics>();diagnostics.Sample=this;
                 }

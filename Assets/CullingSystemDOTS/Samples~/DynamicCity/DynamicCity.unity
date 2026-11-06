@@ -175,7 +175,7 @@ MonoBehaviour:
   IncludeRotatedFixture: 1
   CreateView: 1
   AgentsPaused: 0
-  AutomaticEdits: 1
+  AutomaticEdits: 0
   ShowHud: 1
   Seed: 12345
   GroundMaterial: {fileID: 2100000, guid: 404adf9d4680cb243a89325ce8166c56, type: 2}

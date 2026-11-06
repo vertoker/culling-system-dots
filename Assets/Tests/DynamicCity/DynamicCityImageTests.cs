@@ -45,7 +45,9 @@ namespace CullingSystemDOTS.DynamicCity.Tests
                 scene=UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(scenePath,new LoadSceneParameters(LoadSceneMode.Additive));
                 for(int i=0;i<5;i++)yield return null;
                 sample=scene.GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<DynamicCityBootstrap>()).Single();
-                Assert.That(sample.Initialized,Is.True,sample.Fault);sample.ShowHud=false;sample.AutomaticEdits=false;sample.PauseSimulation(true);
+                Assert.That(sample.Initialized,Is.True,sample.Fault);
+                Assert.That(sample.AutomaticEdits,Is.False,"The imported scene must start as a stable city.");
+                sample.ShowHud=false;sample.AutomaticEdits=false;sample.PauseSimulation(true);
                 sample.View.GetComponent<DynamicCityCamera>().Tour=false;
                 target=new RenderTexture(160,120,24);target.Create();sample.View.targetTexture=target;
                 outsideTarget=new RenderTexture(160,120,24);outsideTarget.Create();outside=new GameObject("Owned simultaneous outside view").AddComponent<Camera>();
