@@ -7,7 +7,7 @@ namespace CullingSystemDOTS.Dynamic.Gpu
 {
     // The presentation owner seals after its final color/shadow consumers and keeps polling
     // retired submissions, including after the originating World has been destroyed.
-    internal sealed class OcclusionGpuSubmission : IDisposable
+    internal sealed class OcclusionGpuSubmission : IDisposable, IOcclusionGpuRetirement
     {
         private readonly OcclusionSnapshotLease snapshot;
         private readonly IDisposable resources;
@@ -30,7 +30,13 @@ namespace CullingSystemDOTS.Dynamic.Gpu
             try { resources.Dispose(); }
             finally { snapshot.Dispose(); Released = true; }
         }
-        public void Dispose() { CheckThread(); disposeRequested = true; Poll(); }
+        public void Dispose()
+        {
+            CheckThread(); disposeRequested = true; Poll();
+            if (!Released) OcclusionGpuRetirement.Register(this);
+        }
+        bool IOcclusionGpuRetirement.PollRetirement() { Poll(); return Released; }
+        void IOcclusionGpuRetirement.SealForShutdown() => SealAfterLastConsumer();
         private void CheckThread()
         {
             if (Thread.CurrentThread.ManagedThreadId != thread) throw new InvalidOperationException("GPU submissions belong to their creating thread.");

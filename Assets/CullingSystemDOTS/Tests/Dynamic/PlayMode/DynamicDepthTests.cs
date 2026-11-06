@@ -275,13 +275,15 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
                 snapshot = registry.AcquireSnapshot(); pipeline = new OcclusionGpuPipeline(registry, resources, new int2(33,19), 100);
                 var texture = pipeline.Depth.Levels[0]; submission = new OcclusionGpuSubmission(snapshot, pipeline);
                 pipeline.RecordDepth(command, snapshot, Matrix4x4.identity, GL.GetGPUProjectionMatrix(Matrix4x4.Perspective(60, 33f/19, .1f, 100), false));
+                int pendingBefore = OcclusionGpuRetirement.PendingCount;
                 submission.Dispose(); registry.Dispose();
+                Assert.That(OcclusionGpuRetirement.PendingCount, Is.GreaterThan(pendingBefore), "Cancelled work must remain owned independently of the destroyed World.");
                 Assert.That(submission.Released, Is.False, "An unsealed future graphics consumer still owns this submission.");
                 Assert.That(texture.IsCreated(), Is.True);
                 Assert.DoesNotThrow(() => snapshot.GetGeometry(geometry));
                 Graphics.ExecuteCommandBuffer(command); submission.SealAfterLastConsumer();
                 int frames = 0;
-                while (!submission.Released && frames++ < 120) { submission.Poll(); yield return null; }
+                while (!submission.Released && frames++ < 120) yield return null;
                 Assert.That(submission.Released, Is.True); Assert.That(registry.AccountedResourceBytes, Is.Zero);
                 Assert.That(texture == null || !texture.IsCreated(), Is.True);
                 Assert.Throws<ObjectDisposedException>(() => snapshot.GetGeometry(geometry));

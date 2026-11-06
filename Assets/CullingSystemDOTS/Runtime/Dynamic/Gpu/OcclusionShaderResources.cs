@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [assembly: InternalsVisibleTo("CullingSystemDOTS.Dynamic.Rendering.Tests")]
+[assembly: InternalsVisibleTo("CullingSystemDOTS.Dynamic.Editor")]
 
 namespace CullingSystemDOTS.Dynamic.Gpu
 {

@@ -54,6 +54,12 @@ namespace CullingSystemDOTS.Dynamic
         }
         internal Mesh GetMesh(GeometryHandle handle) { CheckAlive(); return geometries[handle].Mesh; }
         internal Material GetMaterial(int instance) { CheckAlive(); return materials[instance]; }
+        internal OcclusionGeometry RetainGeometry(GeometryHandle handle)
+        {
+            CheckAlive();
+            if (!geometries.TryGetValue(handle, out var geometry)) throw new ArgumentException("Geometry does not belong to this snapshot.", nameof(handle));
+            geometry.Retain(); return geometry;
+        }
         public void RegisterReader(JobHandle dependency) { CheckAlive(); readers = JobHandle.CombineDependencies(readers, dependency); }
         internal void CompleteReaders() { CheckAlive(); readers.Complete(); readers = default; }
         private void CheckAlive()
