@@ -43,7 +43,7 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
         [Serializable] private sealed class Distribution {public double Median=-1,P95=-1,P99=-1;public int Available;}
         [Serializable] private sealed class Result
         {
-            public int Index,Targets,MovingTargets,FrustumTargets,ReferenceIds,GpuReferenceIds,LostIds,Warmup,Frames,SimulationFrames;
+            public int Index,Targets,MovingTargets,FrustumTargets,ReferenceIds,GpuReferenceIds,LostIds,Warmup,Frames,SimulationFrames,OrdinaryEnabledTargets;
             public int MinReady=int.MaxValue,MaxReady,MaxPending,OverflowFrames,GpuFrames,FallbackFrames,Collections;
             public bool Enabled;public string Layout;
             public long ReferenceTriangles,MaxAccountedBytes,MaxManagedBytes,MaxUploadBytes;
@@ -108,21 +108,25 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
         {
             for(int i=0;i<180;i++){sample=FindAnyObjectByType<DynamicCityBootstrap>();if(sample!=null && sample.Initialized)break;yield return null;}
             Require(sample!=null && sample.Initialized,"The imported sample did not initialize.");
-            int index=0,limit=int.Parse(Arg("--scale-limit","24"),CultureInfo.InvariantCulture);
+            int index=0,skip=int.Parse(Arg("--scale-skip","0"),CultureInfo.InvariantCulture),limit=int.Parse(Arg("--scale-limit","24"),CultureInfo.InvariantCulture);
             var populations=Arg("--scale-counts","4096,40960,409600").Split(',').Select(int.Parse).ToArray();
             foreach(int population in populations)
             {
-                Require(population>0 && population<=409600,"Population exceeds the declared scale fixture.");
+                Require(population==4096 || population==40960 || population==409600,"Use one of the three declared scale populations.");
+                if(index+8<=skip){index+=8;continue;}
                 var setup=Setup(population);while(setup.MoveNext())yield return setup.Current;
                 foreach(bool occluded in new[]{false,true})
                 {
+                    if(index+4<=skip){index+=4;continue;}
                     SetWall(occluded);var proof=new Result{Targets=count,Layout=occluded?"occluded":"open"};
                     var checking=ProveVisibility(proof);while(checking.MoveNext())yield return checking.Current;
+                    if(Environment.GetCommandLineArgs().Contains("--scale-proof-only"))
+                    {motion.Enabled=true;for(int i=0;i<8;i++)yield return null;motion.Enabled=false;continue;}
                     foreach(bool moving in new[]{false,true})foreach(bool enabled in new[]{false,true})
                     {
-                        if(index>=limit){Cleanup();goto Finished;}
-                        var result=new Result{Index=index++,Targets=count,MovingTargets=moving?count:0,Enabled=enabled,Layout=proof.Layout,
-                            FrustumTargets=proof.FrustumTargets,ReferenceIds=proof.ReferenceIds,GpuReferenceIds=proof.GpuReferenceIds,LostIds=proof.LostIds,ReferenceTriangles=proof.ReferenceTriangles};
+                        int current=index++;if(current<skip)continue;if(current>=skip+limit){Cleanup();goto Finished;}
+                        var result=new Result{Index=current,Targets=count,MovingTargets=moving?count:0,Enabled=enabled,Layout=proof.Layout,
+                            FrustumTargets=proof.FrustumTargets,ReferenceIds=proof.ReferenceIds,GpuReferenceIds=proof.GpuReferenceIds,LostIds=proof.LostIds,ReferenceTriangles=proof.ReferenceTriangles,OrdinaryEnabledTargets=proof.OrdinaryEnabledTargets};
                         var measure=Measure(result);while(measure.MoveNext())yield return measure.Current;
                         report.Results.Add(result);Save();Require(errors.Count==0,string.Join("\n",errors));
                     }
@@ -189,11 +193,26 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
             Require(proof.FrustumTargets==count,"Some requested targets are outside the reference frustum.");
             using(var triangles=ProfilerRecorder.StartNew(ProfilerCategory.Render,"Triangles Count",1))
             {
-                sample.SetFeatureEnabled(false);int begin=Time.frameCount+1;for(int i=0;i<120 && (i<12 || rendered<begin);i++)yield return null;
+                sample.SetFeatureEnabled(false);int begin=Time.frameCount+1,stable=0,lastSample=-1;
+                for(int i=0;i<600 && (i<12 || stable<3);i++)
+                {
+                    yield return null;
+                    if(rendered<begin || rendered==lastSample)continue;lastSample=rendered;
+                    stable=triangles.Valid && triangles.LastValue>=count*12L?stable+1:0;
+                }
                 Require(rendered>=begin,"The reference camera did not render.");
                 proof.ReferenceTriangles=triangles.Valid?triangles.LastValue:-1;
-                Require(proof.ReferenceTriangles>=count*12L,"Ordinary rendering did not submit every cube's triangles.");
-                var reference=ReadIds();proof.ReferenceIds=reference.Count(v=>v);if(proof.Layout=="open")Require(proof.ReferenceIds==count,"The open reference did not rasterize every requested target ID.");
+                var reference=ReadIds();proof.ReferenceIds=reference.Count(v=>v);
+                foreach(var entity in entities)if(manager.IsComponentEnabled<MaterialMeshInfo>(entity))proof.OrdinaryEnabledTargets++;
+                File.WriteAllText(Path.Combine(directory,"reference-proof-"+count+"-"+proof.Layout+".json"),JsonUtility.ToJson(proof,true));
+                Require(proof.ReferenceTriangles>=count*12L,"Ordinary triangles="+proof.ReferenceTriangles+", expected at least "+count*12L+", enabled="+proof.OrdinaryEnabledTargets+", visible IDs="+proof.ReferenceIds);
+                Require(proof.OrdinaryEnabledTargets==count,"Ordinary reference retained disabled target bindings.");
+                if(proof.Layout=="open")Require(proof.ReferenceIds==count,"The open reference did not rasterize every requested target ID.");
+                else
+                {
+                    int expected=0;foreach(var entity in entities)if(manager.GetComponentData<LocalToWorld>(entity).Value.c3.x+.4f>columns*.15f+.01f)expected++;
+                    Require(proof.ReferenceIds==expected,"The ordinary occluded reference is missing analytically exposed grid targets: "+proof.ReferenceIds+" / "+expected);
+                }
                 sample.SetFeatureEnabled(true);begin=Time.frameCount+1;
                 for(int i=0;i<120 && (rendered<begin || sample.Presentation.ReadyInstances!=count+(wall==Entity.Null?0:1));i++)yield return null;
                 Require(sample.Presentation.ReadyInstances==count+(wall==Entity.Null?0:1),"GPU transfer covered only part of the requested population: "+sample.Presentation.ReadyInstances+" / "+count+"; "+sample.Presentation.LastFault);
