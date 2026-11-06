@@ -3,6 +3,19 @@
   "version": "0.1.0",
   "displayName": "Culling System DOTS",
   "description": "Unity compute visibility baking with CPU Jobs/Burst fallback and ECS rendering integration.",
+  "license": "MIT",
+  "author": {
+    "name": "vertoker",
+    "url": "https://github.com/vertoker"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vertoker/culling-system-dots.git",
+    "directory": "Assets/CullingSystemDOTS"
+  },
+  "documentationUrl": "https://github.com/vertoker/culling-system-dots/blob/master/Assets/CullingSystemDOTS/Documentation~/Setup.md",
+  "changelogUrl": "https://github.com/vertoker/culling-system-dots/blob/master/Assets/CullingSystemDOTS/CHANGELOG.md",
+  "licensesUrl": "https://github.com/vertoker/culling-system-dots/blob/master/Assets/CullingSystemDOTS/LICENSE.md",
   "unity": "6000.6",
   "dependencies": {
     "com.unity.entities": "6.6.0",

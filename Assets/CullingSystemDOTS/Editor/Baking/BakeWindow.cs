@@ -23,7 +23,7 @@ namespace CullingSystemDOTS.Editor.Baking
         }
         private void OnGUI()
         {
-            bool running = controller?.Status == BakeControllerStatus.Running;
+            bool running = controller?.Status == BakeControllerStatus.Running || controller?.Status == BakeControllerStatus.Publishing;
             EditorGUILayout.LabelField("Culling System DOTS",EditorStyles.boldLabel);
             using (new EditorGUI.DisabledScope(running))
             {
@@ -51,13 +51,13 @@ namespace CullingSystemDOTS.Editor.Baking
             }
             EditorGUILayout.Space();
             using (new EditorGUI.DisabledScope(volume == null || settings == null || running || EditorApplication.isPlayingOrWillChangePlaymode))
-                if (GUILayout.Button("Bake")) Run(() => { controller?.Dispose(); controller = new BakeController(volume,settings); controller.Start(); autoPublish = true; error = null; validity = null; });
+                if (GUILayout.Button("Bake")) Run(() => { controller?.Dispose(); controller = new BakeController(volume,settings); controller.StartIncremental(); autoPublish = true; error = null; validity = null; });
             if (running && GUILayout.Button("Cancel")) Run(() => { autoPublish = false; controller.Cancel(); });
             if (controller != null)
             {
                 EditorGUILayout.LabelField("Backend",controller.BackendName);
                 if (!string.IsNullOrEmpty(controller.FallbackReason)) EditorGUILayout.HelpBox("Restarted on CPU: "+controller.FallbackReason,MessageType.Warning);
-                EditorGUI.ProgressBar(EditorGUILayout.GetControlRect(false,20),controller.Progress,controller.Status.ToString());
+                EditorGUI.ProgressBar(EditorGUILayout.GetControlRect(false,20),controller.Progress,controller.ProgressMessage);
                 if (controller.Status == BakeControllerStatus.Ready && GUILayout.Button("Save completed bake")) Run(Publish);
             }
             using (new EditorGUI.DisabledScope(running || volume == null || settings == null))
@@ -68,13 +68,14 @@ namespace CullingSystemDOTS.Editor.Baking
         private void UpdateBake()
         {
             if (controller == null) return;
-            if (controller.Status == BakeControllerStatus.Running) Run(controller.Tick);
+            if (controller.Status == BakeControllerStatus.Running || controller.Status == BakeControllerStatus.Publishing) Run(controller.Tick);
             if (autoPublish && controller.Status == BakeControllerStatus.Ready) { autoPublish = false; Run(Publish); }
+            if (controller.Status == BakeControllerStatus.Published) validity = "Bake saved and assigned to the volume.";
             Repaint();
         }
         private void Publish()
         {
-            controller.Publish(outputPath); validity = "Bake saved and assigned to the volume."; error = null;
+            controller.BeginPublish(outputPath); validity = null; error = null;
         }
         private void Run(Action action) { try { action(); } catch (Exception failure) { autoPublish = false; error = failure.Message; } }
     }

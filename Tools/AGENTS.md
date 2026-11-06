@@ -13,3 +13,9 @@ tooling and distribution contracts.
   untrusted paths into shell commands or use broad cleanup patterns on the repository root.
 
 Run `python -m unittest discover -s Tools/tests -v` for affected tooling/layout changes.
+
+`python Tools/ValidateAgentDocs.py` checks instruction coverage, parent navigation, local Markdown
+links/casing/anchors, skill metadata/catalog entries, client-independent entry points and cumulative
+instruction size. It uses only Python's standard library and works from another launch directory.
+Use `--root <checkout>` for an explicit repository. Static checks cover the maintained Markdown
+subset; they do not certify prose meaning, external URLs, or runtime correctness.

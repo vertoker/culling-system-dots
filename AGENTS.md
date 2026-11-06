@@ -66,6 +66,7 @@ not assumptions imported from another project.
 | Maintainer docs, plans and validation evidence | [Docs](Docs/AGENTS.md) |
 | Root project package configuration | [Packages](Packages/AGENTS.md) |
 | Development project settings | [Project settings](ProjectSettings/AGENTS.md) |
+| Portable CI checks | [GitHub automation](.github/AGENTS.md) |
 
 ## Completion
 
@@ -73,3 +74,5 @@ Run the checks appropriate to the change and report observed results, failures a
 Old reports are historical evidence, not a fresh run. Documentation-only changes need document
 and link checks, not a full Unity suite. Give manual steps when a remaining behavior requires
 visual inspection. Never claim a test, build, platform or performance result that was not observed.
+Run `python Tools/ValidateAgentDocs.py` after instruction/documentation changes. It checks the
+maintained Markdown subset and local references; it does not fetch external URLs or prove behavior.

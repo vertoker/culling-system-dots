@@ -13,6 +13,12 @@ namespace CullingSystemDOTS.Editor.Baking
         private struct Entry { public Renderer Renderer; public int Group, Source;  }
         public static BakeSnapshot Capture(BakeSnapshotRequest request)
         {
+            BakeSnapshot result = null;
+            foreach (float ignored in CaptureSteps(request,value => result = value)) { }
+            return result;
+        }
+        internal static IEnumerable<float> CaptureSteps(BakeSnapshotRequest request, Action<BakeSnapshot> done)
+        {
             if (request == null || request.Groups == null || request.Samples == null || request.Profile != BakeInputProfile.ComputeSoftwareInput)
                 throw new ArgumentException("A complete snapshot request is required.");
             if (request.Groups.Length > ushort.MaxValue) throw new ArgumentException("Too many bake groups.");
@@ -27,6 +33,7 @@ namespace CullingSystemDOTS.Editor.Baking
                 groupKeys[g] = group.Key;
                 foreach (var renderer in group.Renderers ?? Array.Empty<Renderer>())
                 {
+                    if ((entries.Count & 63) == 0) yield return 0;
                     if (renderer == null || mapping.ContainsKey(renderer)) continue;
                     mapping.Add(renderer, g); entries.Add(new Entry { Renderer = renderer, Group = g, Source = entries.Count });
                 }
@@ -52,8 +59,10 @@ namespace CullingSystemDOTS.Editor.Baking
             var cachedGeometry = new Dictionary<(Mesh, int), int>();
             try
             {
-                foreach (var entry in entries)
+                for (int entryIndex = 0; entryIndex < entries.Count; entryIndex++)
                 {
+                    var entry = entries[entryIndex];
+                    yield return (float)entryIndex/Math.Max(1,entries.Count);
                     var renderer = entry.Renderer; Mesh mesh;
                     if (renderer is SkinnedMeshRenderer skinned)
                     {
@@ -85,8 +94,13 @@ namespace CullingSystemDOTS.Editor.Baking
                         }
                         float3 min = new float3(float.PositiveInfinity), max = new float3(float.NegativeInfinity);
                         var item = geometry[index];
-                        for (int i = 0; i < item.IndexCount; i++)
+                        // Validation hashes all source vertices/indices/transforms again. Bounds are
+                        // derived data: reuse them only in this non-tracing comparison snapshot.
+                        bool reuseBounds = request.ValidationBounds != null && instances.Count < request.ValidationBounds.Length;
+                        if (reuseBounds) { min = request.ValidationBounds[instances.Count].BoundsMin; max = request.ValidationBounds[instances.Count].BoundsMax; }
+                        for (int i = 0; !reuseBounds && i < item.IndexCount; i++)
                         {
+                            if ((i & 4095) == 0) yield return (float)entryIndex/Math.Max(1,entries.Count);
                             float3 point = matrix.MultiplyPoint3x4(vertices[item.VertexOffset + indices[item.IndexOffset + i]]);
                             min = math.min(min, point); max = math.max(max, point);
                         }
@@ -97,7 +111,7 @@ namespace CullingSystemDOTS.Editor.Baking
                             DoubleSided = policy.DoubleSided ? (byte)1 : (byte)0 });
                     }
                 }
-                return new BakeSnapshot(vertices.ToArray(), indices.ToArray(), geometry.ToArray(), instances.ToArray(), groupKeys, request.Samples, request);
+                done(new BakeSnapshot(vertices.ToArray(), indices.ToArray(), geometry.ToArray(), instances.ToArray(), groupKeys, request.Samples, request));
             }
             finally { foreach (var mesh in baked.Values) UnityEngine.Object.DestroyImmediate(mesh); }
         }

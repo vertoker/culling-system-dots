@@ -11,11 +11,11 @@ with Unity's BlobAssetStore. Scene object GlobalObjectId produces a stable insta
 identity independent of the shared bake identity. Unsaved editor fixtures use the
 object's session identity until they are saved.
 
-The binding baking system consumes the stock renderer baker's temporary mapping
-for both MeshRenderer and SkinnedMeshRenderer. It records all generated graphics
-entities, including additional material entities, in a remappable Entity buffer.
-The local Graphics fork exposes these existing temporary mapping types; no private
-reflection or legacy assembly is needed by production Bakers or runtime code.
+The binding baking system uses the public `AdditionalEntitiesBakingData` buffer and
+filters entries by renderer authoring identity and `MaterialMeshInfo`. It records
+primary and additional graphics entities, including material/LOD entities, in a
+remappable Entity buffer. Entities Graphics is the unmodified UPM package; no local
+fork, internal renderer baking types or private reflection is required.
 
 `CullingVolume`, `CullingGroupDefinition` and `CullingBakedRenderBinding` are unmanaged
 runtime components. Their blob and Entity references survive SubScene serialization
@@ -54,6 +54,8 @@ surviving view hashes dirty. Registration/data/configuration changes invalidate 
 work; camera layer/radius edits retain the documented legacy hash behavior unless the
 caller invokes SetDirty. Inversion invokes SetDirty automatically, like the source setter.
 
-Stage 3's combined Editor gate passes: 221 EditMode and 10 PlayMode tests, including
-parallel independent candidates with ordered replay. Deformation, arbitrary custom camera
-stacks, Player platforms and transform-boundary precision require broader acceptance.
+Functional tests cover parallel independent candidates with ordered replay and the
+documented streaming/rendering scenarios. Development-repository validation reports
+record the tested revisions and environments. See [Compatibility](Compatibility.md)
+for current scope; deformation, custom camera stacks and other platforms need their
+own acceptance evidence.

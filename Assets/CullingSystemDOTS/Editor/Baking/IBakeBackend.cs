@@ -3,7 +3,7 @@ using System;
 namespace CullingSystemDOTS.Editor.Baking
 {
     public enum BakeSessionStatus { Pending, Running, Completed, Cancelled, Faulted }
-    public struct BakeBackendOptions { public int MemoryBudgetBytes, MaxCellsPerBatch; }
+    public struct BakeBackendOptions { public int MemoryBudgetBytes, MaxCellsPerBatch; internal bool BackgroundPreparation; }
     public interface IBakeSession : IDisposable
     {
         BakeSessionStatus Status { get; }

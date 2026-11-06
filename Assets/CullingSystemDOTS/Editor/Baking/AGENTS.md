@@ -12,8 +12,12 @@ Read [the Editor guide](../AGENTS.md) first. Backend instructions are in
   Cpu must not create GPU work. Cancellation is terminal, not a fallback trigger.
 - Publish only completed results that still match current inputs. Output replacement is atomic;
   cancellation/error/invalidation preserves prior asset bytes and GUID. Never save user scenes.
-- Keep progress and cancellation meaningful. Scheduled phases advance on Editor updates, but
-  synchronous capture/BVH/publication phases can block repaint; do not imply full responsiveness.
+- Keep the final source fingerprint check adjacent to the atomic write, without another update or
+  worker gap. Undo/hierarchy notifications do not catch all scripted edits. Validation-only snapshots
+  may reuse derived bounds, but must reread/hash all source data and must never reach a tracer.
+- Keep progress and cancellation meaningful. The window uses incremental capture/publication and
+  owned background numeric work. Join workers before disposing borrowed data. Individual Unity
+  APIs, copies/uploads and final atomic import can still delay repaint; do not promise a hard limit.
 - Backend and postprocess changes must preserve group mapping, transparent/opaque semantics and
   deterministic hit ordering defined by this package. External output is not automatically correct.
 

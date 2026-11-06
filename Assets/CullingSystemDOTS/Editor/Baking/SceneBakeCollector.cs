@@ -20,6 +20,7 @@ namespace CullingSystemDOTS.Editor.Baking
         public uint4 VolumeId;
         public BakeMergeMetadata Metadata;
         public string Fingerprint;
+        internal BakeInstance[] ValidationBounds;
         public void Dispose() { Snapshot?.Dispose(); Snapshot = null; }
     }
     public static class SceneBakeCollector
@@ -30,6 +31,15 @@ namespace CullingSystemDOTS.Editor.Baking
             using var current = Capture(volume,settings); return current.Fingerprint == volume.Bake.InputFingerprint;
         }
         public static CollectedBakeInput Capture(CullingVolumeAuthoring volume, BakeSettingsAsset settings)
+        {
+            using var capture = BeginCapture(volume, settings);
+            return capture.Complete();
+        }
+        public static BakeCaptureOperation BeginCapture(CullingVolumeAuthoring volume, BakeSettingsAsset settings) =>
+            new BakeCaptureOperation(done => CaptureSteps(volume, settings, done, null));
+        internal static BakeCaptureOperation BeginValidation(CullingVolumeAuthoring volume, BakeSettingsAsset settings, BakeInstance[] bounds) =>
+            new BakeCaptureOperation(done => CaptureSteps(volume, settings, done, bounds));
+        private static IEnumerable<float> CaptureSteps(CullingVolumeAuthoring volume, BakeSettingsAsset settings, Action<CollectedBakeInput> done, BakeInstance[] bounds)
         {
             if (volume == null || settings == null) throw new ArgumentNullException();
             if (settings.InputProfile != BakeInputProfile.ComputeSoftwareInput || (uint)settings.ExecutionMode > 2 || settings.Resolution <= 0 || !math.isfinite(settings.Far) || settings.Far <= 0 ||
@@ -42,10 +52,12 @@ namespace CullingSystemDOTS.Editor.Baking
                 var scene = SceneManager.GetSceneAt(i);
                 if (scene.isLoaded && scene != volume.gameObject.scene) sceneRoots.AddRange(scene.GetRootGameObjects());
             }
+            yield return .01f;
             var roots = sceneRoots.ToArray();
             var groups = roots.SelectMany(r=>r.GetComponentsInChildren<CullingGroupAuthoring>(true)).Where(g=>g.Volume == volume).OrderBy(g=>g.GroupIndex).ToArray();
             if (groups.Length > ushort.MaxValue) throw new ArgumentException("At most 65535 original groups are supported.");
             for (int i = 0; i < groups.Length; i++) if (groups[i].GroupIndex != i) throw new ArgumentException("Group indices must be unique and contiguous, including empty groups.");
+            yield return .02f;
             var objectId = GlobalObjectId.GetGlobalObjectIdSlow(volume);
             string identity = objectId.targetObjectId == 0 ? volume.GetEntityId().ToString() : objectId.ToString();
             uint4 id = volume.Bake == null ? new Unity.Entities.Hash128(UnityEngine.Hash128.Compute(identity).ToString()).Value : volume.Bake.VolumeId;
@@ -53,6 +65,7 @@ namespace CullingSystemDOTS.Editor.Baking
             bool Included(Renderer renderer) => renderer != null && (renderer.GetComponent<CullingBakeRendererTag>() == null || !renderer.GetComponent<CullingBakeRendererTag>().ExcludeFromBake);
             for (int i = 0; i < groups.Length; i++)
             {
+                if ((i & 63) == 0) yield return .02f + .03f*i/Math.Max(1,groups.Length);
                 mapping[i] = new CullingGroupKey(id,(ushort)i);
                 sources[i] = new BakeGroupSource { Key = mapping[i], Renderers = (groups[i].Renderers ?? Array.Empty<Renderer>()).Where(Included).ToArray() };
             }
@@ -91,6 +104,7 @@ namespace CullingSystemDOTS.Editor.Baking
             var fullGrid = new float3[(int)total]; Vector3 half = rawGrid*.5f;
             for (int i = 0; i < fullGrid.Length; i++)
             {
+                if ((i & 255) == 0) yield return .05f + .1f*i/Math.Max(1,fullGrid.Length);
                 int x = i%(int)rawGrid.x, y = (i/(int)rawGrid.x)%(int)rawGrid.y, z = i/((int)rawGrid.x*(int)rawGrid.y);
                 Vector3 local = settings.CellSize/2 + new Vector3(x*settings.CellSize.x,y*settings.CellSize.y,z*settings.CellSize.z) -
                     new Vector3(half.x*settings.CellSize.x,half.y*settings.CellSize.y,half.z*settings.CellSize.z);
@@ -100,22 +114,32 @@ namespace CullingSystemDOTS.Editor.Baking
             // Source CullAdditionalOccluders uses a world-axis-aligned box, regardless of
             // volume rotation, and its HashSet removes duplicate renderer references.
             var additionalBounds = new Bounds(volume.transform.position,volume.Size);
-            var snapshot = MeshSnapshotExtractor.Capture(new BakeSnapshotRequest { Profile = settings.InputProfile, Groups = sources,
+            BakeSampleLocation[] samples = null;
+            foreach (float progress in SamplingSnapshotExtractor.CaptureSteps(fullGrid,providers,Decision,value => samples = value))
+                yield return .15f + .1f*progress;
+            BakeSnapshot snapshot = null;
+            var request = new BakeSnapshotRequest { Profile = settings.InputProfile, Groups = sources,
                 AdditionalOccluders = inputs == null ? Array.Empty<Renderer>() : (inputs.AdditionalOccluders ?? Array.Empty<Renderer>())
                     .Where(Included).Where(r=>additionalBounds.Intersects(r.bounds)).Distinct().ToArray(),
-                Samples = SamplingSnapshotExtractor.Capture(fullGrid,providers,Decision),
+                Samples = samples, ValidationBounds = bounds,
                 LodGroups = roots.SelectMany(r=>r.GetComponentsInChildren<LODGroup>()).Where(r=>r.gameObject.activeInHierarchy)
                     .OrderBy(r=>r.GetEntityId()).ToArray(), RenderTransparency = settings.RenderTransparency,
                 Rays = new BakeRaySettings { Width = settings.Resolution, Height = settings.Resolution, Far = settings.Far,
-                    Rotation = new quaternion(rotation.x,rotation.y,rotation.z,rotation.w), CellSize = settings.CellSize } });
+                    Rotation = new quaternion(rotation.x,rotation.y,rotation.z,rotation.w), CellSize = settings.CellSize } };
+            try
+            {
+                foreach (float progress in MeshSnapshotExtractor.CaptureSteps(request,value => snapshot = value)) yield return .25f + .55f*progress;
             var result = new CollectedBakeInput { Snapshot = snapshot, Mapping = mapping, VolumeId = id,
+                ValidationBounds = bounds ?? snapshot.Instances.ToArray(),
                 Metadata = settings.InputProfile == BakeInputProfile.ComputeSoftwareInput ? BakeMergeMetadata.NativeDefault : BakeMergeMetadata.ComputeNeighbors,
                 Layout = new CullingBakeLayout { CellCount = rounded, CellSize = settings.CellSize,
                     BakeOrientation = new quaternion(rotation.x,rotation.y,rotation.z,rotation.w) } };
-            try { result.Fingerprint = Fingerprint(result,settings,volume.Size); return result; }
-            catch { result.Dispose(); throw; }
+                foreach (float progress in FingerprintSteps(result,settings,volume.Size,value => result.Fingerprint = value)) yield return .8f + .2f*progress;
+                done(result); snapshot = null;
+            }
+            finally { snapshot?.Dispose(); }
         }
-        private static string Fingerprint(CollectedBakeInput input, BakeSettingsAsset settings, Vector3 size)
+        private static IEnumerable<float> FingerprintSteps(CollectedBakeInput input, BakeSettingsAsset settings, Vector3 size, Action<string> done)
         {
             using var hash = SHA256.Create(); using var sink = new CryptoStream(Stream.Null,hash,CryptoStreamMode.Write);
             using var writer = new BinaryWriter(sink);
@@ -129,18 +153,24 @@ namespace CullingSystemDOTS.Editor.Baking
             var s = input.Snapshot; F4(s.Rays.Rotation.value);
             writer.Write(s.Groups.Length);
             foreach (var key in s.Groups) { writer.Write(key.VolumeId.x); writer.Write(key.VolumeId.y); writer.Write(key.VolumeId.z); writer.Write(key.VolumeId.w); writer.Write(key.GroupIndex); }
-            writer.Write(s.Vertices.Length); foreach (var vertex in s.Vertices) F3(vertex);
-            writer.Write(s.Indices.Length); foreach (int index in s.Indices) writer.Write(index);
+            writer.Write(s.Vertices.Length);
+            for (int i = 0; i < s.Vertices.Length; i++) { F3(s.Vertices[i]); if ((i & 1023) == 0) yield return .3f*i/Math.Max(1,s.Vertices.Length); }
+            writer.Write(s.Indices.Length);
+            for (int i = 0; i < s.Indices.Length; i++) { writer.Write(s.Indices[i]); if ((i & 4095) == 0) yield return .3f + .3f*i/Math.Max(1,s.Indices.Length); }
             writer.Write(s.Geometry.Length); foreach (var g in s.Geometry) { writer.Write(g.VertexOffset); writer.Write(g.VertexCount); writer.Write(g.IndexOffset); writer.Write(g.IndexCount); }
             writer.Write(s.Instances.Length);
-            foreach (var instance in s.Instances)
+            for (int i = 0; i < s.Instances.Length; i++)
             {
+                if ((i & 255) == 0) yield return .6f + .3f*i/Math.Max(1,s.Instances.Length);
+                var instance = s.Instances[i];
                 writer.Write(instance.Geometry); writer.Write(instance.GroupIndex); writer.Write(instance.Transparent); writer.Write(instance.DoubleSided);
                 F4(instance.LocalToWorld.c0); F4(instance.LocalToWorld.c1); F4(instance.LocalToWorld.c2); F4(instance.LocalToWorld.c3);
                 F4(instance.WorldToLocal.c0); F4(instance.WorldToLocal.c1); F4(instance.WorldToLocal.c2); F4(instance.WorldToLocal.c3); F3(instance.BoundsMin); F3(instance.BoundsMax);
             }
-            writer.Write(s.Samples.Length); foreach (var sample in s.Samples) { writer.Write(sample.FullGridIndex); F3(sample.Position); }
-            writer.Flush(); sink.FlushFinalBlock(); return Convert.ToBase64String(hash.Hash);
+            writer.Write(s.Samples.Length);
+            for (int i = 0; i < s.Samples.Length; i++)
+            { var sample = s.Samples[i]; writer.Write(sample.FullGridIndex); F3(sample.Position); if ((i & 1023) == 0) yield return .9f + .1f*i/Math.Max(1,s.Samples.Length); }
+            writer.Flush(); sink.FlushFinalBlock(); done(Convert.ToBase64String(hash.Hash));
         }
     }
 }

@@ -90,5 +90,51 @@ namespace CullingSystemDOTS.Tests
             { session.Tick(); Assert.That(session.Progress, Is.GreaterThanOrEqualTo(previous)); previous = session.Progress; yield return null; }
             Assert.That(session.Status, Is.EqualTo(BakeSessionStatus.Completed)); Assert.That(((BakeJobHandle)session).RanInBurst, Is.True);
         }
+
+        [Test]
+        public void BackgroundPreparationChecksBudgetBeforeBuildingAndJoinsOnCancellation()
+        {
+            using var snapshot = Snapshot();
+            using (var insufficient = new JobsBakeBackend().Begin(snapshot,new BakeBackendOptions { MemoryBudgetBytes = 1, BackgroundPreparation = true }))
+            {
+                Assert.Throws<InvalidOperationException>(() => insufficient.Tick());
+                Assert.That(insufficient.Status, Is.EqualTo(BakeSessionStatus.Faulted));
+                Assert.That(((BakeJobHandle)insufficient).NativeBytes, Is.Zero);
+            }
+            using var cancelled = new JobsBakeBackend().Begin(snapshot,new BakeBackendOptions { BackgroundPreparation = true });
+            cancelled.Tick(); cancelled.Cancel();
+            Assert.That(cancelled.Status, Is.EqualTo(BakeSessionStatus.Cancelled));
+            Assert.That(((BakeJobHandle)cancelled).NativeBytes, Is.Zero);
+            Assert.Throws<OperationCanceledException>(() => cancelled.Complete());
+        }
+
+        [Test]
+        public void SnapshotDisposalJoinsBackgroundBuilderBeforeFreeingItsArrays()
+        {
+            var snapshot = Snapshot();
+            using var session = new JobsBakeBackend().Begin(snapshot,new BakeBackendOptions { BackgroundPreparation = true });
+            session.Tick(); snapshot.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => session.Complete());
+            Assert.That(session.Status, Is.EqualTo(BakeSessionStatus.Faulted));
+            Assert.That(((BakeJobHandle)session).NativeBytes, Is.Zero);
+        }
+
+        [TestCase(false)] [TestCase(true)]
+        public void BackgroundPreparationMatchesTheDirectBackend(bool gpu)
+        {
+            if (gpu && !CullingSystemDOTS.Editor.Baking.Gpu.ComputeBakeBackend.IsSupported) Assert.Ignore("Compute/readback unavailable.");
+            using var snapshot = Snapshot();
+            IBakeBackend backend = gpu ? (IBakeBackend)new CullingSystemDOTS.Editor.Baking.Gpu.ComputeBakeBackend() : new JobsBakeBackend();
+            using var direct = backend.Begin(snapshot); var expected = direct.Complete();
+            using var background = backend.Begin(snapshot,new BakeBackendOptions { BackgroundPreparation = true, MaxCellsPerBatch = 1 });
+            var actual = background.Complete();
+            Assert.That(actual.Length, Is.EqualTo(expected.Length));
+            for (int i = 0; i < actual.Length; i++)
+            {
+                Assert.That(actual[i].FullGridIndex, Is.EqualTo(expected[i].FullGridIndex));
+                Assert.That(actual[i].NeighborMask, Is.EqualTo(expected[i].NeighborMask));
+                CollectionAssert.AreEqual(expected[i].Groups,actual[i].Groups);
+            }
+        }
     }
 }

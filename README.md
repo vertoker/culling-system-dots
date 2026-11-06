@@ -24,3 +24,7 @@ Start with [AGENTS.md](AGENTS.md) for repository navigation and working rules. E
 directory has local instructions. The package's [own guide](Assets/CullingSystemDOTS/AGENTS.md)
 also works after Git URL installation. Reusable, client-independent procedures are listed in
 [.agents/README.md](.agents/README.md); no workflow plugin is required.
+
+Run `python Tools/ValidateAgentDocs.py` for maintained documentation and
+`python -m unittest discover -s Tools/tests -v` for portable tooling checks. GitHub Actions runs
+both on a clean checkout. The repository and installable package use the [MIT license](LICENSE).

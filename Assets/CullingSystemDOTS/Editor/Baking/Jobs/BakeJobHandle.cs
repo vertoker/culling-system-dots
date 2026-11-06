@@ -11,6 +11,7 @@ namespace CullingSystemDOTS.Editor.Baking.Jobs
         private BakeSnapshot snapshot;
         private readonly BakeBackendOptions options;
         private NativeBvh bvh;
+        private BvhBuildOperation preparation;
         private long TreeBytes => bvh == null ? 0 : bvh.Bytes;
         private NativeArray<uint> tileBits, tileNeighbors, cellBits, cellNeighbors;
         private NativeArray<byte> burstFlags, tileErrors;
@@ -39,6 +40,11 @@ namespace CullingSystemDOTS.Editor.Baking.Jobs
             {
                 if (Status == BakeSessionStatus.Pending)
                 {
+                    if (options.BackgroundPreparation)
+                    {
+                        if (preparation == null) { preparation = new BvhBuildOperation(snapshot,options); return; }
+                        if (!preparation.IsCompleted) return;
+                    }
                     Initialize(); Status = BakeSessionStatus.Running;
                     if (total == 0) Finish(); else Schedule();
                 }
@@ -58,7 +64,7 @@ namespace CullingSystemDOTS.Editor.Baking.Jobs
         }
         private void Initialize()
         {
-            BakeNumericValidation.Validate(snapshot);
+            if (preparation == null) BakeNumericValidation.Validate(snapshot);
             var settings = snapshot.Rays;
             if (settings.Width <= 0 || settings.Height <= 0 || !math.isfinite(settings.Far) || settings.Far <= 0 ||
                 !math.all(math.isfinite(settings.Rotation.value))) throw new ArgumentException("Finite positive ray settings required.");
@@ -70,7 +76,8 @@ namespace CullingSystemDOTS.Editor.Baking.Jobs
             long available = budget - snapshotBytes - estimate;
             if (available < perCell && total > 0) throw new InvalidOperationException("Bake native memory budget cannot fit snapshot, BVH and one cell tile batch.");
             batchSize = (int)math.min(options.MaxCellsPerBatch == 0 ? 8 : options.MaxCellsPerBatch, math.min(total,math.max(1,available/perCell)));
-            bvh = BvhBuilder.Build(snapshot);
+            bvh = preparation == null ? BvhBuilder.Build(snapshot) : preparation.TakeResult();
+            preparation?.Dispose(); preparation = null;
             NativeBytes = TreeBytes; PeakNativeBytes = NativeBytes;
             result = new BakeCellResult[total];
         }
@@ -148,7 +155,7 @@ namespace CullingSystemDOTS.Editor.Baking.Jobs
         private void Cleanup()
         {
             try { dependency.Complete(); }
-            finally { dependency = default; DisposeBatch(); bvh?.Dispose(); bvh = null; NativeBytes = 0; }
+            finally { dependency = default; preparation?.Dispose(); preparation = null; DisposeBatch(); bvh?.Dispose(); bvh = null; NativeBytes = 0; }
         }
         private void EnsureAlive() { if (disposed) throw new ObjectDisposedException(nameof(BakeJobHandle)); }
         public void Dispose()

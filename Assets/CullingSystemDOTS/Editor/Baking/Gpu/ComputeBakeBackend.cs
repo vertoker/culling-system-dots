@@ -28,6 +28,7 @@ namespace CullingSystemDOTS.Editor.Baking.Gpu
         private BakeSnapshot snapshot;
         private readonly BakeBackendOptions options;
         private ComputeShader shader;
+        private BvhBuildOperation preparation;
         private ComputeBuffer nodes,triangles,tlas,instances,samples,output;
         private AsyncGPUReadbackRequest request;
         private bool pending,readbackReady,readbackError,disposed;
@@ -53,6 +54,12 @@ namespace CullingSystemDOTS.Editor.Baking.Gpu
                 _ = snapshot.Samples.Length;
                 if (Status == BakeSessionStatus.Pending)
                 {
+                    if (options.BackgroundPreparation)
+                    {
+                        if (!ComputeBakeBackend.IsSupported) throw new NotSupportedException("Compute shaders and asynchronous GPU readback are required.");
+                        if (preparation == null) { preparation = new BvhBuildOperation(snapshot,options,true); return; }
+                        if (!preparation.IsCompleted) return;
+                    }
                     Initialize(); Status = BakeSessionStatus.Running;
                     if (total == 0) Finish(); else Dispatch();
                 }
@@ -69,7 +76,7 @@ namespace CullingSystemDOTS.Editor.Baking.Gpu
         }
         private void Initialize()
         {
-            BakeNumericValidation.Validate(snapshot);
+            if (preparation == null) BakeNumericValidation.Validate(snapshot);
             if (snapshot.Profile != BakeInputProfile.ComputeSoftwareInput) throw new ArgumentException("GPU tracing requires the compute snapshot profile.");
             var rays = snapshot.Rays;
             if (rays.Width <= 0 || rays.Height <= 0 || rays.Width > 65535*8 || rays.Height > 65535*8 ||
@@ -91,8 +98,9 @@ namespace CullingSystemDOTS.Editor.Baking.Gpu
             if (asset == null) throw new InvalidOperationException("The Unity compute bake shader is missing.");
             shader = Object.Instantiate(asset); kernel = shader.FindKernel("CSMain");
             if (!shader.IsSupported(kernel)) throw new NotSupportedException("The bake compute kernel is unsupported on this graphics device.");
-            using (var data = BvhBuilder.Build(snapshot))
+            using (var data = preparation == null ? BvhBuilder.Build(snapshot) : preparation.TakeResult())
             {
+                preparation?.Dispose(); preparation = null;
                 using var packedNodes = new NativeArray<GpuNode>(data.Nodes.Length, Allocator.Temp);
                 var nodeWriter = packedNodes;
                 for (int i = 0; i < data.Nodes.Length; i++)
@@ -175,6 +183,7 @@ namespace CullingSystemDOTS.Editor.Baking.Gpu
         { samples?.Dispose(); samples = null; output?.Dispose(); output = null; readback = null; readbackReady = false; NativeBytes = treeBytes; }
         private void Cleanup()
         {
+            preparation?.Dispose(); preparation = null;
             ++generation;
             try { if (pending) request.WaitForCompletion(); }
             finally

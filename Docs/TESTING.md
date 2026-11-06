@@ -21,6 +21,11 @@ fixtures; broaden to coupled assemblies when contracts or lifecycle boundaries c
 prefer a regression that fails for the original cause. Avoid tests that only duplicate the
 implementation, match prose, or test mocks rather than behavior.
 
+For Markdown/instruction changes, run `python Tools/ValidateAgentDocs.py`. The portable CI workflow
+also runs the validator and Python suites on a clean checkout. Link/language checks are static
+heuristics; inspect changed meaning and external links separately. CI does not run Unity or claim
+graphics/platform support.
+
 ## Unity runs
 
 Use the connected Editor test runner through Coplay MCP. After source edits, complete import and

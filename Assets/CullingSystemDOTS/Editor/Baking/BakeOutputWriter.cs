@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using CullingSystemDOTS.Core;
 using CullingSystemDOTS.Runtime;
 using Unity.Mathematics;
@@ -14,6 +15,11 @@ namespace CullingSystemDOTS.Editor.Baking
         public static CullingBakeAsset CreateAsset(BakeCellResult[] results, uint4 volumeId, CullingBakeLayout layout,
             CullingGroupKey[] groups, BakeMergeMetadata metadata)
         {
+            return CreatePreparedAsset(PrepareResults(results,volumeId,layout,groups,metadata),groups);
+        }
+        internal static LegacyBakeSource PrepareResults(BakeCellResult[] results, uint4 volumeId, CullingBakeLayout layout,
+            CullingGroupKey[] groups, BakeMergeMetadata metadata, CancellationToken cancellation = default)
+        {
             if (results == null || groups == null) throw new ArgumentNullException();
             if ((uint)metadata > (uint)BakeMergeMetadata.PreserveMergeMasks) throw new ArgumentOutOfRangeException(nameof(metadata));
             double count = (double)layout.CellCount.x*layout.CellCount.y*layout.CellCount.z;
@@ -26,6 +32,7 @@ namespace CullingSystemDOTS.Editor.Baking
                 MergeBitmask = 0 };
             foreach (var cell in results)
             {
+                cancellation.ThrowIfCancellationRequested();
                 if (cell == null || cell.Groups == null || (uint)cell.FullGridIndex >= (uint)cells.Length || !seen.Add(cell.FullGridIndex))
                     throw new ArgumentException("Each active sample must have a unique valid FullGridIndex and group set.");
                 var encoded = Encode(cell.Groups,groups.Length);
@@ -33,8 +40,11 @@ namespace CullingSystemDOTS.Editor.Baking
                 encoded.MergeBitmask = metadata == BakeMergeMetadata.NativeDefault ? uint.MaxValue : cell.NeighborMask;
                 cells[cell.FullGridIndex] = encoded;
             }
-            using var imported = LegacyBakeImporter.Import(new LegacyBakeSource { VolumeId = volumeId,
-                Layout = layout, Cells = cells, DeclaredGroupCount = groups.Length },groups);
+            return new LegacyBakeSource { VolumeId = volumeId, Layout = layout, Cells = cells, DeclaredGroupCount = groups.Length };
+        }
+        private static CullingBakeAsset CreatePreparedAsset(LegacyBakeSource source, CullingGroupKey[] groups)
+        {
+            using var imported = LegacyBakeImporter.Import(source,groups);
             if (!imported.Success) throw new ArgumentException(imported.Diagnostic);
             imported.Asset.name = "Culling System DOTS Bake";
             return imported.Asset;
@@ -82,6 +92,10 @@ namespace CullingSystemDOTS.Editor.Baking
         private static CullingBakeAsset SaveResults(string path, BakeCellResult[] results, uint4 volumeId, CullingBakeLayout layout,
             CullingGroupKey[] groups, BakeMergeMetadata metadata, string inputFingerprint = null)
         {
+            return SavePrepared(path,PrepareResults(results,volumeId,layout,groups,metadata),groups,inputFingerprint);
+        }
+        internal static CullingBakeAsset SavePrepared(string path, LegacyBakeSource source, CullingGroupKey[] groups, string inputFingerprint)
+        {
             string root = Path.GetFullPath("Assets") + Path.DirectorySeparatorChar;
             string full = Path.GetFullPath(path ?? throw new ArgumentNullException(nameof(path)));
             if (!full.StartsWith(root,StringComparison.OrdinalIgnoreCase) || !full.EndsWith(".asset",StringComparison.OrdinalIgnoreCase))
@@ -95,7 +109,7 @@ namespace CullingSystemDOTS.Editor.Baking
                 if (previous == null) throw new ArgumentException("Existing output must be a CullingBakeAsset.");
                 if (EditorUtility.IsDirty(previous)) throw new InvalidOperationException("Output asset has unsaved edits.");
             }
-            var asset = CreateAsset(results,volumeId,layout,groups,metadata);
+            var asset = CreatePreparedAsset(source,groups);
             asset.SetInputFingerprint(inputFingerprint);
             string parent = Path.GetDirectoryName(path).Replace('\\','/'), stagingName = "PvsBakeStage_"+Guid.NewGuid().ToString("N");
             string stagingDirectory = parent+"/"+stagingName, stagingPath = stagingDirectory+"/"+Path.GetFileName(path);

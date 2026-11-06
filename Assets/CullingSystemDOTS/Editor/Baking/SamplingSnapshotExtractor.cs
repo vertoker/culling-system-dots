@@ -12,6 +12,13 @@ namespace CullingSystemDOTS.Editor.Baking
         public static BakeSampleLocation[] Capture(IReadOnlyList<float3> fullGrid,
             IReadOnlyList<ICullingSamplingProvider> providers, Func<float3, SamplingDecision> defaultDecision = null)
         {
+            BakeSampleLocation[] result = null;
+            foreach (float ignored in CaptureSteps(fullGrid,providers,defaultDecision,value => result = value)) { }
+            return result;
+        }
+        internal static IEnumerable<float> CaptureSteps(IReadOnlyList<float3> fullGrid,
+            IReadOnlyList<ICullingSamplingProvider> providers, Func<float3, SamplingDecision> defaultDecision, Action<BakeSampleLocation[]> done)
+        {
             if (fullGrid == null || providers == null) throw new ArgumentNullException();
             foreach (var provider in providers)
             {
@@ -21,6 +28,7 @@ namespace CullingSystemDOTS.Editor.Baking
             var active = new List<BakeSampleLocation>();
             for (int i = 0; i < fullGrid.Count; i++)
             {
+                if ((i & 255) == 0) yield return (float)i/Math.Max(1,fullGrid.Count);
                 var position = fullGrid[i];
                 if (!math.all(math.isfinite(position))) throw new ArgumentException("Sampling positions must be finite.");
                 var decision = defaultDecision == null ? SamplingDecision.Continue : defaultDecision(position);
@@ -30,7 +38,7 @@ namespace CullingSystemDOTS.Editor.Baking
                     foreach (var provider in providers) if (!provider.IsActive(position)) { include = false; break; }
                 if (include) active.Add(new BakeSampleLocation { FullGridIndex = i, Position = position });
             }
-            return active.ToArray();
+            done(active.ToArray());
         }
     }
 }

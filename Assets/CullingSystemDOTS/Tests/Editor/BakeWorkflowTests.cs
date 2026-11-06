@@ -135,5 +135,131 @@ namespace CullingSystemDOTS.Tests
             }
             Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Ready)); Assert.That(controller.Progress, Is.EqualTo(1));
         }
+
+        private static void InvokeIncremental(BakeController controller, string method, params object[] arguments)
+        {
+            var entry = typeof(BakeController).GetMethod(method);
+            Assert.That(entry, Is.Not.Null, "The bake window requires a nonblocking " + method + " entry point.");
+            entry.Invoke(controller, arguments);
+        }
+
+        [Test]
+        public void IncrementalStartDefersCaptureAndCanCancelBeforeReadingScene()
+        {
+            SelectMode(BakeExecutionMode.Cpu);
+            using var controller = new BakeController(volume, settings);
+            InvokeIncremental(controller, "StartIncremental");
+            Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Running));
+            Assert.That(controller.Progress, Is.Zero);
+            Assert.That(controller.BackendName, Is.EqualTo("Not started"));
+            controller.Cancel();
+            Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Cancelled));
+            Assert.That(File.Exists(output), Is.False);
+        }
+
+        [Test]
+        public void IncrementalStartFreezesSettingsAndRejectsLaterMergeChangesAtPublication()
+        {
+            SelectMode(BakeExecutionMode.Cpu);
+            using var controller = new BakeController(volume,settings);
+            InvokeIncremental(controller,"StartIncremental");
+            settings.MergeAxes = new[] {Vector3Int.one}; controller.Complete();
+            Assert.Throws<InvalidOperationException>(() => controller.Publish(output));
+            Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Invalidated));
+            Assert.That(File.Exists(output), Is.False);
+        }
+
+        [Test]
+        public void IncrementalPublicationCanCancelWithoutReplacingExistingBytesOrGuid()
+        {
+            SelectMode(BakeExecutionMode.Cpu);
+            using (var initial = new BakeController(volume, settings)) { initial.Start(); initial.Complete(); initial.Publish(output); }
+            byte[] previous = File.ReadAllBytes(output); string guid = AssetDatabase.AssetPathToGUID(output);
+            using var controller = new BakeController(volume, settings); controller.Start(); controller.Complete();
+            InvokeIncremental(controller, "BeginPublish", output);
+            Assert.That(controller.Status.ToString(), Is.EqualTo("Publishing"));
+            CollectionAssert.AreEqual(previous, File.ReadAllBytes(output));
+            controller.Cancel();
+            Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Cancelled));
+            CollectionAssert.AreEqual(previous, File.ReadAllBytes(output));
+            Assert.That(AssetDatabase.AssetPathToGUID(output), Is.EqualTo(guid));
+        }
+
+        [UnityTest]
+        public IEnumerator IncrementalWindowWorkflowPublishesAfterMultipleEditorUpdates()
+        {
+            SelectMode(BakeExecutionMode.Cpu);
+            using var controller = new BakeController(volume, settings);
+            InvokeIncremental(controller, "StartIncremental"); int updates = 0;
+            double deadline = EditorApplication.timeSinceStartup + 20;
+            while (controller.Status == BakeControllerStatus.Running && EditorApplication.timeSinceStartup < deadline)
+            { controller.Tick(); updates++; yield return null; }
+            Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Ready));
+            Assert.That(updates, Is.GreaterThan(1));
+            InvokeIncremental(controller, "BeginPublish", output);
+            Assert.That(File.Exists(output), Is.False);
+            while (controller.Status.ToString() == "Publishing" && EditorApplication.timeSinceStartup < deadline)
+            { controller.Tick(); yield return null; }
+            Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Published));
+            Assert.That(volume.Bake, Is.Not.Null);
+            Assert.That(SceneBakeCollector.IsBakeCurrent(volume, settings), Is.True);
+        }
+
+        [UnityTest]
+        public IEnumerator IncrementalPublicationRejectsChangedGeometryAndKeepsOldOutput()
+        {
+            SelectMode(BakeExecutionMode.Cpu);
+            using (var initial = new BakeController(volume, settings)) { initial.Start(); initial.Complete(); initial.Publish(output); }
+            var previous = File.ReadAllBytes(output);
+            using var controller = new BakeController(volume, settings); controller.Start(); controller.Complete();
+            InvokeIncremental(controller, "BeginPublish", output);
+            var vertices = mesh.vertices; vertices[0] *= 2; mesh.vertices = vertices;
+            double deadline = EditorApplication.timeSinceStartup + 20;
+            while (controller.Status.ToString() == "Publishing" && EditorApplication.timeSinceStartup < deadline)
+            { try { controller.Tick(); } catch (InvalidOperationException) { } yield return null; }
+            Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Invalidated));
+            CollectionAssert.AreEqual(previous, File.ReadAllBytes(output));
+        }
+
+        [UnityTest]
+        public IEnumerator IncrementalPublicationIoFailureRetainsReadyResultsForRetry()
+        {
+            SelectMode(BakeExecutionMode.Cpu);
+            using var controller = new BakeController(volume,settings); controller.Start(); controller.Complete();
+            InvokeIncremental(controller,"BeginPublish","Assets/Missing_" + Guid.NewGuid().ToString("N") + "/Bake.asset");
+            double deadline = EditorApplication.timeSinceStartup + 20;
+            while (controller.Status.ToString() == "Publishing" && EditorApplication.timeSinceStartup < deadline)
+            { try { controller.Tick(); } catch (IOException) { } yield return null; }
+            Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Ready));
+            InvokeIncremental(controller,"BeginPublish",output);
+            while (controller.Status.ToString() == "Publishing" && EditorApplication.timeSinceStartup < deadline)
+            { controller.Tick(); yield return null; }
+            Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Published));
+        }
+
+        [UnityTest]
+        public IEnumerator LateScriptedInputChangesCannotPublishAfterBackgroundEncoding()
+        {
+            SelectMode(BakeExecutionMode.Cpu);
+            using (var initial = new BakeController(volume,settings)) { initial.Start(); initial.Complete(); initial.Publish(output); }
+            var bytes = File.ReadAllBytes(output); string guid = AssetDatabase.AssetPathToGUID(output);
+            yield return null;
+            for (int mutation = 0; mutation < 3; mutation++)
+            {
+                using var controller = new BakeController(volume,settings); controller.Start(); controller.Complete();
+                InvokeIncremental(controller,"BeginPublish",output);
+                double deadline = EditorApplication.timeSinceStartup + 20;
+                while (controller.Status.ToString() == "Publishing" && controller.ProgressMessage != "Writing and importing output asset" && EditorApplication.timeSinceStartup < deadline)
+                { controller.Tick(); yield return null; }
+                Assert.That(controller.ProgressMessage, Is.EqualTo("Writing and importing output asset"));
+                if (mutation == 0) settings.Far -= 1;
+                if (mutation == 1) { var vertices = mesh.vertices; vertices[0] *= 1.1f; mesh.vertices = vertices; }
+                if (mutation == 2) volume.GetComponentInChildren<MeshRenderer>().transform.localPosition += Vector3.right;
+                Assert.Throws<InvalidOperationException>(() => controller.Tick());
+                Assert.That(controller.Status, Is.EqualTo(BakeControllerStatus.Invalidated));
+                CollectionAssert.AreEqual(bytes,File.ReadAllBytes(output));
+                Assert.That(AssetDatabase.AssetPathToGUID(output), Is.EqualTo(guid));
+            }
+        }
     }
 }

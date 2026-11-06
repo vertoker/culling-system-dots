@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using CullingSystemDOTS.Core;
 using UnityEngine;
 using Unity.Mathematics;
@@ -13,7 +14,7 @@ namespace CullingSystemDOTS.Editor.Baking
     public static class BakePostprocessor
     {
         public static BakePostprocessResult Process(CullingBakeLayout layout, BakeCellResult[] activeCells,
-            BakeMergeMetadata metadata, Vector3Int[] mergeAxes)
+            BakeMergeMetadata metadata, Vector3Int[] mergeAxes, CancellationToken cancellation = default)
         {
             if (activeCells == null || mergeAxes == null) throw new ArgumentNullException();
             if ((uint)metadata > (uint)BakeMergeMetadata.PreserveMergeMasks) throw new ArgumentOutOfRangeException(nameof(metadata));
@@ -22,9 +23,10 @@ namespace CullingSystemDOTS.Editor.Baking
             if (!math.all(math.isfinite(dimensions)) || !math.all(dimensions > 0) ||
                 !math.all(math.floor(dimensions) == dimensions) || count > int.MaxValue) throw new ArgumentException("Invalid bake dimensions.");
             var cells = new BakeCellResult[(int)count]; var seen = new HashSet<int>();
-            for (int i = 0; i < cells.Length; i++) cells[i] = new BakeCellResult { FullGridIndex = i, Groups = Array.Empty<ushort>() };
+            for (int i = 0; i < cells.Length; i++) { if ((i & 255) == 0) cancellation.ThrowIfCancellationRequested(); cells[i] = new BakeCellResult { FullGridIndex = i, Groups = Array.Empty<ushort>() }; }
             foreach (var sample in activeCells)
             {
+                cancellation.ThrowIfCancellationRequested();
                 if (sample == null || sample.Groups == null || (uint)sample.FullGridIndex >= cells.Length || !seen.Add(sample.FullGridIndex))
                     throw new ArgumentException("Invalid or repeated original FullGridIndex.");
                 for (int i = 1; i < sample.Groups.Length; i++) if (sample.Groups[i] <= sample.Groups[i-1]) throw new ArgumentException("Groups must be sorted and unique.");
@@ -40,6 +42,7 @@ namespace CullingSystemDOTS.Editor.Baking
                 for (int i = 0; i < sets.Length; i++) sets[i] = new HashSet<ushort>();
                 for (int index = 0; index < cells.Length; index++)
                 {
+                    if ((index & 255) == 0) cancellation.ThrowIfCancellationRequested();
                     int x = index%old.x, y = (index/old.x)%old.y, z = index/(old.x*old.y);
                     int coarse = (z/factor.z)*next.x*next.y+(y/factor.y)*next.x+x/factor.x;
                     uint currentMask = cells[index].NeighborMask, newMask = currentMask;

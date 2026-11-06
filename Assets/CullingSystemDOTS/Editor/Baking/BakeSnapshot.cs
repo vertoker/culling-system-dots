@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using CullingSystemDOTS.Authoring;
 using CullingSystemDOTS.Core;
 using Unity.Collections;
@@ -32,6 +33,7 @@ namespace CullingSystemDOTS.Editor.Baking
         public bool RenderTransparency = true;
         public BakeRaySettings Rays = new BakeRaySettings { Width = 8, Height = 8, Far = 1000,
             Rotation = quaternion.identity, CellSize = new float3(1) };
+        internal BakeInstance[] ValidationBounds;
     }
     public sealed class BakeSnapshot : IDisposable
     {
@@ -42,6 +44,7 @@ namespace CullingSystemDOTS.Editor.Baking
         private NativeArray<CullingGroupKey> groups;
         private NativeArray<BakeSampleLocation> samples;
         private JobHandle readers;
+        private Task managedReaders = Task.CompletedTask;
         private bool disposed;
         public BakeInputProfile Profile { get; }
         public BakeRaySettings Rays { get; }
@@ -67,11 +70,14 @@ namespace CullingSystemDOTS.Editor.Baking
             catch { Dispose(); throw; }
         }
         public void RegisterReader(JobHandle dependency) { EnsureAlive(); readers = JobHandle.CombineDependencies(readers, dependency); }
+        internal void RegisterReader(Task dependency) { EnsureAlive(); managedReaders = Task.WhenAll(managedReaders, dependency); }
         private void EnsureAlive() { if (disposed) throw new ObjectDisposedException(nameof(BakeSnapshot)); }
         public void Dispose()
         {
             if (disposed) return;
             readers.Complete();
+            // Background builders borrow the same arrays; their result path owns any failure.
+            try { managedReaders.GetAwaiter().GetResult(); } catch (Exception) { }
             if (vertices.IsCreated) vertices.Dispose(); if (indices.IsCreated) indices.Dispose();
             if (geometry.IsCreated) geometry.Dispose(); if (instances.IsCreated) instances.Dispose();
             if (groups.IsCreated) groups.Dispose(); if (samples.IsCreated) samples.Dispose(); disposed = true;

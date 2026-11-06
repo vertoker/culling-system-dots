@@ -68,7 +68,7 @@ namespace CullingSystemDOTS.Delivery.Editor
             string parent = Path.GetDirectoryName(folder).Replace('\\','/'); if (!AssetDatabase.IsValidFolder(parent)) CreateFolder(parent);
             AssetDatabase.CreateFolder(parent,Path.GetFileName(folder));
         }
-        private static Scene CreateOwnedScene(string path)
+        internal static Scene CreateOwnedScene(string path)
         {
             // NewScene(Additive) refuses an untitled host; saving a PreviewScene
             // is also unsupported. Opening a new empty scene asset additively
