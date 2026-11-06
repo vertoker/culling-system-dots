@@ -31,10 +31,10 @@ namespace CullingSystemDOTS.Dynamic.Gpu
             }
             catch { Dispose(); throw; }
         }
-        internal void RecordDepth(CommandBuffer command, OcclusionSnapshotLease snapshot, Matrix4x4 view, Matrix4x4 gpuProjection)
+        internal void RecordDepth(CommandBuffer command, OcclusionSnapshotLease snapshot, Matrix4x4 view, Matrix4x4 gpuProjection, OcclusionGpuMeshSet gpuGeometry)
         {
             CheckAlive();
-            if (command == null || snapshot == null || snapshot.WorldIdentity != worldIdentity ||
+            if (command == null || snapshot == null || gpuGeometry == null || snapshot.WorldIdentity != worldIdentity ||
                 !OcclusionValidity.MatrixFinite(view) || !OcclusionValidity.MatrixFinite(gpuProjection)) throw new ArgumentException("Current finite view and matching snapshot are required.");
             command.SetRenderTarget(Depth.Levels[0]); command.SetViewport(new Rect(0, 0, Depth.Size.x, Depth.Size.y));
             command.ClearRenderTarget(false, true, new Color(FarDepth, 0, 0, 0));
@@ -48,8 +48,10 @@ namespace CullingSystemDOTS.Dynamic.Gpu
                 // Per-instance mirrored culling has no accepted raster contract yet. Omission
                 // reduces occlusion; rendering the wrong winding could invent opaque coverage.
                 if (!OcclusionValidity.Finite(determinant) || determinant <= 0) continue;
+                var geometry = snapshot.GetGeometry(instance.Geometry);
+                if (!geometry.Available || !gpuGeometry.TryGet(instance.Geometry,geometry.Revision,out var mesh)) continue;
                 properties.SetMatrix("_OcclusionObjectToWorld", instance.LocalToWorld);
-                command.DrawMesh(snapshot.GetMesh(instance.Geometry), Matrix4x4.identity, depthMaterial, instance.SubMesh, 0, properties);
+                command.DrawMesh(mesh, Matrix4x4.identity, depthMaterial, instance.SubMesh, 0, properties);
             }
         }
         internal void RecordHierarchy(CommandBuffer command)

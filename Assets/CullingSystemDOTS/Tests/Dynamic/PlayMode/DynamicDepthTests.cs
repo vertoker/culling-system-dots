@@ -14,6 +14,17 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
     {
         private struct Candidate { public int2 Min, Max; public float Nearest; public uint Valid; }
         private struct WorldCandidate { public float3 Center; public uint Valid; public float3 Extents; public uint Padding; }
+        private static OcclusionGpuMeshSet PrepareMeshes(OcclusionGpuGeometryCache cache, OcclusionSnapshotLease snapshot)
+        {
+            var budget = new OcclusionGpuUploadBudget(262144); budget.BeginFrame(1); cache.Process(snapshot,budget); return cache.Acquire(snapshot);
+        }
+        private sealed class DepthReaders : IDisposable
+        {
+            private readonly OcclusionGpuPipeline pipeline;
+            private readonly OcclusionGpuMeshSet meshes;
+            internal DepthReaders(OcclusionGpuPipeline pipeline, OcclusionGpuMeshSet meshes) { this.pipeline = pipeline; this.meshes = meshes; }
+            public void Dispose() { try { pipeline.Dispose(); } finally { meshes.Dispose(); } }
+        }
         private static OcclusionShaderResources LoadResources()
         {
             #if UNITY_EDITOR
@@ -132,6 +143,7 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
             try
             {
                 using (var registry = new OcclusionWorld())
+                using (var cache = new OcclusionGpuGeometryCache(registry))
                 using (var pipeline = new OcclusionGpuPipeline(registry, resources, new int2(33, 19), 100))
                 {
                     var geometry = registry.RegisterGeometry(cube.GetComponent<MeshFilter>().sharedMesh);
@@ -140,13 +152,14 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
                             WorldBounds = new Bounds(new Vector3(0, 0, z), Vector3.one * 2), Roles = OcclusionRole.Occluder, Opaque = true } });
                     while (registry.PendingUpdateCount > 0) registry.ProcessUpdates(new OcclusionUpdateBudget(262144));
                     using (var snapshot = registry.AcquireSnapshot())
+                    using (var meshes = PrepareMeshes(cache,snapshot))
                     foreach (bool orthographic in new[] { false, true })
                     foreach (bool flippedZ in new[] { false, true })
                     {
                         var projection = GL.GetGPUProjectionMatrix(orthographic ? Matrix4x4.Ortho(-2, 2, -2, 2, .1f, 100) : Matrix4x4.Perspective(60, 33f/19, .1f, 100), false);
                         if (flippedZ) for (int c = 0; c < 4; c++) projection[2, c] = projection[3, c] - projection[2, c];
                         using (var command = new CommandBuffer())
-                        { pipeline.RecordDepth(command, snapshot, Matrix4x4.identity, projection); Graphics.ExecuteCommandBuffer(command); }
+                        { pipeline.RecordDepth(command, snapshot, Matrix4x4.identity, projection,meshes); Graphics.ExecuteCommandBuffer(command); }
                         var request = AsyncGPUReadback.Request(pipeline.Depth.Levels[0], 0); while (!request.done) yield return null;
                         Assert.That(request.hasError, Is.False); var actual = request.GetData<float>();
                         float expected = 3 - .5f / math.cos(math.radians(30));
@@ -235,12 +248,79 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
             var registry = new OcclusionWorld(); registry.Dispose();
             Assert.Throws<ObjectDisposedException>(() => { using (var depth = new OcclusionDepthResources(registry, new int2(4))) { } });
         }
+        [UnityTest] public IEnumerator UnuploadedGeometryCannotPopulateDepthDespiteCpuPreparation()
+        {
+            var resources = LoadResources(); var cube = GameObject.CreatePrimitive(PrimitiveType.Cube); cube.SetActive(false);
+            try
+            {
+                using (var registry = new OcclusionWorld())
+                using (var cache = new OcclusionGpuGeometryCache(registry))
+                using (var pipeline = new OcclusionGpuPipeline(registry,resources,new int2(33,19),100))
+                {
+                    var geometry = registry.RegisterGeometry(cube.GetComponent<MeshFilter>().sharedMesh);
+                    registry.RegisterInstance(new OcclusionInstanceDescriptor { Geometry=geometry, State=new OcclusionInstanceState {
+                        LocalToWorld=float4x4.Translate(new float3(0,0,-3)), WorldBounds=new Bounds(new Vector3(0,0,-3),Vector3.one), Roles=OcclusionRole.Occluder, Opaque=true } });
+                    while (registry.PendingUpdateCount>0) registry.ProcessUpdates(new OcclusionUpdateBudget(262144));
+                    using (var snapshot=registry.AcquireSnapshot())
+                    foreach (bool ready in new[] { false,true })
+                    {
+                        var budget=new OcclusionGpuUploadBudget(ready?262144:16); budget.BeginFrame(ready?2ul:1ul); cache.Process(snapshot,budget);
+                        using (var meshes=cache.Acquire(snapshot))
+                        {
+                            using (var command=new CommandBuffer())
+                            { pipeline.RecordDepth(command,snapshot,Matrix4x4.identity,GL.GetGPUProjectionMatrix(Matrix4x4.Ortho(-2,2,-2,2,.1f,100),false),meshes); Graphics.ExecuteCommandBuffer(command); }
+                            var request=AsyncGPUReadback.Request(pipeline.Depth.Levels[0],0); while (!request.done) yield return null;
+                            Assert.That(request.hasError,Is.False);
+                            Assert.That(request.GetData<float>()[9*33+16],Is.EqualTo(ready?2.5f:100).Within(.001f),"Actual GPU upload readiness must gate the depth source.");
+                        }
+                    }
+                }
+            }
+            finally { AsyncGPUReadback.WaitAllRequests(); UnityEngine.Object.Destroy(resources); UnityEngine.Object.Destroy(cube); }
+        }
+        [UnityTest] public IEnumerator StaleGpuGeometryCannotPopulateCurrentDepth()
+        {
+            var resources=LoadResources(); var cube=GameObject.CreatePrimitive(PrimitiveType.Cube); cube.SetActive(false); Mesh replacement=null;
+            try
+            {
+                using (var registry=new OcclusionWorld())
+                using (var cache=new OcclusionGpuGeometryCache(registry))
+                using (var pipeline=new OcclusionGpuPipeline(registry,resources,new int2(33,19),100))
+                {
+                    var geometry=registry.RegisterGeometry(cube.GetComponent<MeshFilter>().sharedMesh);
+                    registry.RegisterInstance(new OcclusionInstanceDescriptor { Geometry=geometry, State=new OcclusionInstanceState {
+                        LocalToWorld=float4x4.Translate(new float3(0,0,-3)), WorldBounds=new Bounds(new Vector3(0,0,-3),Vector3.one), Roles=OcclusionRole.Occluder, Opaque=true } });
+                    while (registry.PendingUpdateCount>0) registry.ProcessUpdates(new OcclusionUpdateBudget(262144));
+                    using (var oldSnapshot=registry.AcquireSnapshot())
+                    {
+                        var budget=new OcclusionGpuUploadBudget(262144); budget.BeginFrame(1); cache.Process(oldSnapshot,budget);
+                        using (var oldMeshes=cache.Acquire(oldSnapshot))
+                        {
+                            replacement=UnityEngine.Object.Instantiate(cube.GetComponent<MeshFilter>().sharedMesh);
+                            var vertices=replacement.vertices; for (int i=0;i<vertices.Length;i++) vertices[i]+=Vector3.right*20; replacement.vertices=vertices;
+                            registry.ReplaceGeometry(geometry,replacement);
+                            while (registry.PendingUpdateCount>0) registry.ProcessUpdates(new OcclusionUpdateBudget(262144));
+                            using (var current=registry.AcquireSnapshot())
+                            {
+                                Assert.That(current.Instances[0].Prepared,Is.EqualTo(1));
+                                using (var command=new CommandBuffer())
+                                { pipeline.RecordDepth(command,current,Matrix4x4.identity,GL.GetGPUProjectionMatrix(Matrix4x4.Ortho(-2,2,-2,2,.1f,100),false),oldMeshes); Graphics.ExecuteCommandBuffer(command); }
+                                var request=AsyncGPUReadback.Request(pipeline.Depth.Levels[0],0); while (!request.done) yield return null;
+                                Assert.That(request.hasError,Is.False); Assert.That(request.GetData<float>()[9*33+16],Is.EqualTo(100));
+                            }
+                        }
+                    }
+                }
+            }
+            finally { AsyncGPUReadback.WaitAllRequests(); UnityEngine.Object.Destroy(replacement); UnityEngine.Object.Destroy(resources); UnityEngine.Object.Destroy(cube); }
+        }
         [UnityTest] public IEnumerator MirroredOccludersAreOmittedUntilTheirRasterContractIsSupported()
         {
             var resources = LoadResources(); var cube = GameObject.CreatePrimitive(PrimitiveType.Cube); cube.SetActive(false);
             try
             {
                 using (var registry = new OcclusionWorld())
+                using (var cache = new OcclusionGpuGeometryCache(registry))
                 using (var pipeline = new OcclusionGpuPipeline(registry, resources, new int2(33,19), 100))
                 {
                     var geometry = registry.RegisterGeometry(cube.GetComponent<MeshFilter>().sharedMesh);
@@ -249,9 +329,10 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
                         WorldBounds = new Bounds(new Vector3(0,0,-3), Vector3.one), Roles = OcclusionRole.Occluder, Opaque = true } });
                     while (registry.PendingUpdateCount > 0) registry.ProcessUpdates(new OcclusionUpdateBudget(262144));
                     using (var snapshot = registry.AcquireSnapshot())
+                    using (var meshes = PrepareMeshes(cache,snapshot))
                     {
                         using (var command = new CommandBuffer())
-                        { pipeline.RecordDepth(command, snapshot, Matrix4x4.identity, GL.GetGPUProjectionMatrix(Matrix4x4.Ortho(-2,2,-2,2,.1f,100),false)); Graphics.ExecuteCommandBuffer(command); }
+                        { pipeline.RecordDepth(command, snapshot, Matrix4x4.identity, GL.GetGPUProjectionMatrix(Matrix4x4.Ortho(-2,2,-2,2,.1f,100),false),meshes); Graphics.ExecuteCommandBuffer(command); }
                         var request = AsyncGPUReadback.Request(pipeline.Depth.Levels[0],0); while (!request.done) yield return null;
                         Assert.That(request.hasError, Is.False); Assert.That(request.GetData<float>()[9*33+16], Is.EqualTo(100));
                     }
@@ -264,6 +345,7 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
             var registry = new OcclusionWorld(); var resources = LoadResources();
             var cube = GameObject.CreatePrimitive(PrimitiveType.Cube); cube.SetActive(false);
             OcclusionGpuPipeline pipeline = null; OcclusionGpuSubmission submission = null; OcclusionSnapshotLease snapshot = null;
+            OcclusionGpuGeometryCache cache = null; OcclusionGpuMeshSet meshes = null;
             using (var command = new CommandBuffer())
             try
             {
@@ -273,8 +355,10 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
                     Roles = OcclusionRole.Occluder, Opaque = true } });
                 while (registry.PendingUpdateCount > 0) registry.ProcessUpdates(new OcclusionUpdateBudget(262144));
                 snapshot = registry.AcquireSnapshot(); pipeline = new OcclusionGpuPipeline(registry, resources, new int2(33,19), 100);
-                var texture = pipeline.Depth.Levels[0]; submission = new OcclusionGpuSubmission(snapshot, pipeline);
-                pipeline.RecordDepth(command, snapshot, Matrix4x4.identity, GL.GetGPUProjectionMatrix(Matrix4x4.Perspective(60, 33f/19, .1f, 100), false));
+                cache = new OcclusionGpuGeometryCache(registry); meshes = PrepareMeshes(cache,snapshot);
+                var texture = pipeline.Depth.Levels[0]; submission = new OcclusionGpuSubmission(snapshot, new DepthReaders(pipeline,meshes));
+                pipeline.RecordDepth(command, snapshot, Matrix4x4.identity, GL.GetGPUProjectionMatrix(Matrix4x4.Perspective(60, 33f/19, .1f, 100), false),meshes);
+                cache.Dispose();
                 int pendingBefore = OcclusionGpuRetirement.PendingCount;
                 submission.Dispose(); registry.Dispose();
                 Assert.That(OcclusionGpuRetirement.PendingCount, Is.GreaterThan(pendingBefore), "Cancelled work must remain owned independently of the destroyed World.");
@@ -300,7 +384,8 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
                         drain.WaitForCompletion(); submission.Poll();
                     }
                 }
-                else if (submission == null) { pipeline?.Dispose(); snapshot?.Dispose(); }
+                else if (submission == null) { pipeline?.Dispose(); meshes?.Dispose(); snapshot?.Dispose(); }
+                cache?.Dispose();
                 registry.Dispose(); UnityEngine.Object.Destroy(cube); UnityEngine.Object.Destroy(resources);
             }
         }

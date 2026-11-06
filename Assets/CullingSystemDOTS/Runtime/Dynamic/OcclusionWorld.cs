@@ -38,6 +38,8 @@ namespace CullingSystemDOTS.Dynamic
         public ulong OccluderEpoch { get; private set; } = 1;
         public long AccountedResourceBytes => budget.Used;
         internal OcclusionMemoryBudget ResourceBudget { get { CheckAlive(); return budget; } }
+        internal int UploadByteLimit => settings.MaxUploadBytesPerFrame;
+        internal int GeometryCreationLimit => settings.MaxGeometryCreationsPerFrame;
 
         public OcclusionWorld(OcclusionSettings settings = null)
         {

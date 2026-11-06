@@ -8,6 +8,7 @@ namespace CullingSystemDOTS.Dynamic.Gpu
         internal int Used { get; private set; }
         internal int Remaining => Limit - Used;
         private ulong currentFrame;
+        internal ulong Frame => currentFrame;
         internal OcclusionGpuUploadBudget(int limit) { if (limit <= 0) throw new ArgumentOutOfRangeException(nameof(limit)); Limit = limit; }
         internal void BeginFrame(ulong frame)
         {
