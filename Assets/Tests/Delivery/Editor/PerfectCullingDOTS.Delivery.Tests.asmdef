@@ -1,0 +1,6 @@
+{
+  "name": "PerfectCullingDOTS.Delivery.Tests",
+  "references": ["PerfectCullingDOTS.Core", "PerfectCullingDOTS.Runtime", "PerfectCullingDOTS.Editor", "Unity.Entities", "Unity.Scenes", "Unity.Collections", "Unity.Mathematics"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}
