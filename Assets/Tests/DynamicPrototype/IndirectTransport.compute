@@ -1,0 +1,9 @@
+#pragma kernel SetCount
+RWByteAddressBuffer Arguments;
+int Hidden;
+[numthreads(1, 1, 1)]
+void SetCount(uint id : SV_DispatchThreadID)
+{
+    // DX12 indexed argument layout, scoped to this transport proof.
+    Arguments.Store(4, Hidden ? 0 : 1);
+}

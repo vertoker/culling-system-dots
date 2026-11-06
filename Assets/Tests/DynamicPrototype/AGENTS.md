@@ -11,3 +11,8 @@ The probe owns its entities, cameras, requests and buffers. Restore graphics fla
 join outstanding readbacks before freeing buffers, and leave the user's scene/settings intact.
 Record limitations and observed results in
 [the integration report](../../../Docs/Validation/DynamicOcclusion-Integration.md).
+
+The separate indirect transport proof uses public GPU-written draw arguments, independent
+camera buffers and all-caster shadow arguments. Its
+[evidence](../../../Docs/Validation/DynamicOcclusion-Indirect.md) establishes submission ordering,
+not general occlusion correctness. Fence retirement must cover the later color/shadow consumers.

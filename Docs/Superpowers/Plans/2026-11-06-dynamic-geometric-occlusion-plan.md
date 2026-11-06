@@ -4,8 +4,8 @@
 > available, `superpowers:executing-plans`. Keep one owner for live Unity. No branches or worktrees.
 
 **Status:** Task 0 stock investigation completed; Gate G1 failed. At the planned boundary the user
-selected and authorized a package-owned GPU indirect continuation. Its concrete addendum/proof
-must precede Tasks 1-7, which have not started. See the
+selected and authorized a package-owned GPU indirect continuation. Task 0b passed its transport
+proof; Task 1 is next. Tasks 1-7 have not started. See the
 [integration evidence and continuation options](../../Validation/DynamicOcclusion-Integration.md).
 
 **Goal:** Implement independent algorithm 3: configurable runtime geometric occlusion for a
@@ -16,9 +16,12 @@ tests and a separately validated presentation boundary. No building/room knowled
 required. Preserve the existing static bake and leave algorithm 2 and composition to separate plans.
 
 **Tech stack:** Unity C#/Burst/Jobs for runtime registration and numeric preparation, HLSL compute
-and URP RenderGraph for depth testing, stock Entities Graphics through a route proven at G1.
+and public pre-camera graphics-queue depth/indirect submission, with stock Entities Graphics
+remaining untouched for other bindings. URP 17.6 is the initial accepted pipeline target.
 
 **Spec:** [Design and acceptance contract](2026-11-06-dynamic-geometric-occlusion-design.md).
+The approved continuation is recorded in the
+[indirect rendering addendum](2026-11-06-dynamic-indirect-rendering-design.md).
 The user selected algorithm 3 first; numerical defaults and proposed API names are engineering
 proposals in that design/this plan, not measured capacities or previously approved public APIs.
 
@@ -147,6 +150,57 @@ exist, but there is no new shadow-capable GPU route to exercise. The legacy shad
 was rerun, and new-route shadow acceptance remains deferred rather than marked passed.
 Independent review found constructor cleanup leaks; two injected allocation-failure regressions
 went RED then GREEN, and the coupled suite passed 20/20. The evidence report records the jobs.
+
+## Task 0b: prove the authorized indirect transport
+
+**Files:** Root-only `Assets/Tests/DynamicPrototype/IndirectTransportProbe.cs`,
+`IndirectTransportProbeTests.cs`, `IndirectTransport.shader`, `IndirectTransport.compute`.
+Keep this proof in the existing root test assembly and project, without shipped API changes.
+Record evidence in `Docs/Validation/DynamicOcclusion-Indirect.md`.
+
+**Interfaces:** Candidate owner holds one reusable mesh/material and per-view graphics buffers.
+Its camera-begin handler consumes `Hidden[view]`, records a GPU-write to the argument buffer and
+calls the public indirect API. Test setup uses no stock visibility bits or CPU result readback.
+Separate full-caster arguments feed the shadow submission.
+
+- [x] Add a failing pixel test: ordinary indirect count is one, GPU-written count zero removes
+  its color, and the next moving-camera/edited submission restores it without waiting for readback.
+- [x] Add two simultaneous camera tests with opposite masks, plus camera-hidden caster/visible
+  receiver parity against ordinary rendering. Do not infer shadow support from the legacy adapter.
+- [x] Implement the minimal candidate using public `Graphics.RenderMeshIndirect`,
+  `GraphicsBuffer.IndirectDrawIndexedArgs`, `UnityIndirect.cginc`, and graphics-queue compute.
+  If its registration boundary is too late, move only registration to an earlier public boundary
+  and prove where current-view arguments become final; use an owned BRG if necessary.
+- [x] Prove resource retirement covers the later color/shadow reader; test failure cleanup.
+- [x] Observe GREEN, record actual API/pass/resource/lifetime signatures, and commit the proof.
+  This is the G1 replacement for the explicitly authorized route, not product/performance acceptance.
+
+**Outcome:** [Transport evidence](../../Validation/DynamicOcclusion-Indirect.md), coupled 23/23
+PlayMode checks. Selected API: `Graphics.RenderMeshIndirect` with per-view arguments, independent
+all-caster arguments and graphics-queue compute in `beginCameraRendering`; retire after a fence
+in `endContextRendering`, following URP's submissions. No required renderer feature/custom BRG.
+
+**Frozen production dataflow:** Task 3 uses full reference-grid positive linear eye depth in
+`R32_SFloat`, far clear, minimum blending of eligible triangles, then maximum-depth reduction in
+separate per-level textures with ceil dimensions. Positive eye depth makes the farthest reduction
+independent of hardware reversed Z; projection/raster tests must still cover the installed backend.
+Check render/blend/load-store format support; unsupported formats retain ordinary rendering.
+Conservative bounds tests compact IDs into per-view indirect buffers, consumed only after the
+same queue's passes. Full-visible fallback and full-shadow buffers remain separate. Task 3 must
+validate all coverage/reference cases; selecting formats is not a claim that those shaders passed.
+Initial occluding views require single-sample URP rendering with no temporal jitter, dynamic
+resolution or unsupported stacks; other views keep full-visible submission until separately tested.
+
+### Conditional file-map amendments for Tasks 3-4
+
+`Runtime/Dynamic/Gpu/OcclusionIndirectRenderer.cs` owns the proven indirect transport and buffer
+layout; shipped `Shaders/OcclusionIndirect.shader` plus an HLSL instance-layout include own its
+explicit material contract. `DynamicOcclusionPresentation.cs` becomes an ownership-transfer and
+snapshot bridge, not a per-camera stock enable-bit mask. Transfer/restore only at binding lifecycle
+boundaries. Keep full-shadow data separate from camera compaction. Use the Task 0b evidence to
+freeze the exact fence/submission boundary before writing this production presentation layer.
+If the candidate uses public pre-camera submission without a renderer feature, omit unused
+RenderGraph feature scaffolding rather than requiring a redundant feature from consumers.
 
 ## Task 1: define live registry, validity and ownership
 
