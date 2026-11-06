@@ -5,7 +5,7 @@
 
 **Status:** Task 0 stock investigation completed; Gate G1 failed. At the planned boundary the user
 selected and authorized a package-owned GPU indirect continuation. Task 0b passed its transport
-proof; Task 1 is next. Tasks 1-7 have not started. See the
+proof; Task 1 registry foundation is complete. Task 2 is next. See the
 [integration evidence and continuation options](../../Validation/DynamicOcclusion-Integration.md).
 
 **Goal:** Implement independent algorithm 3: configurable runtime geometric occlusion for a
@@ -226,16 +226,31 @@ mesh changes require `ReplaceGeometry`, including edits to the same Mesh referen
 retains its owned geometry copy; callers retain their Mesh. Removal rejects new use and retires
 storage after all readers; snapshots are immutable leases with one clear disposal owner.
 
-- [ ] Add failing tests `OldGenerationCannotMutateReplacement`, `WorldIdentityRejectsForeignHandle`,
+- [x] Add failing tests `OldGenerationCannotMutateReplacement`, `WorldIdentityRejectsForeignHandle`,
   `SnapshotRetainsGeometryUntilLastReader`, `SameMeshReferenceReplacementChangesRevision`,
-  `InvalidSettingsFailBeforeAllocation`, and `LegacyOwnershipConflictIsExplicit`.
-- [ ] Add validity tests that change each view-signature field, global occluder epoch and candidate
+  and `InvalidSettingsFailBeforeAllocation`. `LegacyOwnershipConflictIsExplicit` belongs to Task 2's
+  real ECS binding boundary; this independent registry has no fake caller-supplied legacy flag.
+- [x] Add validity tests that change each view-signature field, global occluder epoch and candidate
   generation/bounds revision independently; every stale hidden result becomes PotentiallyVisible.
-- [ ] Run the new EditMode fixtures and record RED before implementation.
-- [ ] Implement contracts, checked setting validation, World ownership and snapshot retirement.
+- [x] Run the new EditMode fixtures and record RED before implementation.
+- [x] Implement contracts, checked setting validation, World ownership and snapshot retirement.
   Keep this assembly independent of legacy Core and URP. Document provider mutation obligations.
-- [ ] Run the fixtures to GREEN, inspect native/managed lifetime under repeated create/dispose,
+- [x] Run the fixtures to GREEN, inspect native/managed lifetime under repeated create/dispose,
   validate folder guidance and commit exact owned paths on master.
+
+**Outcome:** Independent `CullingSystemDOTS.Dynamic` assembly with generation/World handles,
+owned geometry copies, checked settings, immutable native snapshots and registered Job readers.
+Sources remain caller-owned. Replacement grows dependent bounds; rejected replacement retains old
+bytes but withdraws occluders and invalidates the epoch. Payload accounting includes owned native
+arrays and mesh stream payload estimates, not all Unity/managed/driver overhead. Leases retain
+retired geometry and the caller must keep a GPU lease through its retirement fence.
+
+RED `96895bbdc34e4caf92c50731e1e2621e`: 0/23. Initial GREEN
+`8b0c1b60ddd049c59629e3976e890140`: 23/23. Boundary regressions exposed stale replacement bounds
+and overflowing extrema (`44f3046d401a4151b7e9294222b8b547`: 27/29); fixed, coupled suite
+`bbc611d590d347d79f52b2afb5b42257`: 71/71. Final repeated-lifetime case (32 cycles) plus coupled
+legacy Core/Runtime job `a82415d39770401da1d4841aec9239e1`: 72/72, zero failures/skips.
+Document checks: 86 files; Python tooling: 35/35. This is registry acceptance, not GPU feature acceptance.
 
 ## Task 2: incremental block data and ECS capture
 
@@ -254,6 +269,8 @@ wall-clock bound for indivisible engine calls. Apply render bindings only throug
 - [ ] Add `MovingOccludeeDoesNotRebuildOccluderGeometry`, `RemovalInvalidatesBeforeQueuedUpload`,
   `NewRevisionSupersedesPendingBuild`, `EditFloodBoundsQueueMemory`, and
   `WorldDisposeJoinsJobsAndRetiresGpuReaders` (GPU half completed with Task 3).
+- [ ] Add `LegacyOwnershipConflictIsExplicit` at actual ECS/graphics ownership registration,
+  including both registration orders and rejected-publication rollback.
 - [ ] Observe RED; implement sparse hashed block membership, revision coalescing, bounded queues,
   immediate global invalidation and omission of unavailable occluders from the depth source.
 - [ ] Implement full-Entity binding capture and explicit scene/World unload cleanup. Geometry must

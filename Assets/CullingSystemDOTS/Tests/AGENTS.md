@@ -5,6 +5,7 @@ Read [the package guide](../AGENTS.md) first.
 - [Core](Core/AGENTS.md) tests data/codec/evaluation contracts.
 - [Editor](Editor/AGENTS.md) tests capture, authoring, backends, lifetime and output.
 - [Runtime](Runtime/AGENTS.md) tests World, receiver and presentation ownership in EditMode.
+- [Dynamic](Dynamic/AGENTS.md) tests the independent runtime geometric algorithm.
 
 These tests travel with the package. Keep fixtures independent of root development paths and
 commercial assets. Keep NUnit/test-runner references isolated in test assemblies; do not add
