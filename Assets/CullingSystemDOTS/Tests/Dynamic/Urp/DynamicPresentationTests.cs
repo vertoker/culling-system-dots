@@ -75,11 +75,12 @@ namespace CullingSystemDOTS.Dynamic.Urp.Tests
                 finally {data.cameraStack.Remove(overlay);Object.Destroy(overlay.gameObject);}
                 for(int i=0;i<3;i++)yield return null;
                 Assert.That(Red(target),Is.LessThan(5));
-                bool changed=false,stockObserved=false;
-                late=(context,views)=>{if(!changed && views.Contains(camera)){system.Registry.RemoveInstance(wall);changed=true;}};
-                observe=(context,view)=>{if(changed && view==camera)stockObserved|=manager.IsComponentEnabled<MaterialMeshInfo>(entity);};
+                bool changed=false,stockObserved=false,observed=false;int mutationFrame=-1,observedFrame=-1;
+                late=(context,views)=>{if(!changed && views.Contains(camera)){system.Registry.RemoveInstance(wall);changed=true;mutationFrame=Time.frameCount;}};
+                observe=(context,view)=>{if(changed && !observed && view==camera){stockObserved=manager.IsComponentEnabled<MaterialMeshInfo>(entity);observed=true;observedFrame=Time.frameCount;}};
                 RenderPipelineManager.beginContextRendering+=late;RenderPipelineManager.endCameraRendering+=observe;
-                for(int i=0;i<4;i++)yield return null;
+                for(int i=0;i<10 && !observed;i++)yield return null;
+                Assert.That(observed,Is.True);Assert.That(observedFrame,Is.EqualTo(mutationFrame));
                 Assert.That(stockObserved,Is.True,"Late registry mutation must restore stock before this camera's culling.");
                 Assert.That(Red(target),Is.GreaterThan(200));
                 presentation.Dispose();presentation=null;

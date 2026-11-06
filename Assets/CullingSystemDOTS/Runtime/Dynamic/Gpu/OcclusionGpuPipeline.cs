@@ -43,7 +43,8 @@ namespace CullingSystemDOTS.Dynamic.Gpu
             properties.SetFloat("_FarDepth", FarDepth);
             foreach (var instance in snapshot.Instances)
             {
-                if ((instance.Roles & OcclusionRole.Occluder) == 0 || instance.Opaque == 0 || instance.Prepared == 0 || (layerMask & (1 << instance.Layer)) == 0) continue;
+                if ((instance.Roles & OcclusionRole.Occluder) == 0 || instance.Opaque == 0 || instance.Prepared == 0 ||
+                    instance.Shadows == ShadowCastingMode.ShadowsOnly || (layerMask & (1 << instance.Layer)) == 0) continue;
                 float determinant = math.determinant(new float3x3(instance.LocalToWorld.c0.xyz, instance.LocalToWorld.c1.xyz, instance.LocalToWorld.c2.xyz));
                 // Per-instance mirrored culling has no accepted raster contract yet. Omission
                 // reduces occlusion; rendering the wrong winding could invent opaque coverage.

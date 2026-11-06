@@ -29,9 +29,10 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
             {
                 var geometry=registry.RegisterGeometry(cube.GetComponent<MeshFilter>().sharedMesh);
                 var wallMatrix=float4x4.TRS(new float3(0,0,-2),quaternion.identity,new float3(6,6,.2f));
-                var wall=registry.RegisterInstance(new OcclusionInstanceDescriptor {Geometry=geometry,Layer=30,
+                var wallDescriptor=new OcclusionInstanceDescriptor {Geometry=geometry,Layer=30,
                     State=new OcclusionInstanceState {LocalToWorld=wallMatrix,WorldBounds=new Bounds(new Vector3(0,0,-2),new Vector3(6,6,.2f)),
-                        Roles=OcclusionRole.Occluder,Opaque=true}});
+                        Roles=OcclusionRole.Occluder,Opaque=true}};
+                var wall=registry.RegisterInstance(wallDescriptor);
                 registry.RegisterInstance(new OcclusionInstanceDescriptor {Geometry=geometry,Material=material,Layer=31,
                     State=new OcclusionInstanceState {LocalToWorld=float4x4.identity,WorldBounds=new Bounds(Vector3.zero,Vector3.one),Color=new float4(1,0,0,1),
                         Roles=OcclusionRole.Renderable|OcclusionRole.Occludee,Opaque=true}});
@@ -58,6 +59,14 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
                 Assert.That(renderer.SlotCount,Is.LessThanOrEqualTo(2));
                 Assert.That(renderer.PacketCreations,Is.LessThanOrEqualTo(renderer.SlotCount),"Matching frame payloads must reuse buffers.");
                 Assert.That(renderer.ViewCreations,Is.LessThanOrEqualTo(renderer.SlotCount*2),"Stable views must reuse depth and compaction resources.");
+                registry.RemoveInstance(wall);
+                var shadowOnly=wallDescriptor;shadowOnly.Material=material;shadowOnly.Shadows=ShadowCastingMode.ShadowsOnly;
+                shadowOnly.State.Roles=OcclusionRole.Renderable|OcclusionRole.Occluder|OcclusionRole.Occludee;
+                var shadowWall=registry.RegisterInstance(shadowOnly);
+                for(int i=0;i<3;i++)yield return null;
+                Assert.That(Red(targets[0]),Is.GreaterThan(200),"A shadow-only wall has no opaque camera coverage and must not hide the target.");
+                registry.RemoveInstance(shadowWall);wall=registry.RegisterInstance(wallDescriptor);
+                for(int i=0;i<3;i++)yield return null;
                 cameras[0].cullingMask=1<<31;
                 for(int i=0;i<3;i++)yield return null;
                 Assert.That(Red(targets[0]),Is.GreaterThan(200),"A camera-excluded layer cannot contribute occluder depth.");
