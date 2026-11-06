@@ -2,7 +2,8 @@
 
 Corrected production revision: `60545b1887756988858067c3198fed0d9b281e9c`.
 Unity 6000.6.8f1, stock Entities/Graphics 6.6, URP 17.6, Windows Editor DX12,
-RTX 4060 Ti. Built-Player acceptance of this correction is still pending.
+RTX 4060 Ti. Subsequent [built-Player acceptance](DynamicOcclusion-ReadablePlayer.md)
+passed 20 two-view image pairs against package revision `29d7034`.
 
 The user's observation was a real visibility defect. Previous eight-state
 captures did not put the camera inside the thickness of a restored, existing

@@ -1,0 +1,177 @@
+{
+    "Revision": "29d7034fc91d12ed2f71a40572e5ef24ef0db7b3",
+    "Unity": "6000.6.8f1",
+    "Api": "Direct3D12",
+    "Gpu": "NVIDIA GeForce RTX 4060 Ti",
+    "Cpu": "AMD Ryzen 7 7700 8-Core Processor ",
+    "Failure": "",
+    "Passed": true,
+    "InitialAgents": 512,
+    "InitialPieces": 689,
+    "InitialInteriorDetails": 640,
+    "Reloads": 3,
+    "GpuFrames": 18,
+    "FallbackFrames": 44,
+    "Cases": [
+        {
+            "Scenario": 0,
+            "ReferenceIds": 17,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "primary"
+        },
+        {
+            "Scenario": 0,
+            "ReferenceIds": 20,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "outside"
+        },
+        {
+            "Scenario": 1,
+            "ReferenceIds": 25,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "primary"
+        },
+        {
+            "Scenario": 1,
+            "ReferenceIds": 20,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "outside"
+        },
+        {
+            "Scenario": 2,
+            "ReferenceIds": 30,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "primary"
+        },
+        {
+            "Scenario": 2,
+            "ReferenceIds": 20,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "outside"
+        },
+        {
+            "Scenario": 3,
+            "ReferenceIds": 29,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "primary"
+        },
+        {
+            "Scenario": 3,
+            "ReferenceIds": 19,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "outside"
+        },
+        {
+            "Scenario": 4,
+            "ReferenceIds": 42,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "primary"
+        },
+        {
+            "Scenario": 4,
+            "ReferenceIds": 19,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "outside"
+        },
+        {
+            "Scenario": 5,
+            "ReferenceIds": 11,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "primary"
+        },
+        {
+            "Scenario": 5,
+            "ReferenceIds": 19,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "outside"
+        },
+        {
+            "Scenario": 6,
+            "ReferenceIds": 19,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "primary"
+        },
+        {
+            "Scenario": 6,
+            "ReferenceIds": 19,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "outside"
+        },
+        {
+            "Scenario": 7,
+            "ReferenceIds": 19,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "primary"
+        },
+        {
+            "Scenario": 7,
+            "ReferenceIds": 19,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "outside"
+        },
+        {
+            "Scenario": 8,
+            "ReferenceIds": 27,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "primary"
+        },
+        {
+            "Scenario": 8,
+            "ReferenceIds": 18,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "outside"
+        },
+        {
+            "Scenario": 9,
+            "ReferenceIds": 28,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "primary"
+        },
+        {
+            "Scenario": 9,
+            "ReferenceIds": 18,
+            "LostIds": 0,
+            "InteriorErrors": 0,
+            "ChangedPixels": 0,
+            "View": "outside"
+        }
+    ]
+}

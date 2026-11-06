@@ -21,6 +21,12 @@ visibility. Unsupported views use full rendering. TAA, jitter, stereo, dynamic r
 non-unit URP render scale and camera stacks restore stock graphics. Other pipelines, custom
 render features/material deformation and lighting equivalence need their own validation.
 
+Occluders whose enclosing bounds touch or cross the camera near plane do not contribute
+depth for that view. This includes a camera inside a wall's thickness: uncertain front-surface
+coverage must not hide the room beyond it. Other views can still use the same wall. Occluder
+depth uses one-sided front coverage with orientation derived from the explicit view/projection
+matrices; it does not turn ordinary materials double-sided.
+
 ## Explicit ECS setup
 
 Assign `OcclusionShaderResources.asset` through a serialized reference. Create a material using
@@ -106,3 +112,14 @@ Import **Dynamic City construction** from Package Manager for serialized setup, 
 camera, individual piece edits and independent ECS agents. Its ordinary-rendering switch uses
 the same simulation. Performance comparison must use the same camera path, simulation and edits;
 fewer indirect instances alone do not prove an end-to-end improvement.
+
+The city starts intact with automatic edits and the exterior tour disabled. Street and workshop
+buttons select useful views; the free camera has no collision response. Seeded construction and
+the tour are explicit controls. Interior fixtures are independent renderable/occludee bindings.
+
+The Windows DX12 cube-city Player comparison has not established a speedup over
+ordinary Entities Graphics. Current CPU capture, registry updates and frame packet
+preparation add substantial cost to a fully moving population; the cheap geometry
+does not repay that cost in the measured workload. Keep this renderer experimental
+and measure your own content before adopting it as an optimization. Functional
+rendering acceptance is separate from performance acceptance.
