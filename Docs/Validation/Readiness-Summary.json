@@ -1,0 +1,193 @@
+{
+  "sourceRevision": "3f2e1e31b7f854b164c7b76ee8a52e1c1c854ed8",
+  "packageTree": "a352b35d59c7e54be6bb6de66915f7299b08b5dd",
+  "unityReports": {
+    "Readiness-EditMode.xml": {
+      "result": "Passed",
+      "total": "182",
+      "passed": "182",
+      "failed": "0",
+      "skipped": "0"
+    },
+    "Readiness-PlayMode.xml": {
+      "result": "Passed",
+      "total": "16",
+      "passed": "16",
+      "failed": "0",
+      "skipped": "0"
+    },
+    "Readiness-GitInstall-EditMode.xml": {
+      "result": "Passed",
+      "total": "181",
+      "passed": "181",
+      "failed": "0",
+      "skipped": "0"
+    },
+    "Readiness-GitInstall-PlayMode.xml": {
+      "result": "Passed",
+      "total": "16",
+      "passed": "16",
+      "failed": "0",
+      "skipped": "0"
+    }
+  },
+  "pythonTests": {
+    "passed": 35,
+    "failed": 0
+  },
+  "bake": {
+    "groups": 512,
+    "uniqueTriangles": 32768,
+    "instancedTriangles": 1048576,
+    "activeCells": 128,
+    "resolution": 32,
+    "cpuSeconds": 16.1174815,
+    "gpuSeconds": 57.938584999999996,
+    "maxMainThreadTickMilliseconds": 481.6449,
+    "externalSampledProcessPeakBytes": {
+      "Gpu": 2953478144,
+      "Cpu": 2935631872
+    },
+    "scope": "Synthetic Editor workload, unfocused Editor updates; not a GPU speedup or total-memory-cap claim."
+  },
+  "cameraMeasurement": {
+    "entities": 3000,
+    "cameras": [
+      1,
+      4
+    ],
+    "cases": [
+      {
+        "cameras": 1,
+        "entities": 3000,
+        "frames": 30,
+        "beginCalls": 30,
+        "endCalls": 30,
+        "adapter": false,
+        "publicationMsPerFrame": 6.0000000000000015e-05,
+        "beginMaskMsPerCamera": 0.00098,
+        "endRestoreMsPerCamera": 0.00082,
+        "wallMsPerFrame": 3.9784200000000003,
+        "mainThreadAllocatedBytesPerFrame": -1,
+        "sampledPeakUnityAllocatedBytes": 1152780795,
+        "allocationStatus": "Unavailable: Mono returned no allocation delta; this is not a zero-allocation result."
+      },
+      {
+        "cameras": 1,
+        "entities": 3000,
+        "frames": 30,
+        "beginCalls": 30,
+        "endCalls": 30,
+        "adapter": true,
+        "publicationMsPerFrame": 13.054476666666664,
+        "beginMaskMsPerCamera": 4.104306666666667,
+        "endRestoreMsPerCamera": 4.2012133333333335,
+        "wallMsPerFrame": 26.85972,
+        "mainThreadAllocatedBytesPerFrame": -1,
+        "sampledPeakUnityAllocatedBytes": 1151959595,
+        "allocationStatus": "Unavailable: Mono returned no allocation delta; this is not a zero-allocation result."
+      },
+      {
+        "cameras": 4,
+        "entities": 3000,
+        "frames": 30,
+        "beginCalls": 120,
+        "endCalls": 120,
+        "adapter": false,
+        "publicationMsPerFrame": 6.000000000000002e-05,
+        "beginMaskMsPerCamera": 0.00022583333333333334,
+        "endRestoreMsPerCamera": 0.00028416666666666667,
+        "wallMsPerFrame": 6.331236666666667,
+        "mainThreadAllocatedBytesPerFrame": -1,
+        "sampledPeakUnityAllocatedBytes": 1153956377,
+        "allocationStatus": "Unavailable: Mono returned no allocation delta; this is not a zero-allocation result."
+      },
+      {
+        "cameras": 4,
+        "entities": 3000,
+        "frames": 30,
+        "beginCalls": 120,
+        "endCalls": 120,
+        "adapter": true,
+        "publicationMsPerFrame": 16.85775,
+        "beginMaskMsPerCamera": 4.062264166666667,
+        "endRestoreMsPerCamera": 4.09811,
+        "wallMsPerFrame": 58.249100000000006,
+        "mainThreadAllocatedBytesPerFrame": -1,
+        "sampledPeakUnityAllocatedBytes": 1153896569,
+        "allocationStatus": "Unavailable: Mono returned no allocation delta; this is not a zero-allocation result."
+      }
+    ],
+    "gpuTiming": "unavailable",
+    "mainThreadAllocations": "unavailable on this Mono runtime; zero was not accepted as evidence"
+  },
+  "gitInstallation": {
+    "sourceRevision": "3f2e1e31b7f854b164c7b76ee8a52e1c1c854ed8",
+    "packageTree": "a352b35d59c7e54be6bb6de66915f7299b08b5dd",
+    "matchedPayloadFiles": 281,
+    "payloadDifferences": [],
+    "ownPackageSource": "git",
+    "graphicsSource": "builtin",
+    "consumerPath": ".superpowers/consumers/GitInstall",
+    "temporaryConsumerRemoved": true,
+    "comparison": "Text line endings normalized; Unity-added package.json _fingerprint ignored; all other contents matched.",
+    "editMode": {
+      "passed": 181,
+      "failed": 0
+    },
+    "playMode": {
+      "passed": 16,
+      "failed": 0
+    }
+  },
+  "windowsBuild": {
+    "sourceRevision": "3f2e1e31b7f854b164c7b76ee8a52e1c1c854ed8",
+    "packageSource": "git",
+    "job_id": "build-6c3a9b7f63",
+    "result": "succeeded",
+    "platform": "StandaloneWindows64",
+    "output_path": "Build/Readiness.exe",
+    "started_at": "2026-11-06T10:47:07.497417Z",
+    "duration_seconds": 133.0962758,
+    "completed_at": "2026-11-06T10:49:20.5936928Z",
+    "total_size_mb": 196.32,
+    "errors": 0,
+    "warnings": 0,
+    "playerExecuted": false,
+    "scope": "Fresh Windows development Mono build of the Git-installed Basic sample. Build success is not a fresh Player runtime smoke test."
+  },
+  "mainScene": {
+    "path": "",
+    "dirty": false,
+    "roots": 2,
+    "savedOrDiscarded": false
+  },
+  "publication": {
+    "agentPushed": false,
+    "userWillPush": true
+  },
+  "temporaryConsumerRemoved": true,
+  "review": {
+    "critical": 0,
+    "important": 3,
+    "minor": 2,
+    "fixPassCompleted": true
+  },
+  "hardware": {
+    "cpu": "AMD Ryzen 7 7700 8-Core Processor",
+    "logicalProcessors": 16,
+    "ramMiB": 130165,
+    "gpu": "NVIDIA GeForce RTX 4060 Ti",
+    "gpuMemoryMiB": 16107,
+    "api": "Direct3D12",
+    "jobWorkers": 15
+  },
+  "consumerExit": "Graceful Editor exit stalled; only the verified owned temporary PID was stopped before scoped cleanup.",
+  "documentChecks": {
+    "command": "python Tools/ValidateAgentDocs.py",
+    "markdownFiles": 77,
+    "maximumInheritedBytes": 14156,
+    "budgetBytes": 32768,
+    "remoteCiExecuted": false
+  }
+}

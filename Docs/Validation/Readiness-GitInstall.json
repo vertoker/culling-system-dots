@@ -1,0 +1,19 @@
+{
+  "sourceRevision": "3f2e1e31b7f854b164c7b76ee8a52e1c1c854ed8",
+  "packageTree": "a352b35d59c7e54be6bb6de66915f7299b08b5dd",
+  "matchedPayloadFiles": 281,
+  "payloadDifferences": [],
+  "ownPackageSource": "git",
+  "graphicsSource": "builtin",
+  "consumerPath": ".superpowers/consumers/GitInstall",
+  "temporaryConsumerRemoved": true,
+  "comparison": "Text line endings normalized; Unity-added package.json _fingerprint ignored; all other contents matched.",
+  "editMode": {
+    "passed": 181,
+    "failed": 0
+  },
+  "playMode": {
+    "passed": 16,
+    "failed": 0
+  }
+}

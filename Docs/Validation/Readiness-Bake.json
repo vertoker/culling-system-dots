@@ -1,0 +1,153 @@
+{
+    "revision": "3f2e1e31b7f854b164c7b76ee8a52e1c1c854ed8",
+    "utc": "2026-11-06T10:38:57.0473943Z",
+    "unity": "6000.6.8f1",
+    "gpu": "NVIDIA GeForce RTX 4060 Ti",
+    "graphicsApi": "Direct3D12",
+    "memoryScope": "Peak of per-update samples, not an allocation cap or exact transient/VRAM peak.",
+    "timingScope": "Editor update driven bake, including capture, BVH, tracing, revalidation, encoding and own asset publication. Fixture setup excluded.",
+    "samplingIsolation": "Volume-restricted AlwaysInclude verified against an owned additive scene with an unrestricted Exclude region; actual active sample count checked.",
+    "groups": 512,
+    "rendererInstances": 512,
+    "uniqueMeshes": 16,
+    "uniqueTriangles": 32768,
+    "instancedTriangles": 1048576,
+    "cells": 128,
+    "resolution": 32,
+    "raysPerCell": 6144,
+    "runs": [
+        {
+            "requestedBackend": "Cpu",
+            "effectiveBackend": "CPU Jobs/Burst",
+            "fallbackReason": "",
+            "error": "",
+            "totalSeconds": 16.1174815,
+            "maxTickMilliseconds": 403.6596,
+            "maxEditorGapMilliseconds": 101.21910000000001,
+            "sampledPeakWorkingSetBytes": -1,
+            "sampledPeakUnityAllocatedBytes": 1167150242,
+            "sampledPeakManagedBytes": 129597440,
+            "workingSetStatus": "Unavailable from Unity Mono; see the external Windows process-memory samples.",
+            "actualActiveSamples": 128,
+            "updates": 182,
+            "phases": [
+                {
+                    "name": "Capturing scene inputs",
+                    "mainThreadTickSeconds": 0.6404808999999998,
+                    "sampledWallSeconds": 10.8281055,
+                    "maxTickMilliseconds": 17.5938,
+                    "ticks": 132
+                },
+                {
+                    "name": "Building acceleration structures",
+                    "mainThreadTickSeconds": 0.005412999999999999,
+                    "sampledWallSeconds": 0.2986331,
+                    "maxTickMilliseconds": 3.124,
+                    "ticks": 3
+                },
+                {
+                    "name": "Tracing visibility",
+                    "mainThreadTickSeconds": 0.006394599999999999,
+                    "sampledWallSeconds": 1.5857012000000008,
+                    "maxTickMilliseconds": 1.5310000000000001,
+                    "ticks": 16
+                },
+                {
+                    "name": "Validating current inputs",
+                    "mainThreadTickSeconds": 0.1766054,
+                    "sampledWallSeconds": 2.8039502999999986,
+                    "maxTickMilliseconds": 13.933300000000001,
+                    "ticks": 29
+                },
+                {
+                    "name": "Merging and encoding cells",
+                    "mainThreadTickSeconds": 0.000058399999999999997,
+                    "sampledWallSeconds": 0.09839630000000099,
+                    "maxTickMilliseconds": 0.0584,
+                    "ticks": 1
+                },
+                {
+                    "name": "Writing and importing output asset",
+                    "mainThreadTickSeconds": 0.4036596,
+                    "sampledWallSeconds": 0.5026820999999977,
+                    "maxTickMilliseconds": 403.6596,
+                    "ticks": 1
+                },
+                {
+                    "name": "Published",
+                    "mainThreadTickSeconds": 0.0,
+                    "sampledWallSeconds": 0.000007200000002427487,
+                    "maxTickMilliseconds": 0.0,
+                    "ticks": 0
+                }
+            ]
+        },
+        {
+            "requestedBackend": "Gpu",
+            "effectiveBackend": "GPU compute (binary BVH)",
+            "fallbackReason": "",
+            "error": "",
+            "totalSeconds": 57.938584999999996,
+            "maxTickMilliseconds": 481.6449,
+            "maxEditorGapMilliseconds": 102.10259999999494,
+            "sampledPeakWorkingSetBytes": -1,
+            "sampledPeakUnityAllocatedBytes": 1168722144,
+            "sampledPeakManagedBytes": 143118336,
+            "workingSetStatus": "Unavailable from Unity Mono; see the external Windows process-memory samples.",
+            "actualActiveSamples": 128,
+            "updates": 602,
+            "phases": [
+                {
+                    "name": "Capturing scene inputs",
+                    "mainThreadTickSeconds": 0.6002632000000003,
+                    "sampledWallSeconds": 12.2642027,
+                    "maxTickMilliseconds": 12.348,
+                    "ticks": 129
+                },
+                {
+                    "name": "Building acceleration structures",
+                    "mainThreadTickSeconds": 0.001776,
+                    "sampledWallSeconds": 0.10020759999999918,
+                    "maxTickMilliseconds": 1.776,
+                    "ticks": 1
+                },
+                {
+                    "name": "Tracing visibility",
+                    "mainThreadTickSeconds": 0.019131399999999996,
+                    "sampledWallSeconds": 42.07969059999999,
+                    "maxTickMilliseconds": 11.3466,
+                    "ticks": 439
+                },
+                {
+                    "name": "Validating current inputs",
+                    "mainThreadTickSeconds": 0.18955860000000002,
+                    "sampledWallSeconds": 2.815373600000001,
+                    "maxTickMilliseconds": 14.083,
+                    "ticks": 31
+                },
+                {
+                    "name": "Merging and encoding cells",
+                    "mainThreadTickSeconds": 0.0000042999999999999995,
+                    "sampledWallSeconds": 0.09760020000000225,
+                    "maxTickMilliseconds": 0.0043,
+                    "ticks": 1
+                },
+                {
+                    "name": "Writing and importing output asset",
+                    "mainThreadTickSeconds": 0.4816449,
+                    "sampledWallSeconds": 0.5815075000000007,
+                    "maxTickMilliseconds": 481.6449,
+                    "ticks": 1
+                },
+                {
+                    "name": "Published",
+                    "mainThreadTickSeconds": 0.0,
+                    "sampledWallSeconds": 0.0000025999999948567165,
+                    "maxTickMilliseconds": 0.0,
+                    "ticks": 0
+                }
+            ]
+        }
+    ],
+    "completed": true
+}

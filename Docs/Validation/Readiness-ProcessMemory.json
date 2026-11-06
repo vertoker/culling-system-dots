@@ -1,0 +1,17 @@
+﻿{
+    "editorPid":  81112,
+    "sourceRevision":  "3f2e1e31b7f854b164c7b76ee8a52e1c1c854ed8",
+    "startUtc":  "2026-11-06T10:38:46.0726845Z",
+    "endUtc":  "2026-11-06T10:40:11.3969783Z",
+    "intervalMilliseconds":  100,
+    "scope":  "External Windows Get-Process WorkingSet64 sampling enabled before both CPU/GPU runs. Entire Editor process including baseline; excludes separate processes; not an exact transient/VRAM peak.",
+    "sampledPeakWorkingSetBytes":  {
+                                       "Gpu":  2953478144,
+                                       "Cpu":  2935631872
+                                   },
+    "samples":  {
+                    "Gpu":  481,
+                    "Cpu":  133
+                },
+    "finished":  true
+}

@@ -1,0 +1,16 @@
+{
+  "sourceRevision": "3f2e1e31b7f854b164c7b76ee8a52e1c1c854ed8",
+  "packageSource": "git",
+  "job_id": "build-6c3a9b7f63",
+  "result": "succeeded",
+  "platform": "StandaloneWindows64",
+  "output_path": "Build/Readiness.exe",
+  "started_at": "2026-11-06T10:47:07.497417Z",
+  "duration_seconds": 133.0962758,
+  "completed_at": "2026-11-06T10:49:20.5936928Z",
+  "total_size_mb": 196.32,
+  "errors": 0,
+  "warnings": 0,
+  "playerExecuted": false,
+  "scope": "Fresh Windows development Mono build of the Git-installed Basic sample. Build success is not a fresh Player runtime smoke test."
+}

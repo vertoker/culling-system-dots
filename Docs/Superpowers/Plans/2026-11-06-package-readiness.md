@@ -1,6 +1,6 @@
 # Package readiness and responsive baking
 
-**Status:** In progress.
+**Status:** Completed locally. Publication/force push remains with the user.
 
 **Goal:** Automate agent-document validation, remove unrelated ignore rules, exercise local skills,
 make the bake window responsive through preparation/publication, measure a substantial synthetic
@@ -36,9 +36,9 @@ links. Document actual newly validated behavior and remaining limits; do not rel
 - [x] Validator, negative/positive fixture tests, CI and usage instructions; remove game-only ignores.
 - [x] Package MIT license, README, changelog and descriptor metadata; exercise documentation skills.
 - [x] Responsive capture/build/postprocess/publication with cancellation/lifetime regressions.
-- [ ] Fresh relevant Unity suites and CPU/GPU large-scene and camera-cost measurements.
-- [ ] Review integrated changes, verify installation payload and public docs, commit on master.
-- [ ] Provide final local revision and guarded publication command for the user; do not push.
+- [x] Fresh relevant Unity suites and CPU/GPU large-scene and camera-cost measurements.
+- [x] Review integrated changes, verify installation payload and public docs, commit on master.
+- [x] Provide final local revision and guarded publication command for the user; do not push.
 
 ## Verification and rulings
 
@@ -63,3 +63,11 @@ links. Document actual newly validated behavior and remaining limits; do not rel
   and never enter tracing. This guard/import can still stall briefly. No hard frame budget is claimed.
 - Benchmark fixture sampling is checked against an owned unrelated Exclude region. Mono process
   and allocation counters returning zero are unavailable; external process-memory sampling is used.
+- Source delivery commit: 3f2e1e3. Fresh source benchmark: CPU 16.117 s, GPU 57.939 s, 128 verified cells;
+  worst final source-check/write tick 481.645 ms. Camera cases expose substantial per-camera CPU cost;
+  no acceleration or zero-allocation claim. Detailed scoped reports are under Docs/Validation/Readiness*.
+- Fresh Git-installed consumer: all 281 payload files match after documented text normalization;
+  181/181 EditMode and 16/16 PlayMode; Windows Mono sample build 133.096 s, zero errors/warnings. No fresh
+  Player execution. The temporary Editor exit stalled; only its verified owned process was stopped,
+  then the exact temporary tree was removed. Main scene remains unnamed/clean/two roots.
+- The evidence commit leaves the tested package tree unchanged. No remote writes were performed.

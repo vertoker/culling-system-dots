@@ -1,0 +1,70 @@
+{
+    "unity": "6000.6.8f1",
+    "gpu": "NVIDIA GeForce RTX 4060 Ti",
+    "api": "Direct3D12",
+    "utc": "2026-11-06T10:36:23.2657198Z",
+    "scope": "Editor PlayMode synthetic render entities, 5 warmup/30 sampled frames per case, one/four offscreen cameras. Callback timing brackets actual adapter handlers; includes reader synchronization and mask mutation. Wall frame time and allocations include Editor/test runner/render loop, not isolated adapter CPU time.",
+    "gpuTiming": "Unavailable: no reliable GPU timing captured; zero is not implied.",
+    "cases": [
+        {
+            "cameras": 1,
+            "entities": 3000,
+            "frames": 30,
+            "beginCalls": 30,
+            "endCalls": 30,
+            "adapter": false,
+            "publicationMsPerFrame": 0.000060000000000000015,
+            "beginMaskMsPerCamera": 0.00098,
+            "endRestoreMsPerCamera": 0.00082,
+            "wallMsPerFrame": 3.9784200000000003,
+            "mainThreadAllocatedBytesPerFrame": -1,
+            "sampledPeakUnityAllocatedBytes": 1152780795,
+            "allocationStatus": "Unavailable: Mono returned no allocation delta; this is not a zero-allocation result."
+        },
+        {
+            "cameras": 1,
+            "entities": 3000,
+            "frames": 30,
+            "beginCalls": 30,
+            "endCalls": 30,
+            "adapter": true,
+            "publicationMsPerFrame": 13.054476666666664,
+            "beginMaskMsPerCamera": 4.104306666666667,
+            "endRestoreMsPerCamera": 4.2012133333333335,
+            "wallMsPerFrame": 26.85972,
+            "mainThreadAllocatedBytesPerFrame": -1,
+            "sampledPeakUnityAllocatedBytes": 1151959595,
+            "allocationStatus": "Unavailable: Mono returned no allocation delta; this is not a zero-allocation result."
+        },
+        {
+            "cameras": 4,
+            "entities": 3000,
+            "frames": 30,
+            "beginCalls": 120,
+            "endCalls": 120,
+            "adapter": false,
+            "publicationMsPerFrame": 0.00006000000000000002,
+            "beginMaskMsPerCamera": 0.00022583333333333334,
+            "endRestoreMsPerCamera": 0.00028416666666666667,
+            "wallMsPerFrame": 6.331236666666667,
+            "mainThreadAllocatedBytesPerFrame": -1,
+            "sampledPeakUnityAllocatedBytes": 1153956377,
+            "allocationStatus": "Unavailable: Mono returned no allocation delta; this is not a zero-allocation result."
+        },
+        {
+            "cameras": 4,
+            "entities": 3000,
+            "frames": 30,
+            "beginCalls": 120,
+            "endCalls": 120,
+            "adapter": true,
+            "publicationMsPerFrame": 16.85775,
+            "beginMaskMsPerCamera": 4.062264166666667,
+            "endRestoreMsPerCamera": 4.09811,
+            "wallMsPerFrame": 58.249100000000006,
+            "mainThreadAllocatedBytesPerFrame": -1,
+            "sampledPeakUnityAllocatedBytes": 1153896569,
+            "allocationStatus": "Unavailable: Mono returned no allocation delta; this is not a zero-allocation result."
+        }
+    ]
+}

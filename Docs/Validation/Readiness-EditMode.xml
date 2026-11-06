@@ -1,0 +1,1363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="182" result="Passed" total="182" passed="182" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-06 10:26:56Z" end-time="2026-11-06 10:27:13Z" duration="16,4483023">
+  <test-suite type="TestSuite" id="1000" name="CullingSystemDOTS" fullname="CullingSystemDOTS" runstate="Runnable" testcasecount="182" result="Passed" start-time="2026-11-06 10:26:56Z" end-time="2026-11-06 10:27:13Z" duration="16.448302" total="182" passed="182" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1027" name="CullingSystemDOTS.Core.Tests.dll" fullname="C:/Projects/UnityPlugins/CullingSystemDOTS/Library/ScriptAssemblies/CullingSystemDOTS.Core.Tests.dll" runstate="Runnable" testcasecount="22" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.619020" total="22" passed="22" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="81112" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1028" name="CullingSystemDOTS" fullname="CullingSystemDOTS" runstate="Runnable" testcasecount="22" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.515494" total="22" passed="22" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1029" name="Tests" fullname="CullingSystemDOTS.Tests" runstate="Runnable" testcasecount="22" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.407010" total="22" passed="22" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1001" name="FrameEvaluatorTests" fullname="CullingSystemDOTS.Tests.FrameEvaluatorTests" classname="CullingSystemDOTS.Tests.FrameEvaluatorTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.075321" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1004" name="BindingGenerationReinitializesOnlyReplacedGroupsWithoutRendering" fullname="CullingSystemDOTS.Tests.FrameEvaluatorTests.BindingGenerationReinitializesOnlyReplacedGroupsWithoutRendering" methodname="BindingGenerationReinitializesOnlyReplacedGroupsWithoutRendering" classname="CullingSystemDOTS.Tests.FrameEvaluatorTests" runstate="Runnable" seed="62268158" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.041221" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1003" name="CorruptionAfterAnEarlierPassRollsBackAllStateAndOperations" fullname="CullingSystemDOTS.Tests.FrameEvaluatorTests.CorruptionAfterAnEarlierPassRollsBackAllStateAndOperations" methodname="CorruptionAfterAnEarlierPassRollsBackAllStateAndOperations" classname="CullingSystemDOTS.Tests.FrameEvaluatorTests" runstate="Runnable" seed="2010176020" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.001833" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1007" name="DependentEvaluationCanBeScheduledBeforeThePreviousJobCompletes" fullname="CullingSystemDOTS.Tests.FrameEvaluatorTests.DependentEvaluationCanBeScheduledBeforeThePreviousJobCompletes" methodname="DependentEvaluationCanBeScheduledBeforeThePreviousJobCompletes" classname="CullingSystemDOTS.Tests.FrameEvaluatorTests" runstate="Runnable" seed="1960724461" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000561" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1002" name="ExplicitDataInvalidationOverridesSameCellHashAndPreservesOldBuffer" fullname="CullingSystemDOTS.Tests.FrameEvaluatorTests.ExplicitDataInvalidationOverridesSameCellHashAndPreservesOldBuffer" methodname="ExplicitDataInvalidationOverridesSameCellHashAndPreservesOldBuffer" classname="CullingSystemDOTS.Tests.FrameEvaluatorTests" runstate="Runnable" seed="2049918462" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.001454" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1006" name="GroupKeysRemapStateAcrossVolumeReorderAndRemoval" fullname="CullingSystemDOTS.Tests.FrameEvaluatorTests.GroupKeysRemapStateAcrossVolumeReorderAndRemoval" methodname="GroupKeysRemapStateAcrossVolumeReorderAndRemoval" classname="CullingSystemDOTS.Tests.FrameEvaluatorTests" runstate="Runnable" seed="1464589081" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000783" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1008" name="InstancesSharingOneBakeKeepIndependentStateAndKeys" fullname="CullingSystemDOTS.Tests.FrameEvaluatorTests.InstancesSharingOneBakeKeepIndependentStateAndKeys" methodname="InstancesSharingOneBakeKeepIndependentStateAndKeys" classname="CullingSystemDOTS.Tests.FrameEvaluatorTests" runstate="Runnable" seed="1549992945" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.001347" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1005" name="ReusingPreviousAsOutputIsRejectedBeforeScheduling" fullname="CullingSystemDOTS.Tests.FrameEvaluatorTests.ReusingPreviousAsOutputIsRejectedBeforeScheduling" methodname="ReusingPreviousAsOutputIsRejectedBeforeScheduling" classname="CullingSystemDOTS.Tests.FrameEvaluatorTests" runstate="Runnable" seed="1544847576" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.002555" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1009" name="LegacyFormatTests" fullname="CullingSystemDOTS.Tests.LegacyFormatTests" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.222210" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1022" name="CorruptDataPreservesTheCallersPreviousResult" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.CorruptDataPreservesTheCallersPreviousResult" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.110656" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1015" name="CorruptDataPreservesTheCallersPreviousResult(System.Byte[],0,0,1,TruncatedData)" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.CorruptDataPreservesTheCallersPreviousResult(System.Byte[],0,0,1,TruncatedData)" methodname="CorruptDataPreservesTheCallersPreviousResult" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="1776290162" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.003458" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1016" name="CorruptDataPreservesTheCallersPreviousResult(System.Byte[],0,1,2,TruncatedData)" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.CorruptDataPreservesTheCallersPreviousResult(System.Byte[],0,1,2,TruncatedData)" methodname="CorruptDataPreservesTheCallersPreviousResult" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="1736963066" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000397" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1017" name="CorruptDataPreservesTheCallersPreviousResult(System.Byte[],0,1,1,UnterminatedDelta)" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.CorruptDataPreservesTheCallersPreviousResult(System.Byte[],0,1,1,UnterminatedDelta)" methodname="CorruptDataPreservesTheCallersPreviousResult" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="627406649" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000149" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1018" name="CorruptDataPreservesTheCallersPreviousResult(System.Byte[],-1,1,1,InvalidRange)" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.CorruptDataPreservesTheCallersPreviousResult(System.Byte[],-1,1,1,InvalidRange)" methodname="CorruptDataPreservesTheCallersPreviousResult" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="94803756" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000156" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1019" name="CorruptDataPreservesTheCallersPreviousResult(System.Byte[],0,2,1,InvalidRange)" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.CorruptDataPreservesTheCallersPreviousResult(System.Byte[],0,2,1,InvalidRange)" methodname="CorruptDataPreservesTheCallersPreviousResult" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="297148746" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000141" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1020" name="CorruptDataPreservesTheCallersPreviousResult(System.Byte[],int.MaxValue,1,1,InvalidRange)" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.CorruptDataPreservesTheCallersPreviousResult(System.Byte[],int.MaxValue,1,1,InvalidRange)" methodname="CorruptDataPreservesTheCallersPreviousResult" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="944523930" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000139" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1021" name="CorruptDataPreservesTheCallersPreviousResult(System.Byte[],0,1,2,NonIncreasingGroupIndex)" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.CorruptDataPreservesTheCallersPreviousResult(System.Byte[],0,1,2,NonIncreasingGroupIndex)" methodname="CorruptDataPreservesTheCallersPreviousResult" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="1964954559" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000115" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1023" name="DecodeAppendsToTheDestinationLikeLegacySampling" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.DecodeAppendsToTheDestinationLikeLegacySampling" methodname="DecodeAppendsToTheDestinationLikeLegacySampling" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="1329291231" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000290" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1026" name="DecoderRunsInsideABurstCompiledJob" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.DecoderRunsInsideABurstCompiledJob" methodname="DecoderRunsInsideABurstCompiledJob" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="1162767847" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.002045" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1014" name="DecodesLegacyLeastSignificantBitAndContinuationEncoding" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.DecodesLegacyLeastSignificantBitAndContinuationEncoding" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.101738" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1010" name="DecodesLegacyLeastSignificantBitAndContinuationEncoding(System.Byte[],2,System.UInt16[])" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.DecodesLegacyLeastSignificantBitAndContinuationEncoding(System.Byte[],2,System.UInt16[])" methodname="DecodesLegacyLeastSignificantBitAndContinuationEncoding" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="125601398" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000922" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1011" name="DecodesLegacyLeastSignificantBitAndContinuationEncoding(System.Byte[],2,System.UInt16[])" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.DecodesLegacyLeastSignificantBitAndContinuationEncoding(System.Byte[],2,System.UInt16[])" methodname="DecodesLegacyLeastSignificantBitAndContinuationEncoding" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="1694003576" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000140" asserts="0">
+                <properties>
+                  <property name="childIndex" value="2" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1012" name="DecodesLegacyLeastSignificantBitAndContinuationEncoding(System.Byte[],2,System.UInt16[])" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.DecodesLegacyLeastSignificantBitAndContinuationEncoding(System.Byte[],2,System.UInt16[])" methodname="DecodesLegacyLeastSignificantBitAndContinuationEncoding" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="1089785357" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000114" asserts="0">
+                <properties>
+                  <property name="childIndex" value="3" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1013" name="DecodesLegacyLeastSignificantBitAndContinuationEncoding(System.Byte[],0,System.UInt16[])" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.DecodesLegacyLeastSignificantBitAndContinuationEncoding(System.Byte[],0,System.UInt16[])" methodname="DecodesLegacyLeastSignificantBitAndContinuationEncoding" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="433791792" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000106" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1025" name="GroupIndexOutsideTheBakeMappingIsRejectedAtomically" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.GroupIndexOutsideTheBakeMappingIsRejectedAtomically" methodname="GroupIndexOutsideTheBakeMappingIsRejectedAtomically" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="1904345063" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000376" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1024" name="InvalidCellDoesNotReadTheBlobArray" fullname="CullingSystemDOTS.Tests.LegacyFormatTests.InvalidCellDoesNotReadTheBlobArray" methodname="InvalidCellDoesNotReadTheBlobArray" classname="CullingSystemDOTS.Tests.LegacyFormatTests" runstate="Runnable" seed="888312412" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:57Z" duration="0.000305" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1032" name="CullingSystemDOTS.Delivery.Tests.dll" fullname="C:/Projects/UnityPlugins/CullingSystemDOTS/Library/ScriptAssemblies/CullingSystemDOTS.Delivery.Tests.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:59Z" duration="1.868084" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="81112" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1033" name="CullingSystemDOTS" fullname="CullingSystemDOTS" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:59Z" duration="1.764842" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1034" name="Delivery" fullname="CullingSystemDOTS.Delivery" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:59Z" duration="1.655158" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1035" name="Tests" fullname="CullingSystemDOTS.Delivery.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 10:26:57Z" end-time="2026-11-06 10:26:59Z" duration="1.547041" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1030" name="DeliveryFixtureTests" fullname="CullingSystemDOTS.Delivery.Tests.DeliveryFixtureTests" classname="CullingSystemDOTS.Delivery.Tests.DeliveryFixtureTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 10:26:58Z" end-time="2026-11-06 10:26:59Z" duration="1.435586" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1031" name="GeneratedSampleIsSelfContainedAndDoesNotSaveOrCloseTheHostScene" fullname="CullingSystemDOTS.Delivery.Tests.DeliveryFixtureTests.GeneratedSampleIsSelfContainedAndDoesNotSaveOrCloseTheHostScene" methodname="GeneratedSampleIsSelfContainedAndDoesNotSaveOrCloseTheHostScene" classname="CullingSystemDOTS.Delivery.Tests.DeliveryFixtureTests" runstate="Runnable" seed="421224831" result="Passed" start-time="2026-11-06 10:26:58Z" end-time="2026-11-06 10:26:59Z" duration="1.329588" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1209" name="CullingSystemDOTS.Editor.Tests.dll" fullname="C:/Projects/UnityPlugins/CullingSystemDOTS/Library/ScriptAssemblies/CullingSystemDOTS.Editor.Tests.dll" runstate="Runnable" testcasecount="139" result="Passed" start-time="2026-11-06 10:26:59Z" end-time="2026-11-06 10:27:12Z" duration="12.850289" total="139" passed="139" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="81112" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1210" name="CullingSystemDOTS" fullname="CullingSystemDOTS" runstate="Runnable" testcasecount="139" result="Passed" start-time="2026-11-06 10:26:59Z" end-time="2026-11-06 10:27:12Z" duration="12.767535" total="139" passed="139" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1211" name="Tests" fullname="CullingSystemDOTS.Tests" runstate="Runnable" testcasecount="139" result="Passed" start-time="2026-11-06 10:26:59Z" end-time="2026-11-06 10:27:12Z" duration="12.759001" total="139" passed="139" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1036" name="BakeBackendContractTests" fullname="CullingSystemDOTS.Tests.BakeBackendContractTests" classname="CullingSystemDOTS.Tests.BakeBackendContractTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 10:26:59Z" end-time="2026-11-06 10:26:59Z" duration="0.103663" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1037" name="CancelBeforeReferenceExecutionPublishesNoResultAndKeepsSnapshotOwnedByCaller" fullname="CullingSystemDOTS.Tests.BakeBackendContractTests.CancelBeforeReferenceExecutionPublishesNoResultAndKeepsSnapshotOwnedByCaller" methodname="CancelBeforeReferenceExecutionPublishesNoResultAndKeepsSnapshotOwnedByCaller" classname="CullingSystemDOTS.Tests.BakeBackendContractTests" runstate="Runnable" seed="360706696" result="Passed" start-time="2026-11-06 10:26:59Z" end-time="2026-11-06 10:26:59Z" duration="0.001481" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1038" name="CompletedReferenceSessionHasMonotonicProgressAndDoesNotOwnSnapshot" fullname="CullingSystemDOTS.Tests.BakeBackendContractTests.CompletedReferenceSessionHasMonotonicProgressAndDoesNotOwnSnapshot" methodname="CompletedReferenceSessionHasMonotonicProgressAndDoesNotOwnSnapshot" classname="CullingSystemDOTS.Tests.BakeBackendContractTests" runstate="Runnable" seed="1215358972" result="Passed" start-time="2026-11-06 10:26:59Z" end-time="2026-11-06 10:26:59Z" duration="0.006422" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1039" name="BakeLifetimeTests" fullname="CullingSystemDOTS.Tests.BakeLifetimeTests" classname="CullingSystemDOTS.Tests.BakeLifetimeTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-06 10:26:59Z" end-time="2026-11-06 10:27:00Z" duration="0.232893" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1042" name="BudgetFailureHappensBeforeAllocationAndRetainsBorrowedSnapshot" fullname="CullingSystemDOTS.Tests.BakeLifetimeTests.BudgetFailureHappensBeforeAllocationAndRetainsBorrowedSnapshot" methodname="BudgetFailureHappensBeforeAllocationAndRetainsBorrowedSnapshot" classname="CullingSystemDOTS.Tests.BakeLifetimeTests" runstate="Runnable" seed="174145993" result="Passed" start-time="2026-11-06 10:26:59Z" end-time="2026-11-06 10:26:59Z" duration="0.005338" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1040" name="CancellationBeforeAndDuringBatchPublishesNoPartialResult" fullname="CullingSystemDOTS.Tests.BakeLifetimeTests.CancellationBeforeAndDuringBatchPublishesNoPartialResult" methodname="CancellationBeforeAndDuringBatchPublishesNoPartialResult" classname="CullingSystemDOTS.Tests.BakeLifetimeTests" runstate="Runnable" seed="276463463" result="Passed" start-time="2026-11-06 10:26:59Z" end-time="2026-11-06 10:26:59Z" duration="0.001604" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1044" name="EmptyBakeFitsWithoutAWorkBatchAndReportsCompleted" fullname="CullingSystemDOTS.Tests.BakeLifetimeTests.EmptyBakeFitsWithoutAWorkBatchAndReportsCompleted" methodname="EmptyBakeFitsWithoutAWorkBatchAndReportsCompleted" classname="CullingSystemDOTS.Tests.BakeLifetimeTests" runstate="Runnable" seed="597533696" result="Passed" start-time="2026-11-06 10:26:59Z" end-time="2026-11-06 10:26:59Z" duration="0.000945" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1041" name="ExceptionReleasesNativeMemoryAndRetainsOriginalFailure" fullname="CullingSystemDOTS.Tests.BakeLifetimeTests.ExceptionReleasesNativeMemoryAndRetainsOriginalFailure" methodname="ExceptionReleasesNativeMemoryAndRetainsOriginalFailure" classname="CullingSystemDOTS.Tests.BakeLifetimeTests" runstate="Runnable" seed="1974725182" result="Passed" start-time="2026-11-06 10:26:59Z" end-time="2026-11-06 10:26:59Z" duration="0.001536" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1045" name="NoWorkDoesNotClaimExecutionInBurst" fullname="CullingSystemDOTS.Tests.BakeLifetimeTests.NoWorkDoesNotClaimExecutionInBurst" methodname="NoWorkDoesNotClaimExecutionInBurst" classname="CullingSystemDOTS.Tests.BakeLifetimeTests" runstate="Runnable" seed="451205012" result="Passed" start-time="2026-11-06 10:26:59Z" end-time="2026-11-06 10:26:59Z" duration="0.000459" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1043" name="RepeatedBakeReleasesAllOwnedBuffersAndRunsInBurst" fullname="CullingSystemDOTS.Tests.BakeLifetimeTests.RepeatedBakeReleasesAllOwnedBuffersAndRunsInBurst" methodname="RepeatedBakeReleasesAllOwnedBuffersAndRunsInBurst" classname="CullingSystemDOTS.Tests.BakeLifetimeTests" runstate="Runnable" seed="474166751" result="Passed" start-time="2026-11-06 10:26:59Z" end-time="2026-11-06 10:27:00Z" duration="0.121385" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1046" name="BakeNumericValidationTests" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.118880" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1057" name="InvalidGeometryFaultsWithoutReturningPartialVisibility" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidGeometryFaultsWithoutReturningPartialVisibility" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.011913" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1047" name="InvalidGeometryFaultsWithoutReturningPartialVisibility(False,&quot;vertex&quot;)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidGeometryFaultsWithoutReturningPartialVisibility(False,&quot;vertex&quot;)" methodname="InvalidGeometryFaultsWithoutReturningPartialVisibility" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="1885755779" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.002380" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1048" name="InvalidGeometryFaultsWithoutReturningPartialVisibility(True,&quot;vertex&quot;)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidGeometryFaultsWithoutReturningPartialVisibility(True,&quot;vertex&quot;)" methodname="InvalidGeometryFaultsWithoutReturningPartialVisibility" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="269034039" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.002725" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1049" name="InvalidGeometryFaultsWithoutReturningPartialVisibility(False,&quot;transform&quot;)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidGeometryFaultsWithoutReturningPartialVisibility(False,&quot;transform&quot;)" methodname="InvalidGeometryFaultsWithoutReturningPartialVisibility" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="1778618929" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.000249" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1050" name="InvalidGeometryFaultsWithoutReturningPartialVisibility(True,&quot;transform&quot;)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidGeometryFaultsWithoutReturningPartialVisibility(True,&quot;transform&quot;)" methodname="InvalidGeometryFaultsWithoutReturningPartialVisibility" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="1797103057" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.000221" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1051" name="InvalidGeometryFaultsWithoutReturningPartialVisibility(False,&quot;inverse&quot;)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidGeometryFaultsWithoutReturningPartialVisibility(False,&quot;inverse&quot;)" methodname="InvalidGeometryFaultsWithoutReturningPartialVisibility" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="2106660745" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.000163" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1052" name="InvalidGeometryFaultsWithoutReturningPartialVisibility(True,&quot;inverse&quot;)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidGeometryFaultsWithoutReturningPartialVisibility(True,&quot;inverse&quot;)" methodname="InvalidGeometryFaultsWithoutReturningPartialVisibility" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="101551236" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.000200" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1053" name="InvalidGeometryFaultsWithoutReturningPartialVisibility(False,&quot;bounds&quot;)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidGeometryFaultsWithoutReturningPartialVisibility(False,&quot;bounds&quot;)" methodname="InvalidGeometryFaultsWithoutReturningPartialVisibility" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="2014001220" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.000155" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1054" name="InvalidGeometryFaultsWithoutReturningPartialVisibility(True,&quot;bounds&quot;)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidGeometryFaultsWithoutReturningPartialVisibility(True,&quot;bounds&quot;)" methodname="InvalidGeometryFaultsWithoutReturningPartialVisibility" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="418827261" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.000204" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1055" name="InvalidGeometryFaultsWithoutReturningPartialVisibility(False,&quot;singular&quot;)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidGeometryFaultsWithoutReturningPartialVisibility(False,&quot;singular&quot;)" methodname="InvalidGeometryFaultsWithoutReturningPartialVisibility" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="1874970316" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.000160" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1056" name="InvalidGeometryFaultsWithoutReturningPartialVisibility(True,&quot;singular&quot;)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidGeometryFaultsWithoutReturningPartialVisibility(True,&quot;singular&quot;)" methodname="InvalidGeometryFaultsWithoutReturningPartialVisibility" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="2092572502" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.000184" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1062" name="InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.104185" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1058" name="InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake(False,False)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake(False,False)" methodname="InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="1805627893" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.001148" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1059" name="InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake(True,False)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake(True,False)" methodname="InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="642833549" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.000239" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1060" name="InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake(False,True)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake(False,True)" methodname="InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="723048706" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.000253" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1061" name="InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake(True,True)" fullname="CullingSystemDOTS.Tests.BakeNumericValidationTests.InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake(True,True)" methodname="InvalidSampleOrRotationFaultsBeforePublishingAnEmptyBake" classname="CullingSystemDOTS.Tests.BakeNumericValidationTests" runstate="Runnable" seed="1535973725" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.000190" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1063" name="BakeOutputWriterTests" fullname="CullingSystemDOTS.Tests.BakeOutputWriterTests" classname="CullingSystemDOTS.Tests.BakeOutputWriterTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:01Z" duration="1.368974" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1068" name="BakeSaveIsAtomicAndKeepsExistingGuid" fullname="CullingSystemDOTS.Tests.BakeOutputWriterTests.BakeSaveIsAtomicAndKeepsExistingGuid" methodname="BakeSaveIsAtomicAndKeepsExistingGuid" classname="CullingSystemDOTS.Tests.BakeOutputWriterTests" runstate="Runnable" seed="1454217979" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:00Z" duration="0.455731" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1069" name="CancellationKeepsPreviousBakeBytesAndGuid" fullname="CullingSystemDOTS.Tests.BakeOutputWriterTests.CancellationKeepsPreviousBakeBytesAndGuid" methodname="CancellationKeepsPreviousBakeBytesAndGuid" classname="CullingSystemDOTS.Tests.BakeOutputWriterTests" runstate="Runnable" seed="585186894" result="Passed" start-time="2026-11-06 10:27:00Z" end-time="2026-11-06 10:27:01Z" duration="0.274247" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1067" name="InvalidDuplicateAndOutOfRangeResultsAreRejectedBeforePublication" fullname="CullingSystemDOTS.Tests.BakeOutputWriterTests.InvalidDuplicateAndOutOfRangeResultsAreRejectedBeforePublication" methodname="InvalidDuplicateAndOutOfRangeResultsAreRejectedBeforePublication" classname="CullingSystemDOTS.Tests.BakeOutputWriterTests" runstate="Runnable" seed="1016073607" result="Passed" start-time="2026-11-06 10:27:01Z" end-time="2026-11-06 10:27:01Z" duration="0.000980" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1070" name="LockedDestinationFailsWithoutTouchingPreviousBake" fullname="CullingSystemDOTS.Tests.BakeOutputWriterTests.LockedDestinationFailsWithoutTouchingPreviousBake" methodname="LockedDestinationFailsWithoutTouchingPreviousBake" classname="CullingSystemDOTS.Tests.BakeOutputWriterTests" runstate="Runnable" seed="1395676089" result="Passed" start-time="2026-11-06 10:27:01Z" end-time="2026-11-06 10:27:01Z" duration="0.461738" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1066" name="OutputKeepsExcludedFullGridIndicesAndExplicitMetadataProfile" fullname="CullingSystemDOTS.Tests.BakeOutputWriterTests.OutputKeepsExcludedFullGridIndicesAndExplicitMetadataProfile" classname="CullingSystemDOTS.Tests.BakeOutputWriterTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 10:27:01Z" end-time="2026-11-06 10:27:01Z" duration="0.067107" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1064" name="OutputKeepsExcludedFullGridIndicesAndExplicitMetadataProfile(ComputeNeighbors)" fullname="CullingSystemDOTS.Tests.BakeOutputWriterTests.OutputKeepsExcludedFullGridIndicesAndExplicitMetadataProfile(ComputeNeighbors)" methodname="OutputKeepsExcludedFullGridIndicesAndExplicitMetadataProfile" classname="CullingSystemDOTS.Tests.BakeOutputWriterTests" runstate="Runnable" seed="1230131164" result="Passed" start-time="2026-11-06 10:27:01Z" end-time="2026-11-06 10:27:01Z" duration="0.001533" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1065" name="OutputKeepsExcludedFullGridIndicesAndExplicitMetadataProfile(NativeDefault)" fullname="CullingSystemDOTS.Tests.BakeOutputWriterTests.OutputKeepsExcludedFullGridIndicesAndExplicitMetadataProfile(NativeDefault)" methodname="OutputKeepsExcludedFullGridIndicesAndExplicitMetadataProfile" classname="CullingSystemDOTS.Tests.BakeOutputWriterTests" runstate="Runnable" seed="408634872" result="Passed" start-time="2026-11-06 10:27:01Z" end-time="2026-11-06 10:27:01Z" duration="0.000438" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1071" name="BakeWorkflowTests" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" testcasecount="17" result="Passed" start-time="2026-11-06 10:27:01Z" end-time="2026-11-06 10:27:07Z" duration="5.859454" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1081" name="CancelledControllerDoesNotPublishAndCanBeDisposedRepeatedly" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.CancelledControllerDoesNotPublishAndCanBeDisposedRepeatedly" methodname="CancelledControllerDoesNotPublishAndCanBeDisposedRepeatedly" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="1474642208" result="Passed" start-time="2026-11-06 10:27:01Z" end-time="2026-11-06 10:27:01Z" duration="0.022914" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+            </test-case>
+            <test-case id="1078" name="CoincidentOpaqueSurfacesChooseTheFirstRegisteredGroupDeterministically" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.CoincidentOpaqueSurfacesChooseTheFirstRegisteredGroupDeterministically" methodname="CoincidentOpaqueSurfacesChooseTheFirstRegisteredGroupDeterministically" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="1434080536" result="Passed" start-time="2026-11-06 10:27:01Z" end-time="2026-11-06 10:27:01Z" duration="0.266501" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+            </test-case>
+            <test-case id="1082" name="EditorTicksAdvanceBatchesWithoutCallingComplete" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.EditorTicksAdvanceBatchesWithoutCallingComplete" methodname="EditorTicksAdvanceBatchesWithoutCallingComplete" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="377713488" result="Passed" start-time="2026-11-06 10:27:01Z" end-time="2026-11-06 10:27:02Z" duration="0.622662" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+            </test-case>
+            <test-case id="1077" name="FailedExecutionCannotReplaceExistingBake" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.FailedExecutionCannotReplaceExistingBake" methodname="FailedExecutionCannotReplaceExistingBake" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="2088673442" result="Passed" start-time="2026-11-06 10:27:02Z" end-time="2026-11-06 10:27:02Z" duration="0.252218" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1080" name="GeometryChangeInvalidatesBakeBeforePublication" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.GeometryChangeInvalidatesBakeBeforePublication" methodname="GeometryChangeInvalidatesBakeBeforePublication" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="1987384120" result="Passed" start-time="2026-11-06 10:27:02Z" end-time="2026-11-06 10:27:02Z" duration="0.017448" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+            </test-case>
+            <test-case id="1085" name="IncrementalPublicationCanCancelWithoutReplacingExistingBytesOrGuid" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.IncrementalPublicationCanCancelWithoutReplacingExistingBytesOrGuid" methodname="IncrementalPublicationCanCancelWithoutReplacingExistingBytesOrGuid" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="600336103" result="Passed" start-time="2026-11-06 10:27:02Z" end-time="2026-11-06 10:27:03Z" duration="0.290888" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1088" name="IncrementalPublicationIoFailureRetainsReadyResultsForRetry" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.IncrementalPublicationIoFailureRetainsReadyResultsForRetry" methodname="IncrementalPublicationIoFailureRetainsReadyResultsForRetry" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="1861409079" result="Passed" start-time="2026-11-06 10:27:03Z" end-time="2026-11-06 10:27:03Z" duration="0.705215" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1087" name="IncrementalPublicationRejectsChangedGeometryAndKeepsOldOutput" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.IncrementalPublicationRejectsChangedGeometryAndKeepsOldOutput" methodname="IncrementalPublicationRejectsChangedGeometryAndKeepsOldOutput" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="879461946" result="Passed" start-time="2026-11-06 10:27:03Z" end-time="2026-11-06 10:27:04Z" duration="0.442616" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1083" name="IncrementalStartDefersCaptureAndCanCancelBeforeReadingScene" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.IncrementalStartDefersCaptureAndCanCancelBeforeReadingScene" methodname="IncrementalStartDefersCaptureAndCanCancelBeforeReadingScene" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="836205445" result="Passed" start-time="2026-11-06 10:27:04Z" end-time="2026-11-06 10:27:04Z" duration="0.004999" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1084" name="IncrementalStartFreezesSettingsAndRejectsLaterMergeChangesAtPublication" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.IncrementalStartFreezesSettingsAndRejectsLaterMergeChangesAtPublication" methodname="IncrementalStartFreezesSettingsAndRejectsLaterMergeChangesAtPublication" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="1022709280" result="Passed" start-time="2026-11-06 10:27:04Z" end-time="2026-11-06 10:27:04Z" duration="0.004636" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1086" name="IncrementalWindowWorkflowPublishesAfterMultipleEditorUpdates" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.IncrementalWindowWorkflowPublishesAfterMultipleEditorUpdates" methodname="IncrementalWindowWorkflowPublishesAfterMultipleEditorUpdates" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="1169237042" result="Passed" start-time="2026-11-06 10:27:04Z" end-time="2026-11-06 10:27:05Z" duration="1.068806" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1089" name="LateScriptedInputChangesCannotPublishAfterBackgroundEncoding" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.LateScriptedInputChangesCannotPublishAfterBackgroundEncoding" methodname="LateScriptedInputChangesCannotPublishAfterBackgroundEncoding" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="1270963899" result="Passed" start-time="2026-11-06 10:27:05Z" end-time="2026-11-06 10:27:06Z" duration="0.961225" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1076" name="ModeChangeInvalidatesReadyBakeAndPreservesPreviouslyPublishedAsset" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.ModeChangeInvalidatesReadyBakeAndPreservesPreviouslyPublishedAsset" methodname="ModeChangeInvalidatesReadyBakeAndPreservesPreviouslyPublishedAsset" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="1632190303" result="Passed" start-time="2026-11-06 10:27:06Z" end-time="2026-11-06 10:27:06Z" duration="0.271309" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1075" name="SelectedBackendPublishesTheSameRuntimeCellsAndKeepsItsEffectiveName" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.SelectedBackendPublishesTheSameRuntimeCellsAndKeepsItsEffectiveName" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-06 10:27:06Z" end-time="2026-11-06 10:27:07Z" duration="0.889809" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1072" name="SelectedBackendPublishesTheSameRuntimeCellsAndKeepsItsEffectiveName(Auto)" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.SelectedBackendPublishesTheSameRuntimeCellsAndKeepsItsEffectiveName(Auto)" methodname="SelectedBackendPublishesTheSameRuntimeCellsAndKeepsItsEffectiveName" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="1117803042" result="Passed" start-time="2026-11-06 10:27:06Z" end-time="2026-11-06 10:27:06Z" duration="0.279369" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+              </test-case>
+              <test-case id="1073" name="SelectedBackendPublishesTheSameRuntimeCellsAndKeepsItsEffectiveName(Cpu)" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.SelectedBackendPublishesTheSameRuntimeCellsAndKeepsItsEffectiveName(Cpu)" methodname="SelectedBackendPublishesTheSameRuntimeCellsAndKeepsItsEffectiveName" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="11471285" result="Passed" start-time="2026-11-06 10:27:06Z" end-time="2026-11-06 10:27:07Z" duration="0.266797" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1074" name="SelectedBackendPublishesTheSameRuntimeCellsAndKeepsItsEffectiveName(Gpu)" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.SelectedBackendPublishesTheSameRuntimeCellsAndKeepsItsEffectiveName(Gpu)" methodname="SelectedBackendPublishesTheSameRuntimeCellsAndKeepsItsEffectiveName" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="1953521265" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.279547" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1079" name="SettingsChangeInvalidatesBakeBeforePublication" fullname="CullingSystemDOTS.Tests.BakeWorkflowTests.SettingsChangeInvalidatesBakeBeforePublication" methodname="SettingsChangeInvalidatesBakeBeforePublication" classname="CullingSystemDOTS.Tests.BakeWorkflowTests" runstate="Runnable" seed="1602165686" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.018661" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1090" name="ComputeBakeBackendTests" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:08Z" duration="0.945885" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1106" name="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.057259" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1097" name="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;front&quot;,True)" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;front&quot;,True)" methodname="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="298522570" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.015348" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+              </test-case>
+              <test-case id="1098" name="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;back&quot;,False)" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;back&quot;,False)" methodname="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="1759189429" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.002569" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+              </test-case>
+              <test-case id="1099" name="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;double-back&quot;,True)" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;double-back&quot;,True)" methodname="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="1037725814" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.002370" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+              </test-case>
+              <test-case id="1100" name="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;additional&quot;,False)" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;additional&quot;,False)" methodname="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="1843253426" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.006366" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+              </test-case>
+              <test-case id="1101" name="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;near&quot;,False)" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;near&quot;,False)" methodname="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="1799635676" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.005032" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+              </test-case>
+              <test-case id="1102" name="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;beyond-far&quot;,False)" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;beyond-far&quot;,False)" methodname="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="201656791" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.002631" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+              </test-case>
+              <test-case id="1103" name="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;within-far&quot;,True)" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;within-far&quot;,True)" methodname="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="148700077" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.005265" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+              </test-case>
+              <test-case id="1104" name="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;empty&quot;,False)" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;empty&quot;,False)" methodname="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="1836475489" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.002209" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+              </test-case>
+              <test-case id="1105" name="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;transparent-only&quot;,True)" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker(&quot;transparent-only&quot;,True)" methodname="AnalyticVisibilityIsCorrectIndependentlyOfTheSourceBaker" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="2056264574" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.002753" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1094" name="CancelledGpuSessionCannotReturnPartialResults" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.CancelledGpuSessionCannotReturnPartialResults" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.027291" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1092" name="CancelledGpuSessionCannotReturnPartialResults(False)" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.CancelledGpuSessionCannotReturnPartialResults(False)" methodname="CancelledGpuSessionCannotReturnPartialResults" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="852908261" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.004255" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1093" name="CancelledGpuSessionCannotReturnPartialResults(True)" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.CancelledGpuSessionCannotReturnPartialResults(True)" methodname="CancelledGpuSessionCannotReturnPartialResults" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="836973606" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:07Z" duration="0.011890" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-case id="1096" name="EditorTicksCompleteGpuReadbacks" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.EditorTicksCompleteGpuReadbacks" methodname="EditorTicksCompleteGpuReadbacks" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="839341770" result="Passed" start-time="2026-11-06 10:27:07Z" end-time="2026-11-06 10:27:08Z" duration="0.775742" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+            </test-case>
+            <test-case id="1095" name="ImpossibleBudgetAndEarlySnapshotDisposalFaultWithoutOutput" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.ImpossibleBudgetAndEarlySnapshotDisposalFaultWithoutOutput" methodname="ImpossibleBudgetAndEarlySnapshotDisposalFaultWithoutOutput" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="358222554" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.014846" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+            </test-case>
+            <test-case id="1091" name="OddSizedGpuBatchesPreserveTransparentOcclusionAndBitsAcrossWords" fullname="CullingSystemDOTS.Tests.ComputeBakeBackendTests.OddSizedGpuBatchesPreserveTransparentOcclusionAndBitsAcrossWords" methodname="OddSizedGpuBatchesPreserveTransparentOcclusionAndBitsAcrossWords" classname="CullingSystemDOTS.Tests.ComputeBakeBackendTests" runstate="Runnable" seed="2138432808" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.008869" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1107" name="CpuTraversalTests" fullname="CullingSystemDOTS.Tests.CpuTraversalTests" classname="CullingSystemDOTS.Tests.CpuTraversalTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.104800" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1109" name="AdditionalOpaqueOccluderBlocksWithoutReturningAnId" fullname="CullingSystemDOTS.Tests.CpuTraversalTests.AdditionalOpaqueOccluderBlocksWithoutReturningAnId" methodname="AdditionalOpaqueOccluderBlocksWithoutReturningAnId" classname="CullingSystemDOTS.Tests.CpuTraversalTests" runstate="Runnable" seed="1303198952" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.007257" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1110" name="FarClipExcludesPlanesBeyondAllSixFaces" fullname="CullingSystemDOTS.Tests.CpuTraversalTests.FarClipExcludesPlanesBeyondAllSixFaces" methodname="FarClipExcludesPlanesBeyondAllSixFaces" classname="CullingSystemDOTS.Tests.CpuTraversalTests" runstate="Runnable" seed="1238656163" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.004521" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1108" name="TransparentLayersBeforeOpaqueAreVisibleAndLayersBehindAreNot" fullname="CullingSystemDOTS.Tests.CpuTraversalTests.TransparentLayersBeforeOpaqueAreVisibleAndLayersBehindAreNot" methodname="TransparentLayersBeforeOpaqueAreVisibleAndLayersBehindAreNot" classname="CullingSystemDOTS.Tests.CpuTraversalTests" runstate="Runnable" seed="612522956" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.011118" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1111" name="CullingAuthoringTests" fullname="CullingSystemDOTS.Tests.CullingAuthoringTests" classname="CullingSystemDOTS.Tests.CullingAuthoringTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.276580" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1112" name="BakingKeepsEveryMaterialEntityAndBothInstancesOfTheSameBake" fullname="CullingSystemDOTS.Tests.CullingAuthoringTests.BakingKeepsEveryMaterialEntityAndBothInstancesOfTheSameBake" methodname="BakingKeepsEveryMaterialEntityAndBothInstancesOfTheSameBake" classname="CullingSystemDOTS.Tests.CullingAuthoringTests" runstate="Runnable" seed="245417856" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.253760" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1113" name="PortalAuthoringBakesAnExplicitVolumeLinkAndStableRegistrationOrder" fullname="CullingSystemDOTS.Tests.CullingAuthoringTests.PortalAuthoringBakesAnExplicitVolumeLinkAndStableRegistrationOrder" methodname="PortalAuthoringBakesAnExplicitVolumeLinkAndStableRegistrationOrder" classname="CullingSystemDOTS.Tests.CullingAuthoringTests" runstate="Runnable" seed="422948651" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.015629" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1114" name="FinalReviewRegressionTests" fullname="CullingSystemDOTS.Tests.FinalReviewRegressionTests" classname="CullingSystemDOTS.Tests.FinalReviewRegressionTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.118970" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1120" name="ComputeSkinnedGroupHasIndependentlyVisibleStaticPoseOnCpuAndGpu" fullname="CullingSystemDOTS.Tests.FinalReviewRegressionTests.ComputeSkinnedGroupHasIndependentlyVisibleStaticPoseOnCpuAndGpu" methodname="ComputeSkinnedGroupHasIndependentlyVisibleStaticPoseOnCpuAndGpu" classname="CullingSystemDOTS.Tests.FinalReviewRegressionTests" runstate="Runnable" seed="1443521477" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.017756" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+            </test-case>
+            <test-case id="1121" name="CpuStackOverflowIsReportedBySafetyOffBurstWorker" fullname="CullingSystemDOTS.Tests.FinalReviewRegressionTests.CpuStackOverflowIsReportedBySafetyOffBurstWorker" methodname="CpuStackOverflowIsReportedBySafetyOffBurstWorker" classname="CullingSystemDOTS.Tests.FinalReviewRegressionTests" runstate="Runnable" seed="1621952282" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.003531" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1119" name="DisabledAuthoringIsExcludedByInstalledBakingPipeline" fullname="CullingSystemDOTS.Tests.FinalReviewRegressionTests.DisabledAuthoringIsExcludedByInstalledBakingPipeline" classname="CullingSystemDOTS.Tests.FinalReviewRegressionTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.071955" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1115" name="DisabledAuthoringIsExcludedByInstalledBakingPipeline(False,False)" fullname="CullingSystemDOTS.Tests.FinalReviewRegressionTests.DisabledAuthoringIsExcludedByInstalledBakingPipeline(False,False)" methodname="DisabledAuthoringIsExcludedByInstalledBakingPipeline" classname="CullingSystemDOTS.Tests.FinalReviewRegressionTests" runstate="Runnable" seed="66021622" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.028286" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1116" name="DisabledAuthoringIsExcludedByInstalledBakingPipeline(False,True)" fullname="CullingSystemDOTS.Tests.FinalReviewRegressionTests.DisabledAuthoringIsExcludedByInstalledBakingPipeline(False,True)" methodname="DisabledAuthoringIsExcludedByInstalledBakingPipeline" classname="CullingSystemDOTS.Tests.FinalReviewRegressionTests" runstate="Runnable" seed="411646491" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.012602" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1117" name="DisabledAuthoringIsExcludedByInstalledBakingPipeline(True,False)" fullname="CullingSystemDOTS.Tests.FinalReviewRegressionTests.DisabledAuthoringIsExcludedByInstalledBakingPipeline(True,False)" methodname="DisabledAuthoringIsExcludedByInstalledBakingPipeline" classname="CullingSystemDOTS.Tests.FinalReviewRegressionTests" runstate="Runnable" seed="1136552781" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.014866" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1118" name="DisabledAuthoringIsExcludedByInstalledBakingPipeline(True,True)" fullname="CullingSystemDOTS.Tests.FinalReviewRegressionTests.DisabledAuthoringIsExcludedByInstalledBakingPipeline(True,True)" methodname="DisabledAuthoringIsExcludedByInstalledBakingPipeline" classname="CullingSystemDOTS.Tests.FinalReviewRegressionTests" runstate="Runnable" seed="675332696" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.009975" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1122" name="WorkerFailureFaultsWholeSessionAndReleasesUnpublishedResults" fullname="CullingSystemDOTS.Tests.FinalReviewRegressionTests.WorkerFailureFaultsWholeSessionAndReleasesUnpublishedResults" methodname="WorkerFailureFaultsWholeSessionAndReleasesUnpublishedResults" classname="CullingSystemDOTS.Tests.FinalReviewRegressionTests" runstate="Runnable" seed="512375608" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.001158" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1123" name="GeometrySnapshotTests" fullname="CullingSystemDOTS.Tests.GeometrySnapshotTests" classname="CullingSystemDOTS.Tests.GeometrySnapshotTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.014340" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1128" name="AdditionalOccluderNeverAcquiresAGroup" fullname="CullingSystemDOTS.Tests.GeometrySnapshotTests.AdditionalOccluderNeverAcquiresAGroup" methodname="AdditionalOccluderNeverAcquiresAGroup" classname="CullingSystemDOTS.Tests.GeometrySnapshotTests" runstate="Runnable" seed="1204988208" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.001390" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1125" name="LowestNonEmptyLodUsesOneDoubleSidedInstance" fullname="CullingSystemDOTS.Tests.GeometrySnapshotTests.LowestNonEmptyLodUsesOneDoubleSidedInstance" classname="CullingSystemDOTS.Tests.GeometrySnapshotTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.005328" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1124" name="LowestNonEmptyLodUsesOneDoubleSidedInstance(ComputeSoftwareInput)" fullname="CullingSystemDOTS.Tests.GeometrySnapshotTests.LowestNonEmptyLodUsesOneDoubleSidedInstance(ComputeSoftwareInput)" methodname="LowestNonEmptyLodUsesOneDoubleSidedInstance" classname="CullingSystemDOTS.Tests.GeometrySnapshotTests" runstate="Runnable" seed="2082307760" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.001400" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1126" name="SkinnedPoseIsCopiedWithoutAddingMeshFilter" fullname="CullingSystemDOTS.Tests.GeometrySnapshotTests.SkinnedPoseIsCopiedWithoutAddingMeshFilter" methodname="SkinnedPoseIsCopiedWithoutAddingMeshFilter" classname="CullingSystemDOTS.Tests.GeometrySnapshotTests" runstate="Runnable" seed="591946134" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.001250" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1127" name="SnapshotSharesGeometryAndOwnsItsDataAfterUnityObjectsChange" fullname="CullingSystemDOTS.Tests.GeometrySnapshotTests.SnapshotSharesGeometryAndOwnsItsDataAfterUnityObjectsChange" methodname="SnapshotSharesGeometryAndOwnsItsDataAfterUnityObjectsChange" classname="CullingSystemDOTS.Tests.GeometrySnapshotTests" runstate="Runnable" seed="1830743419" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.001341" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1129" name="IndependentTriangleTests" fullname="CullingSystemDOTS.Tests.IndependentTriangleTests" classname="CullingSystemDOTS.Tests.IndependentTriangleTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.005677" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1130" name="NearClipAndClosedTriangleEdgesDoNotLoseOccluders" fullname="CullingSystemDOTS.Tests.IndependentTriangleTests.NearClipAndClosedTriangleEdgesDoNotLoseOccluders" methodname="NearClipAndClosedTriangleEdgesDoNotLoseOccluders" classname="CullingSystemDOTS.Tests.IndependentTriangleTests" runstate="Runnable" seed="640229252" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.000424" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1131" name="JobsBakeTests" fullname="CullingSystemDOTS.Tests.JobsBakeTests" classname="CullingSystemDOTS.Tests.JobsBakeTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:09Z" duration="0.714978" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1138" name="CoincidentOpaqueSurfacesKeepOriginalInstanceOrder" fullname="CullingSystemDOTS.Tests.JobsBakeTests.CoincidentOpaqueSurfacesKeepOriginalInstanceOrder" methodname="CoincidentOpaqueSurfacesKeepOriginalInstanceOrder" classname="CullingSystemDOTS.Tests.JobsBakeTests" runstate="Runnable" seed="1125550954" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:08Z" duration="0.077456" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1136" name="JobsBakeEqualsCpuReference" fullname="CullingSystemDOTS.Tests.JobsBakeTests.JobsBakeEqualsCpuReference" classname="CullingSystemDOTS.Tests.JobsBakeTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:09Z" duration="0.390063" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1132" name="JobsBakeEqualsCpuReference(False,False)" fullname="CullingSystemDOTS.Tests.JobsBakeTests.JobsBakeEqualsCpuReference(False,False)" methodname="JobsBakeEqualsCpuReference" classname="CullingSystemDOTS.Tests.JobsBakeTests" runstate="Runnable" seed="1760472011" result="Passed" start-time="2026-11-06 10:27:08Z" end-time="2026-11-06 10:27:09Z" duration="0.081831" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1133" name="JobsBakeEqualsCpuReference(True,False)" fullname="CullingSystemDOTS.Tests.JobsBakeTests.JobsBakeEqualsCpuReference(True,False)" methodname="JobsBakeEqualsCpuReference" classname="CullingSystemDOTS.Tests.JobsBakeTests" runstate="Runnable" seed="1199520635" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.075756" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1134" name="JobsBakeEqualsCpuReference(False,True)" fullname="CullingSystemDOTS.Tests.JobsBakeTests.JobsBakeEqualsCpuReference(False,True)" methodname="JobsBakeEqualsCpuReference" classname="CullingSystemDOTS.Tests.JobsBakeTests" runstate="Runnable" seed="728807358" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.113232" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1135" name="JobsBakeEqualsCpuReference(True,True)" fullname="CullingSystemDOTS.Tests.JobsBakeTests.JobsBakeEqualsCpuReference(True,True)" methodname="JobsBakeEqualsCpuReference" classname="CullingSystemDOTS.Tests.JobsBakeTests" runstate="Runnable" seed="1994202387" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.112943" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1137" name="SharedBlasWithInteriorNodesAndMoreThan32GroupsMatchesReference" fullname="CullingSystemDOTS.Tests.JobsBakeTests.SharedBlasWithInteriorNodesAndMoreThan32GroupsMatchesReference" methodname="SharedBlasWithInteriorNodesAndMoreThan32GroupsMatchesReference" classname="CullingSystemDOTS.Tests.JobsBakeTests" runstate="Runnable" seed="329492066" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.239872" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1139" name="WorkerCountDoesNotChangeResultsAndExcludedCellsKeepFullGridIndex" fullname="CullingSystemDOTS.Tests.JobsBakeTests.WorkerCountDoesNotChangeResultsAndExcludedCellsKeepFullGridIndex" methodname="WorkerCountDoesNotChangeResultsAndExcludedCellsKeepFullGridIndex" classname="CullingSystemDOTS.Tests.JobsBakeTests" runstate="Runnable" seed="711811717" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.003860" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1140" name="JobsLifetimeTests" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.369720" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1149" name="BackgroundPreparationChecksBudgetBeforeBuildingAndJoinsOnCancellation" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests.BackgroundPreparationChecksBudgetBeforeBuildingAndJoinsOnCancellation" methodname="BackgroundPreparationChecksBudgetBeforeBuildingAndJoinsOnCancellation" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" seed="1638324145" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.006966" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1153" name="BackgroundPreparationMatchesTheDirectBackend" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests.BackgroundPreparationMatchesTheDirectBackend" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.027879" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1151" name="BackgroundPreparationMatchesTheDirectBackend(False)" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests.BackgroundPreparationMatchesTheDirectBackend(False)" methodname="BackgroundPreparationMatchesTheDirectBackend" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" seed="117304364" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.003353" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1152" name="BackgroundPreparationMatchesTheDirectBackend(True)" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests.BackgroundPreparationMatchesTheDirectBackend(True)" methodname="BackgroundPreparationMatchesTheDirectBackend" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" seed="331465568" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.020355" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1143" name="BurstMatchesManagedReferenceAndReleasesEachBoundedBatch" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests.BurstMatchesManagedReferenceAndReleasesEachBoundedBatch" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.090553" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1141" name="BurstMatchesManagedReferenceAndReleasesEachBoundedBatch(1)" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests.BurstMatchesManagedReferenceAndReleasesEachBoundedBatch(1)" methodname="BurstMatchesManagedReferenceAndReleasesEachBoundedBatch" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" seed="1531923553" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.044496" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1142" name="BurstMatchesManagedReferenceAndReleasesEachBoundedBatch(2)" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests.BurstMatchesManagedReferenceAndReleasesEachBoundedBatch(2)" methodname="BurstMatchesManagedReferenceAndReleasesEachBoundedBatch" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" seed="1580210070" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.041561" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1146" name="CancellationJoinsPendingReadersAndCannotPublish" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests.CancellationJoinsPendingReadersAndCannotPublish" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.008450" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1144" name="CancellationJoinsPendingReadersAndCannotPublish(False)" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests.CancellationJoinsPendingReadersAndCannotPublish(False)" methodname="CancellationJoinsPendingReadersAndCannotPublish" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" seed="668859150" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.002598" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1145" name="CancellationJoinsPendingReadersAndCannotPublish(True)" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests.CancellationJoinsPendingReadersAndCannotPublish(True)" methodname="CancellationJoinsPendingReadersAndCannotPublish" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" seed="1715803063" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.002130" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1147" name="EarlySnapshotDisposalAndBudgetFaultsReleaseCompatibilityBuffers" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests.EarlySnapshotDisposalAndBudgetFaultsReleaseCompatibilityBuffers" methodname="EarlySnapshotDisposalAndBudgetFaultsReleaseCompatibilityBuffers" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" seed="426252405" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.003990" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1148" name="EditorTicksAdvanceCompatibilityBatchesWithoutCallerCompletion" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests.EditorTicksAdvanceCompatibilityBatchesWithoutCallerCompletion" methodname="EditorTicksAdvanceCompatibilityBatchesWithoutCallerCompletion" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" seed="696062636" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.222318" asserts="0">
+              <properties>
+                <property name="_JOINTYPE" value="UnityCombinatorial" />
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1150" name="SnapshotDisposalJoinsBackgroundBuilderBeforeFreeingItsArrays" fullname="CullingSystemDOTS.Tests.JobsLifetimeTests.SnapshotDisposalJoinsBackgroundBuilderBeforeFreeingItsArrays" methodname="SnapshotDisposalJoinsBackgroundBuilderBeforeFreeingItsArrays" classname="CullingSystemDOTS.Tests.JobsLifetimeTests" runstate="Runnable" seed="1822049614" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.003393" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1154" name="LegacyBakeImporterTests" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" testcasecount="21" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:10Z" duration="0.171158" total="21" passed="21" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1156" name="AssetOwnsItsSnapshotAfterTheCallerMutatesSourceArrays" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.AssetOwnsItsSnapshotAfterTheCallerMutatesSourceArrays" methodname="AssetOwnsItsSnapshotAfterTheCallerMutatesSourceArrays" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="850179148" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.001532" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1176" name="FailedImportKeepsThePreviousValidBakeUsable" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.FailedImportKeepsThePreviousValidBakeUsable" methodname="FailedImportKeepsThePreviousValidBakeUsable" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="1736881391" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:09Z" duration="0.000678" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1158" name="ImportedAssetSurvivesSavingUnloadingAndReloading" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.ImportedAssetSurvivesSavingUnloadingAndReloading" methodname="ImportedAssetSurvivesSavingUnloadingAndReloading" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="1044748155" result="Passed" start-time="2026-11-06 10:27:09Z" end-time="2026-11-06 10:27:10Z" duration="0.084886" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1155" name="ImportKeepsOriginalGroupIndicesGridAndMergeMetadata" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.ImportKeepsOriginalGroupIndicesGridAndMergeMetadata" methodname="ImportKeepsOriginalGroupIndicesGridAndMergeMetadata" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="1192841224" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.001628" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1175" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.074012" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1159" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;reordered&quot;,InvalidGroupMapping)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;reordered&quot;,InvalidGroupMapping)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="1426320461" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.001599" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1160" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;wrongVolume&quot;,InvalidGroupMapping)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;wrongVolume&quot;,InvalidGroupMapping)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="892650831" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000285" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1161" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;missingMapping&quot;,InvalidGroupMapping)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;missingMapping&quot;,InvalidGroupMapping)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="1649460123" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000235" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1162" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;groupCountMismatch&quot;,InvalidGroupMapping)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;groupCountMismatch&quot;,InvalidGroupMapping)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="965255235" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000153" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1163" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;groupLimit&quot;,InvalidGroupMapping)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;groupLimit&quot;,InvalidGroupMapping)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="1342827993" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000162" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1164" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;zeroVolumeId&quot;,InvalidGroupMapping)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;zeroVolumeId&quot;,InvalidGroupMapping)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="1531794955" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000174" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1165" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;fractionalGrid&quot;,InvalidLayout)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;fractionalGrid&quot;,InvalidLayout)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="232166747" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000151" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1166" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;cellCountMismatch&quot;,InvalidLayout)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;cellCountMismatch&quot;,InvalidLayout)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="914816816" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000138" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1167" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;zeroCellSize&quot;,InvalidLayout)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;zeroCellSize&quot;,InvalidLayout)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="1679415806" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000136" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1168" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;nanCellSize&quot;,InvalidLayout)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;nanCellSize&quot;,InvalidLayout)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="1959614711" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000130" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1169" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;nanOrientation&quot;,InvalidLayout)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;nanOrientation&quot;,InvalidLayout)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="1855458210" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000144" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1170" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;badDeclaredCount&quot;,InvalidLayout)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;badDeclaredCount&quot;,InvalidLayout)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="1317756002" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000108" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1171" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;truncated&quot;,InvalidCellData)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;truncated&quot;,InvalidCellData)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="858231493" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000299" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1172" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;duplicateIds&quot;,InvalidCellData)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;duplicateIds&quot;,InvalidCellData)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="274888683" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000236" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1173" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;unsupportedVersion&quot;,UnsupportedVersion)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;unsupportedVersion&quot;,UnsupportedVersion)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="489179869" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000143" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1174" name="InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;missingCells&quot;,MissingData)" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.InvalidDataIsRejectedWithAReasonAndNoPartialResult(&quot;missingCells&quot;,MissingData)" methodname="InvalidDataIsRejectedWithAReasonAndNoPartialResult" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="160212443" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000146" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1157" name="MissingLegacyGroupCountUsesTheExplicitMappingIncludingNeverVisibleGroups" fullname="CullingSystemDOTS.Tests.LegacyBakeImporterTests.MissingLegacyGroupCountUsesTheExplicitMappingIncludingNeverVisibleGroups" methodname="MissingLegacyGroupCountUsesTheExplicitMappingIncludingNeverVisibleGroups" classname="CullingSystemDOTS.Tests.LegacyBakeImporterTests" runstate="Runnable" seed="1642269165" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.000580" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1177" name="PackageBoundaryTests" fullname="CullingSystemDOTS.Tests.PackageBoundaryTests" classname="CullingSystemDOTS.Tests.PackageBoundaryTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.015260" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1179" name="DistributablePackageContainsNoNativeBakeBinaries" fullname="CullingSystemDOTS.Tests.PackageBoundaryTests.DistributablePackageContainsNoNativeBakeBinaries" methodname="DistributablePackageContainsNoNativeBakeBinaries" classname="CullingSystemDOTS.Tests.PackageBoundaryTests" runstate="Runnable" seed="673612264" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.004643" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1178" name="RuntimeAssembliesDoNotLinkLegacyOrNativeBakers" fullname="CullingSystemDOTS.Tests.PackageBoundaryTests.RuntimeAssembliesDoNotLinkLegacyOrNativeBakers" methodname="RuntimeAssembliesDoNotLinkLegacyOrNativeBakers" classname="CullingSystemDOTS.Tests.PackageBoundaryTests" runstate="Runnable" seed="1233807646" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.003041" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1180" name="PersistedBakeSceneTests" fullname="CullingSystemDOTS.Tests.PersistedBakeSceneTests" classname="CullingSystemDOTS.Tests.PersistedBakeSceneTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:12Z" duration="2.048096" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1182" name="DisabledRegionOnActiveObjectStillParticipatesLikeSourceFindObjects" fullname="CullingSystemDOTS.Tests.PersistedBakeSceneTests.DisabledRegionOnActiveObjectStillParticipatesLikeSourceFindObjects" methodname="DisabledRegionOnActiveObjectStillParticipatesLikeSourceFindObjects" classname="CullingSystemDOTS.Tests.PersistedBakeSceneTests" runstate="Runnable" seed="420389049" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:10Z" duration="0.416118" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1183" name="NewSceneBakesWithJobsAndReopensWithIdenticalRuntimeDataAndReferences" fullname="CullingSystemDOTS.Tests.PersistedBakeSceneTests.NewSceneBakesWithJobsAndReopensWithIdenticalRuntimeDataAndReferences" methodname="NewSceneBakesWithJobsAndReopensWithIdenticalRuntimeDataAndReferences" classname="CullingSystemDOTS.Tests.PersistedBakeSceneTests" runstate="Runnable" seed="925805879" result="Passed" start-time="2026-11-06 10:27:10Z" end-time="2026-11-06 10:27:11Z" duration="1.026593" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[Shader warning in 'BvhBake(Clone)': Program 'CSMain', warning X4714: sum of temp registers and indexable temp registers times 64 threads exceeds the recommended total 16384.  Performance may be reduced at kernel CSMain (on dx12)
+]]></output>
+            </test-case>
+            <test-case id="1181" name="RegionsAndExplicitGroupsInOtherLoadedScenesKeepOriginalIndices" fullname="CullingSystemDOTS.Tests.PersistedBakeSceneTests.RegionsAndExplicitGroupsInOtherLoadedScenesKeepOriginalIndices" methodname="RegionsAndExplicitGroupsInOtherLoadedScenesKeepOriginalIndices" classname="CullingSystemDOTS.Tests.PersistedBakeSceneTests" runstate="Runnable" seed="1713351529" result="Passed" start-time="2026-11-06 10:27:11Z" end-time="2026-11-06 10:27:12Z" duration="0.498425" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1184" name="ResilientBakeBackendTests" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.129557" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="ParameterizedMethod" id="1196" name="CancellationDoesNotTriggerCpuRestart" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.CancellationDoesNotTriggerCpuRestart" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.017927" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1194" name="CancellationDoesNotTriggerCpuRestart(False)" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.CancellationDoesNotTriggerCpuRestart(False)" methodname="CancellationDoesNotTriggerCpuRestart" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" seed="1767363662" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001955" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1195" name="CancellationDoesNotTriggerCpuRestart(True)" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.CancellationDoesNotTriggerCpuRestart(True)" methodname="CancellationDoesNotTriggerCpuRestart" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" seed="867462310" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001125" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1198" name="CpuFailureRemainsFaultedAndCannotReturnGpuOutput" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.CpuFailureRemainsFaultedAndCannotReturnGpuOutput" methodname="CpuFailureRemainsFaultedAndCannotReturnGpuOutput" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" seed="1281674991" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001721" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1193" name="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.024499" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1185" name="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;begin&quot;,False)" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;begin&quot;,False)" methodname="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" seed="1753995083" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.003710" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1186" name="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;tick&quot;,False)" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;tick&quot;,False)" methodname="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" seed="902030276" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001399" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1187" name="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;complete&quot;,False)" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;complete&quot;,False)" methodname="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" seed="450159983" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001147" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1188" name="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;status&quot;,False)" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;status&quot;,False)" methodname="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" seed="372038581" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001045" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1189" name="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;begin&quot;,True)" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;begin&quot;,True)" methodname="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" seed="857251750" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001165" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1190" name="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;tick&quot;,True)" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;tick&quot;,True)" methodname="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" seed="641512259" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.000930" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1191" name="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;complete&quot;,True)" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;complete&quot;,True)" methodname="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" seed="779492381" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001210" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1192" name="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;status&quot;,True)" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu(&quot;status&quot;,True)" methodname="GpuFailureDiscardsPartialProgressAndRebakesAllCellsOnRealCpu" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" seed="527196524" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.000900" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-case id="1197" name="PrimaryCancellationIsNotTreatedAsGpuFailure" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.PrimaryCancellationIsNotTreatedAsGpuFailure" methodname="PrimaryCancellationIsNotTreatedAsGpuFailure" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" seed="59523540" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001618" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1199" name="RealGpuUploadBudgetFailureRecoversWithinTheSameBudgetOnCpu" fullname="CullingSystemDOTS.Tests.ResilientBakeBackendTests.RealGpuUploadBudgetFailureRecoversWithinTheSameBudgetOnCpu" methodname="RealGpuUploadBudgetFailureRecoversWithinTheSameBudgetOnCpu" classname="CullingSystemDOTS.Tests.ResilientBakeBackendTests" runstate="Runnable" seed="1944674372" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001934" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1200" name="SamplingSnapshotTests" fullname="CullingSystemDOTS.Tests.SamplingSnapshotTests" classname="CullingSystemDOTS.Tests.SamplingSnapshotTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.008709" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1201" name="ExcludedCellsKeepFullGridIndexAndDefaultIncludeOverridesProviders" fullname="CullingSystemDOTS.Tests.SamplingSnapshotTests.ExcludedCellsKeepFullGridIndexAndDefaultIncludeOverridesProviders" methodname="ExcludedCellsKeepFullGridIndexAndDefaultIncludeOverridesProviders" classname="CullingSystemDOTS.Tests.SamplingSnapshotTests" runstate="Runnable" seed="1521032337" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001410" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1202" name="SceneBakeCollectorTests" fullname="CullingSystemDOTS.Tests.SceneBakeCollectorTests" classname="CullingSystemDOTS.Tests.SceneBakeCollectorTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.018594" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1207" name="AdditionalOccludersUseSourceUnrotatedVolumeBoundsAndDoNotBecomeGroups" fullname="CullingSystemDOTS.Tests.SceneBakeCollectorTests.AdditionalOccludersUseSourceUnrotatedVolumeBoundsAndDoNotBecomeGroups" methodname="AdditionalOccludersUseSourceUnrotatedVolumeBoundsAndDoNotBecomeGroups" classname="CullingSystemDOTS.Tests.SceneBakeCollectorTests" runstate="Runnable" seed="707197899" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.004238" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1205" name="AlwaysIncludeRegionOverridesExcludeWithoutRenumberingTheCell" fullname="CullingSystemDOTS.Tests.SceneBakeCollectorTests.AlwaysIncludeRegionOverridesExcludeWithoutRenumberingTheCell" methodname="AlwaysIncludeRegionOverridesExcludeWithoutRenumberingTheCell" classname="CullingSystemDOTS.Tests.SceneBakeCollectorTests" runstate="Runnable" seed="1514612456" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.002020" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1203" name="CollectsExplicitStableIndicesAndSourceRotatedCellCentersWithoutDirtyingHost" fullname="CullingSystemDOTS.Tests.SceneBakeCollectorTests.CollectsExplicitStableIndicesAndSourceRotatedCellCentersWithoutDirtyingHost" methodname="CollectsExplicitStableIndicesAndSourceRotatedCellCentersWithoutDirtyingHost" classname="CullingSystemDOTS.Tests.SceneBakeCollectorTests" runstate="Runnable" seed="743095607" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001757" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1206" name="GeometryEditsInvalidateAndExcludedRenderersKeepTheirGroupSlot" fullname="CullingSystemDOTS.Tests.SceneBakeCollectorTests.GeometryEditsInvalidateAndExcludedRenderersKeepTheirGroupSlot" methodname="GeometryEditsInvalidateAndExcludedRenderersKeepTheirGroupSlot" classname="CullingSystemDOTS.Tests.SceneBakeCollectorTests" runstate="Runnable" seed="2017867931" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.002248" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1208" name="MissingOrDuplicateGroupIndicesAreDiagnosed" fullname="CullingSystemDOTS.Tests.SceneBakeCollectorTests.MissingOrDuplicateGroupIndicesAreDiagnosed" methodname="MissingOrDuplicateGroupIndicesAreDiagnosed" classname="CullingSystemDOTS.Tests.SceneBakeCollectorTests" runstate="Runnable" seed="1894328283" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001695" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1204" name="SettingsAndSceneChangesInvalidateTheFingerprint" fullname="CullingSystemDOTS.Tests.SceneBakeCollectorTests.SettingsAndSceneChangesInvalidateTheFingerprint" methodname="SettingsAndSceneChangesInvalidateTheFingerprint" classname="CullingSystemDOTS.Tests.SceneBakeCollectorTests" runstate="Runnable" seed="635457957" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.002288" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1241" name="CullingSystemDOTS.Runtime.Tests.dll" fullname="C:/Projects/UnityPlugins/CullingSystemDOTS/Library/ScriptAssemblies/CullingSystemDOTS.Runtime.Tests.dll" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:13Z" duration="1.005924" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="81112" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1242" name="CullingSystemDOTS" fullname="CullingSystemDOTS" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:13Z" duration="0.920699" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1243" name="Tests" fullname="CullingSystemDOTS.Tests" runstate="Runnable" testcasecount="20" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:13Z" duration="0.915718" total="20" passed="20" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestFixture" id="1212" name="CameraDriverTests" fullname="CullingSystemDOTS.Tests.CameraDriverTests" classname="CullingSystemDOTS.Tests.CameraDriverTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.127719" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1213" name="CameraSettingsAndActualRenderOrderFlowIntoCapturedViews" fullname="CullingSystemDOTS.Tests.CameraDriverTests.CameraSettingsAndActualRenderOrderFlowIntoCapturedViews" methodname="CameraSettingsAndActualRenderOrderFlowIntoCapturedViews" classname="CullingSystemDOTS.Tests.CameraDriverTests" runstate="Runnable" seed="1879315757" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.011487" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1215" name="DisabledOrRemovedViewsRestoreAndWorldDisposalCanPrecedeDriverDisposal" fullname="CullingSystemDOTS.Tests.CameraDriverTests.DisabledOrRemovedViewsRestoreAndWorldDisposalCanPrecedeDriverDisposal" methodname="DisabledOrRemovedViewsRestoreAndWorldDisposalCanPrecedeDriverDisposal" classname="CullingSystemDOTS.Tests.CameraDriverTests" runstate="Runnable" seed="203669815" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.003108" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1214" name="ExplicitCameraRegistrationOrderSurvivesDifferentObjectActivationOrder" fullname="CullingSystemDOTS.Tests.CameraDriverTests.ExplicitCameraRegistrationOrderSurvivesDifferentObjectActivationOrder" methodname="ExplicitCameraRegistrationOrderSurvivesDifferentObjectActivationOrder" classname="CullingSystemDOTS.Tests.CameraDriverTests" runstate="Runnable" seed="935965999" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.002361" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1216" name="CullingRegistryTests" fullname="CullingSystemDOTS.Tests.CullingRegistryTests" classname="CullingSystemDOTS.Tests.CullingRegistryTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.109356" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1220" name="BehaviourAndOverlappingGroupsFollowLastOperationAndRestoreOnWorldDestruction" fullname="CullingSystemDOTS.Tests.CullingRegistryTests.BehaviourAndOverlappingGroupsFollowLastOperationAndRestoreOnWorldDestruction" methodname="BehaviourAndOverlappingGroupsFollowLastOperationAndRestoreOnWorldDestruction" classname="CullingSystemDOTS.Tests.CullingRegistryTests" runstate="Runnable" seed="1011606255" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.004281" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1222" name="DisableCameraRestoresLegacyState" fullname="CullingSystemDOTS.Tests.CullingRegistryTests.DisableCameraRestoresLegacyState" methodname="DisableCameraRestoresLegacyState" classname="CullingSystemDOTS.Tests.CullingRegistryTests" runstate="Runnable" seed="799119759" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.003786" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1221" name="ForeignWorldHandleCannotRemoveBinding" fullname="CullingSystemDOTS.Tests.CullingRegistryTests.ForeignWorldHandleCannotRemoveBinding" methodname="ForeignWorldHandleCannotRemoveBinding" classname="CullingSystemDOTS.Tests.CullingRegistryTests" runstate="Runnable" seed="364391177" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.002747" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1217" name="RegisterInHiddenGroupAppliesCurrentState" fullname="CullingSystemDOTS.Tests.CullingRegistryTests.RegisterInHiddenGroupAppliesCurrentState" methodname="RegisterInHiddenGroupAppliesCurrentState" classname="CullingSystemDOTS.Tests.CullingRegistryTests" runstate="Runnable" seed="1038787158" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001515" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1219" name="ReusedEntityIndexDoesNotBindOldGroup" fullname="CullingSystemDOTS.Tests.CullingRegistryTests.ReusedEntityIndexDoesNotBindOldGroup" methodname="ReusedEntityIndexDoesNotBindOldGroup" classname="CullingSystemDOTS.Tests.CullingRegistryTests" runstate="Runnable" seed="673894540" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001201" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-case id="1218" name="StreamingReloadRestoresBindings" fullname="CullingSystemDOTS.Tests.CullingRegistryTests.StreamingReloadRestoresBindings" methodname="StreamingReloadRestoresBindings" classname="CullingSystemDOTS.Tests.CullingRegistryTests" runstate="Runnable" seed="502779907" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.002211" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1223" name="EcsRuntimeTests" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:13Z" duration="0.353576" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1236" name="CancelledWorkCannotConsumeTheNextRequest" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests.CancelledWorkCannotConsumeTheNextRequest" methodname="CancelledWorkCannotConsumeTheNextRequest" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" seed="1907105897" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.005916" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+            <test-suite type="ParameterizedMethod" id="1235" name="DestroyWorldCompletesPendingWorkAndReleasesNativeState" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests.DestroyWorldCompletesPendingWorkAndReleasesNativeState" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.012290" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1233" name="DestroyWorldCompletesPendingWorkAndReleasesNativeState(Sequential)" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests.DestroyWorldCompletesPendingWorkAndReleasesNativeState(Sequential)" methodname="DestroyWorldCompletesPendingWorkAndReleasesNativeState" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" seed="117467061" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.006920" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1234" name="DestroyWorldCompletesPendingWorkAndReleasesNativeState(Jobs)" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests.DestroyWorldCompletesPendingWorkAndReleasesNativeState(Jobs)" methodname="DestroyWorldCompletesPendingWorkAndReleasesNativeState" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" seed="2026391801" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001253" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1232" name="InvalidatedOrCorruptWorkKeepsTheLastAcceptedState" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests.InvalidatedOrCorruptWorkKeepsTheLastAcceptedState" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.108514" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1230" name="InvalidatedOrCorruptWorkKeepsTheLastAcceptedState(Sequential)" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests.InvalidatedOrCorruptWorkKeepsTheLastAcceptedState(Sequential)" methodname="InvalidatedOrCorruptWorkKeepsTheLastAcceptedState" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" seed="800137635" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.006725" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1231" name="InvalidatedOrCorruptWorkKeepsTheLastAcceptedState(Jobs)" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests.InvalidatedOrCorruptWorkKeepsTheLastAcceptedState(Jobs)" methodname="InvalidatedOrCorruptWorkKeepsTheLastAcceptedState" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" seed="986018681" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:12Z" duration="0.001805" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1226" name="ReceiverPassesReplayIntermediateStateInsteadOfFinalFrame" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests.ReceiverPassesReplayIntermediateStateInsteadOfFinalFrame" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 10:27:12Z" end-time="2026-11-06 10:27:13Z" duration="0.103960" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1224" name="ReceiverPassesReplayIntermediateStateInsteadOfFinalFrame(Sequential)" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests.ReceiverPassesReplayIntermediateStateInsteadOfFinalFrame(Sequential)" methodname="ReceiverPassesReplayIntermediateStateInsteadOfFinalFrame" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" seed="1413085280" result="Passed" start-time="2026-11-06 10:27:13Z" end-time="2026-11-06 10:27:13Z" duration="0.005101" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1225" name="ReceiverPassesReplayIntermediateStateInsteadOfFinalFrame(Jobs)" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests.ReceiverPassesReplayIntermediateStateInsteadOfFinalFrame(Jobs)" methodname="ReceiverPassesReplayIntermediateStateInsteadOfFinalFrame" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" seed="726605090" result="Passed" start-time="2026-11-06 10:27:13Z" end-time="2026-11-06 10:27:13Z" duration="0.001554" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="ParameterizedMethod" id="1229" name="WorldsOwnIndependentSnapshotsAndRejectEachOthersTickets" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests.WorldsOwnIndependentSnapshotsAndRejectEachOthersTickets" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 10:27:13Z" end-time="2026-11-06 10:27:13Z" duration="0.106430" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1227" name="WorldsOwnIndependentSnapshotsAndRejectEachOthersTickets(Sequential)" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests.WorldsOwnIndependentSnapshotsAndRejectEachOthersTickets(Sequential)" methodname="WorldsOwnIndependentSnapshotsAndRejectEachOthersTickets" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" seed="273630773" result="Passed" start-time="2026-11-06 10:27:13Z" end-time="2026-11-06 10:27:13Z" duration="0.002971" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1228" name="WorldsOwnIndependentSnapshotsAndRejectEachOthersTickets(Jobs)" fullname="CullingSystemDOTS.Tests.EcsRuntimeTests.WorldsOwnIndependentSnapshotsAndRejectEachOthersTickets(Jobs)" methodname="WorldsOwnIndependentSnapshotsAndRejectEachOthersTickets" classname="CullingSystemDOTS.Tests.EcsRuntimeTests" runstate="Runnable" seed="2116447752" result="Passed" start-time="2026-11-06 10:27:13Z" end-time="2026-11-06 10:27:13Z" duration="0.002025" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestFixture" id="1237" name="ShadowCompanionTests" fullname="CullingSystemDOTS.Tests.ShadowCompanionTests" classname="CullingSystemDOTS.Tests.ShadowCompanionTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 10:27:13Z" end-time="2026-11-06 10:27:13Z" duration="0.135996" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1238" name="CompanionCopiesGraphicsAndFollowsMainWithoutDuplicatingSimulation" fullname="CullingSystemDOTS.Tests.ShadowCompanionTests.CompanionCopiesGraphicsAndFollowsMainWithoutDuplicatingSimulation" methodname="CompanionCopiesGraphicsAndFollowsMainWithoutDuplicatingSimulation" classname="CullingSystemDOTS.Tests.ShadowCompanionTests" runstate="Runnable" seed="285748842" result="Passed" start-time="2026-11-06 10:27:13Z" end-time="2026-11-06 10:27:13Z" duration="0.034142" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+            </test-case>
+          </test-suite>
+          <test-suite type="TestFixture" id="1239" name="ViewCaptureTests" fullname="CullingSystemDOTS.Tests.ViewCaptureTests" classname="CullingSystemDOTS.Tests.ViewCaptureTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 10:27:13Z" end-time="2026-11-06 10:27:13Z" duration="0.084794" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-case id="1240" name="CaptureKeepsBakedDimensionsAndExplicitPassOrder" fullname="CullingSystemDOTS.Tests.ViewCaptureTests.CaptureKeepsBakedDimensionsAndExplicitPassOrder" methodname="CaptureKeepsBakedDimensionsAndExplicitPassOrder" classname="CullingSystemDOTS.Tests.ViewCaptureTests" runstate="Runnable" seed="1090853822" result="Passed" start-time="2026-11-06 10:27:13Z" end-time="2026-11-06 10:27:13Z" duration="0.009795" asserts="0">
+              <properties>
+                <property name="retryIteration" value="0" />
+                <property name="repeatIteration" value="0" />
+              </properties>
+              <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: C:/Users/vertoker/AppData/LocalLow/DefaultCompany/CullingSystemDOTS\TestResults.xml
+]]></output>
+            </test-case>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
