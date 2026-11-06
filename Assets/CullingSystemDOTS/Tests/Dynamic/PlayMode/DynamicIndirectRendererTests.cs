@@ -11,18 +11,19 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
 {
     public class DynamicIndirectRendererTests
     {
-        private static byte Red(RenderTexture target)
+        private static Color32 Pixel(RenderTexture target)
         {
             var previous=RenderTexture.active;var image=new Texture2D(1,1,TextureFormat.RGBA32,false);
-            try {RenderTexture.active=target;image.ReadPixels(new Rect(target.width/2,target.height/2,1,1),0,0);image.Apply();return image.GetPixels32()[0].r;}
+            try {RenderTexture.active=target;image.ReadPixels(new Rect(target.width/2,target.height/2,1,1),0,0);image.Apply();return image.GetPixels32()[0];}
             finally {RenderTexture.active=previous;UnityEngine.Object.Destroy(image);}
         }
+        private static byte Red(RenderTexture target)=>Pixel(target).r;
         [UnityTest] public IEnumerator CurrentGeometryProducesOppositeViewsAndMsaaFailsOpenThenDemolitionRevealsTarget()
         {
             #if UNITY_EDITOR
             var resources=UnityEditor.AssetDatabase.LoadAssetAtPath<OcclusionShaderResources>(UnityEditor.AssetDatabase.GUIDToAssetPath("2a976d8c5c1e1c9459592e9215f498d3"));
             var cube=GameObject.CreatePrimitive(PrimitiveType.Cube);cube.SetActive(false);var material=new Material(resources.Indirect);
-            var cameras=new Camera[3];var targets=new RenderTexture[3];
+            var cameras=new Camera[3];var targets=new RenderTexture[3];Mesh oneSided=null;GameObject stockPlane=null;Material stockMaterial=null;
             var registry=new OcclusionWorld(new OcclusionSettings {MaxResourceBytes=1024*1024});OcclusionIndirectRenderer renderer=null;
             System.Action<ScriptableRenderContext,List<Camera>> prepare=null;ulong frame=0;
             try
@@ -73,6 +74,28 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
                 cameras[0].cullingMask=(1<<30)|(1<<31);
                 for(int i=0;i<3;i++)yield return null;
                 Assert.That(Red(targets[0]),Is.LessThan(5));
+                registry.RemoveInstance(wall);
+                oneSided=new Mesh{vertices=new[]{new Vector3(-3,-3,0),new Vector3(3,-3,0),new Vector3(-3,3,0),new Vector3(3,3,0)},
+                    normals=new[]{Vector3.back,Vector3.back,Vector3.back,Vector3.back},triangles=new[]{0,2,1,1,2,3}};
+                stockMaterial=new Material(Shader.Find("Universal Render Pipeline/Unlit"));stockMaterial.SetColor("_BaseColor",Color.blue);
+                stockPlane=new GameObject("Owned ordinary one-sided reference");stockPlane.layer=31;stockPlane.transform.position=new Vector3(0,0,-2);
+                stockPlane.AddComponent<MeshFilter>().sharedMesh=oneSided;var stockRenderer=stockPlane.AddComponent<MeshRenderer>();stockRenderer.sharedMaterial=stockMaterial;stockRenderer.shadowCastingMode=ShadowCastingMode.Off;
+                for(int i=0;i<3;i++)yield return null;byte ordinaryFront=Pixel(targets[0]).b;stockRenderer.enabled=false;
+                var planeGeometry=registry.RegisterGeometry(oneSided);var plane=wallDescriptor;plane.Geometry=planeGeometry;
+                plane.State.LocalToWorld=float4x4.Translate(new float3(0,0,-2));plane.State.WorldBounds=new Bounds(new Vector3(0,0,-2),new Vector3(6,6,0));
+                var planeInstance=registry.RegisterInstance(plane);
+                for(int i=0;i<4;i++)yield return null;
+                byte gpuFront=Red(targets[0]);
+                oneSided.triangles=new[]{0,1,2,1,3,2};registry.ReplaceGeometry(planeGeometry,oneSided);
+                stockRenderer.enabled=true;for(int i=0;i<3;i++)yield return null;byte ordinaryBack=Pixel(targets[0]).b;stockRenderer.enabled=false;
+                for(int i=0;i<4;i++)yield return null;
+                Debug.Log("One-sided winding diagnostic: ordinary front blue="+ordinaryFront+", GPU front red="+gpuFront+", ordinary back blue="+ordinaryBack+", GPU back red="+Red(targets[0]));
+                Assert.That(ordinaryFront,Is.GreaterThan(200),"The independent ordinary renderer must confirm the fixture front side.");
+                Assert.That(ordinaryBack,Is.LessThan(5),"The independent ordinary renderer must reject the fixture back side.");
+                Assert.That(gpuFront,Is.LessThan(5),"A forward one-sided surface must actually occlude.");
+                Assert.That(Red(targets[0]),Is.GreaterThan(200),"Back-facing one-sided geometry has no opaque coverage.");
+                registry.RemoveInstance(planeInstance);registry.RemoveGeometry(planeGeometry);wall=registry.RegisterInstance(wallDescriptor);
+                for(int i=0;i<3;i++)yield return null;
                 var large=new RenderTexture(2048,1024,24);large.Create();
                 try
                 {
@@ -97,7 +120,7 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
                 if(prepare!=null)RenderPipelineManager.beginContextRendering-=prepare;
                 renderer?.Dispose();registry.Dispose();OcclusionGpuRetirement.DrainForShutdown();
                 for(int i=0;i<3;i++) {if(cameras[i]!=null){cameras[i].targetTexture=null;UnityEngine.Object.Destroy(cameras[i].gameObject);}if(targets[i]!=null){targets[i].Release();UnityEngine.Object.Destroy(targets[i]);}}
-                UnityEngine.Object.Destroy(material);UnityEngine.Object.Destroy(cube);
+                UnityEngine.Object.Destroy(stockPlane);UnityEngine.Object.Destroy(stockMaterial);UnityEngine.Object.Destroy(oneSided);UnityEngine.Object.Destroy(material);UnityEngine.Object.Destroy(cube);
             }
             #else
             throw new System.NotSupportedException("This Editor fixture requires serialized Player shader references.");

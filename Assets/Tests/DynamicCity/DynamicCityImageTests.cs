@@ -39,7 +39,7 @@ namespace CullingSystemDOTS.DynamicCity.Tests
             #if UNITY_EDITOR
             var scenePath=UnityEditor.AssetDatabase.FindAssets("DynamicCity t:Scene").Select(UnityEditor.AssetDatabase.GUIDToAssetPath).Single(p=>p.EndsWith("/DynamicCity.unity"));
             var lights=Object.FindObjectsByType<Light>(FindObjectsSortMode.None);var enabled=lights.Select(l=>l.enabled).ToArray();foreach(var light in lights)light.enabled=false;
-            Scene scene=default;RenderTexture target=null;DynamicCityBootstrap sample=null;
+            Scene scene=default;RenderTexture target=null,outsideTarget=null;Camera outside=null;DynamicCityBootstrap sample=null;
             try
             {
                 scene=UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(scenePath,new LoadSceneParameters(LoadSceneMode.Additive));
@@ -48,6 +48,8 @@ namespace CullingSystemDOTS.DynamicCity.Tests
                 Assert.That(sample.Initialized,Is.True,sample.Fault);sample.ShowHud=false;sample.AutomaticEdits=false;sample.PauseSimulation(true);
                 sample.View.GetComponent<DynamicCityCamera>().Tour=false;
                 target=new RenderTexture(160,120,24);target.Create();sample.View.targetTexture=target;
+                outsideTarget=new RenderTexture(160,120,24);outsideTarget.Create();outside=new GameObject("Owned simultaneous outside view").AddComponent<Camera>();
+                outside.CopyFrom(sample.View);outside.targetTexture=outsideTarget;sample.Presentation.RegisterView(outside);
                 sample.SetFeatureEnabled(false);
                 int ids=0;var manager=sample.World.EntityManager;
                 using(var query=manager.CreateEntityQuery(typeof(DynamicOcclusionBinding)))
@@ -62,7 +64,8 @@ namespace CullingSystemDOTS.DynamicCity.Tests
                     }
                 var home=(Vector3)DynamicCityBootstrap.Home(0);var door=sample.Construction.Pieces.First(p=>p.Kind==PieceKind.Door);
                 var wall=sample.Construction.Pieces.First(p=>p.Kind==PieceKind.Wall);var floor=sample.Construction.Pieces.First(p=>p.Kind==PieceKind.Floor);
-                for(int scenario=0;scenario<8;scenario++)
+                outside.transform.position=home+new Vector3(15,5,15);outside.transform.LookAt(home+new Vector3(0,2,0));
+                for(int scenario=0;scenario<10;scenario++)
                 {
                     if(scenario==1)sample.Construction.Apply(new ConstructionCommand{PieceId=door.Id,Operation=ConstructionOperation.OpenDoor,Tick=sample.Construction.LastTick+1});
                     if(scenario==2)sample.Construction.Apply(new ConstructionCommand{PieceId=wall.Id,Operation=ConstructionOperation.Remove,Tick=sample.Construction.LastTick+1});
@@ -70,22 +73,38 @@ namespace CullingSystemDOTS.DynamicCity.Tests
                     if(scenario==7){sample.PauseSimulation(false);sample.Advance(.75f);sample.PauseSimulation(true);}
                     sample.View.transform.position=home+(scenario<4?new Vector3(-1.5f,1.7f,-10):scenario==4?new Vector3(-1.5f,1.7f,-5.9f):scenario==5?new Vector3(2,1.7f,2):new Vector3(15,5,15));
                     sample.View.transform.LookAt(home+new Vector3(-1.5f,1.7f,0));
+                    if(scenario>=8)
+                    {
+                        sample.Construction.Apply(new ConstructionCommand{PieceId=wall.Id,Operation=ConstructionOperation.Place,Tick=sample.Construction.LastTick+1});
+                        sample.View.transform.position=wall.Bounds.center+(scenario==8?Vector3.zero:Vector3.forward*.14f);
+                        sample.View.transform.LookAt(home+new Vector3(0,1.7f,0));
+                        if(scenario==8)Assert.That(wall.Bounds.Contains(sample.View.transform.position),Is.True,"The regression camera must be inside an existing wall, not a removed piece.");
+                    }
                     sample.SetFeatureEnabled(false);for(int i=0;i<3;i++)yield return null;
                     var reference=Capture(target);
+                    var outsideReference=Capture(outsideTarget);
                     var visibleIds=reference.Select(p=>(int)p.r|((int)p.g<<8)|((int)p.b<<16)).Where(id=>id>0 && id<=ids).Distinct().ToArray();
                     Assert.That(visibleIds.Length,Is.GreaterThan(1),"The ordinary path must render per-object IDs for this oracle.");
                     sample.SetFeatureEnabled(true);for(int i=0;i<4;i++)yield return null;
                     Assert.That(sample.Presentation.ReadyInstances,Is.GreaterThan(0),sample.Presentation.LastFault);
                     Assert.That(sample.Presentation.ViewFallback(sample.View),Is.EqualTo(CullingSystemDOTS.Dynamic.OcclusionFallbackReason.None),"The oracle must exercise real current-view GPU occlusion.");
                     var actual=Capture(target);
+                    var outsideActual=Capture(outsideTarget);
                     var actualIds=actual.Select(p=>(int)p.r|((int)p.g<<8)|((int)p.b<<16)).ToHashSet();
                     foreach(int id in visibleIds)Assert.That(actualIds.Contains(id),Is.True,"Entire reference-visible ID lost: "+id+", scenario="+scenario);
                     Assert.That(InteriorErrors(reference,actual,target.width,target.height),Is.Zero,"Lost reference interior, scenario="+scenario);
+                    Assert.That(sample.Presentation.ViewFallback(outside),Is.EqualTo(CullingSystemDOTS.Dynamic.OcclusionFallbackReason.None));
+                    Assert.That(InteriorErrors(outsideReference,outsideActual,outsideTarget.width,outsideTarget.height),Is.Zero,"Outside camera changed when the other camera entered geometry, scenario="+scenario);
+                    var outsideIds=outsideReference.Select(p=>(int)p.r|((int)p.g<<8)|((int)p.b<<16)).Where(id=>id>0 && id<=ids).Distinct();
+                    var outsideActualIds=outsideActual.Select(p=>(int)p.r|((int)p.g<<8)|((int)p.b<<16)).ToHashSet();
+                    foreach(int id in outsideIds)Assert.That(outsideActualIds.Contains(id),Is.True,"Outside reference-visible ID lost: "+id+", scenario="+scenario);
                 }
             }
             finally
             {
                 if(sample!=null){if(sample.View!=null)sample.View.targetTexture=null;sample.Shutdown();}
+                if(outside!=null){outside.targetTexture=null;Object.Destroy(outside.gameObject);}
+                if(outsideTarget!=null){outsideTarget.Release();Object.Destroy(outsideTarget);}
                 if(target!=null){target.Release();Object.Destroy(target);}
                 if(scene.IsValid() && scene.isLoaded)SceneManager.UnloadSceneAsync(scene);
                 for(int i=0;i<lights.Length;i++)if(lights[i]!=null)lights[i].enabled=enabled[i];

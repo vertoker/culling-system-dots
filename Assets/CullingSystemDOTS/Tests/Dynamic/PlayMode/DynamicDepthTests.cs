@@ -137,6 +137,42 @@ namespace CullingSystemDOTS.Dynamic.Rendering.Tests
             }
         }
 
+        [UnityTest] public IEnumerator ContainingAndNearClippedOccludersCannotContributeDepth()
+        {
+            var resources=LoadResources();var cube=GameObject.CreatePrimitive(PrimitiveType.Cube);cube.SetActive(false);
+            try
+            {
+                using(var registry=new OcclusionWorld())
+                using(var cache=new OcclusionGpuGeometryCache(registry))
+                using(var pipeline=new OcclusionGpuPipeline(registry,resources,new int2(33,19),100))
+                {
+                    var geometry=registry.RegisterGeometry(cube.GetComponent<MeshFilter>().sharedMesh);
+                    var descriptor=new OcclusionInstanceDescriptor{Geometry=geometry};
+                    descriptor.State=new OcclusionInstanceState{Opaque=true,Roles=OcclusionRole.Occluder};
+                    var handle=default(InstanceHandle);
+                    foreach(float z in new[]{0f,-.55f,-3f})
+                    {
+                        descriptor.State.LocalToWorld=float4x4.TRS(new float3(0,0,z),quaternion.identity,new float3(5,5,1));
+                        descriptor.State.WorldBounds=new Bounds(new Vector3(0,0,z),new Vector3(5,5,1));
+                        if(!handle.IsValid)handle=registry.RegisterInstance(descriptor);else registry.UpdateInstance(handle,descriptor.State);
+                        while(registry.PendingUpdateCount>0)registry.ProcessUpdates(new OcclusionUpdateBudget(262144));
+                        using(var snapshot=registry.AcquireSnapshot())
+                        using(var meshes=PrepareMeshes(cache,snapshot))
+                        {
+                            using(var command=new CommandBuffer())
+                            {pipeline.RecordDepth(command,snapshot,Matrix4x4.identity,GL.GetGPUProjectionMatrix(Matrix4x4.Perspective(60,33f/19,.1f,100),false),meshes,nearPlane:.1f);Graphics.ExecuteCommandBuffer(command);}
+                            var request=AsyncGPUReadback.Request(pipeline.Depth.Levels[0],0);while(!request.done)yield return null;
+                            Assert.That(request.hasError,Is.False);
+                            var depths=request.GetData<float>();
+                            if(z>-1)foreach(float depth in depths)Assert.That(depth,Is.EqualTo(100),"Uncertain near coverage must remain clear.");
+                            else Assert.That(depths[9*33+16],Is.EqualTo(2.5f).Within(.001f),"An entirely forward wall must still provide useful depth.");
+                        }
+                    }
+                }
+            }
+            finally{AsyncGPUReadback.WaitAllRequests();UnityEngine.Object.Destroy(cube);UnityEngine.Object.Destroy(resources);}
+        }
+
         [UnityTest] public IEnumerator RasterDepthIsLinearAcrossBothHardwareZConventions()
         {
             var resources = LoadResources(); var cube = GameObject.CreatePrimitive(PrimitiveType.Cube); cube.SetActive(false);

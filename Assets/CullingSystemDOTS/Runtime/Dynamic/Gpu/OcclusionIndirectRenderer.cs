@@ -140,7 +140,7 @@ namespace CullingSystemDOTS.Dynamic.Gpu
                     using(var command=new CommandBuffer {name="Current dynamic occlusion and indirect compaction"})
                     {
                         var projection=GL.GetGPUProjectionMatrix(camera.projectionMatrix,false);
-                        view.Pipeline.RecordDepth(command,slot.Snapshot,camera.worldToCameraMatrix,projection,slot.Meshes,camera.cullingMask);
+                        view.Pipeline.RecordDepth(command,slot.Snapshot,camera.worldToCameraMatrix,projection,slot.Meshes,camera.cullingMask,camera.nearClipPlane);
                         view.Pipeline.RecordHierarchy(command);
                         view.Pipeline.RecordWorldTests(command,packet.Candidates,view.Visible,packet.Count,camera.worldToCameraMatrix,projection,camera.nearClipPlane);
                         command.CopyBuffer(packet.Arguments,view.Arguments);

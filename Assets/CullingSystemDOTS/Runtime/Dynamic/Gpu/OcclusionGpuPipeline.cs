@@ -31,13 +31,19 @@ namespace CullingSystemDOTS.Dynamic.Gpu
             }
             catch { Dispose(); throw; }
         }
-        internal void RecordDepth(CommandBuffer command, OcclusionSnapshotLease snapshot, Matrix4x4 view, Matrix4x4 gpuProjection, OcclusionGpuMeshSet gpuGeometry, int layerMask = -1)
+        internal void RecordDepth(CommandBuffer command, OcclusionSnapshotLease snapshot, Matrix4x4 view, Matrix4x4 gpuProjection, OcclusionGpuMeshSet gpuGeometry, int layerMask = -1, float nearPlane = 0)
         {
             CheckAlive();
             if (command == null || snapshot == null || gpuGeometry == null || snapshot.WorldIdentity != worldIdentity ||
-                !OcclusionValidity.MatrixFinite(view) || !OcclusionValidity.MatrixFinite(gpuProjection)) throw new ArgumentException("Current finite view and matching snapshot are required.");
+                !OcclusionValidity.MatrixFinite(view) || !OcclusionValidity.MatrixFinite(gpuProjection) || !OcclusionValidity.Finite(nearPlane) || nearPlane < 0) throw new ArgumentException("Current finite view, near plane and matching snapshot are required.");
             command.SetRenderTarget(Depth.Levels[0]); command.SetViewport(new Rect(0, 0, Depth.Size.x, Depth.Size.y));
             command.ClearRenderTarget(false, true, new Color(FarDepth, 0, 0, 0));
+            // This shader supplies its own VP matrix. DrawMesh cannot infer its winding
+            // from Unity's current camera matrices. Match the explicit view/projection,
+            // including the handedness flip in Camera.worldToCameraMatrix.
+            bool previousInversion=GL.invertCulling;
+            float projectionOrientation=gpuProjection.m00*gpuProjection.m11-gpuProjection.m01*gpuProjection.m10;
+            command.SetInvertCulling((view.determinant<0)!=(projectionOrientation<0));
             var properties = new MaterialPropertyBlock();
             properties.SetMatrix("_OcclusionView", view); properties.SetMatrix("_OcclusionViewProjection", gpuProjection * view);
             properties.SetFloat("_FarDepth", FarDepth);
@@ -45,6 +51,12 @@ namespace CullingSystemDOTS.Dynamic.Gpu
             {
                 if ((instance.Roles & OcclusionRole.Occluder) == 0 || instance.Opaque == 0 || instance.Prepared == 0 ||
                     instance.Shadows == ShadowCastingMode.ShadowsOnly || (layerMask & (1 << instance.Layer)) == 0) continue;
+                // A containing or near-clipped solid has no accepted front-surface coverage
+                // proof. Its exit faces must not hide geometry exposed by ordinary rendering.
+                var extents=instance.WorldBounds.extents;
+                float radius=Mathf.Abs(view.m20)*extents.x+Mathf.Abs(view.m21)*extents.y+Mathf.Abs(view.m22)*extents.z;
+                float nearest=-view.MultiplyPoint3x4(instance.WorldBounds.center).z-radius;
+                if(!OcclusionValidity.Finite(nearest) || nearest<=nearPlane+1e-4f*Mathf.Max(1,nearPlane))continue;
                 float determinant = math.determinant(new float3x3(instance.LocalToWorld.c0.xyz, instance.LocalToWorld.c1.xyz, instance.LocalToWorld.c2.xyz));
                 // Per-instance mirrored culling has no accepted raster contract yet. Omission
                 // reduces occlusion; rendering the wrong winding could invent opaque coverage.
@@ -54,6 +66,7 @@ namespace CullingSystemDOTS.Dynamic.Gpu
                 properties.SetMatrix("_OcclusionObjectToWorld", instance.LocalToWorld);
                 command.DrawMesh(mesh, Matrix4x4.identity, depthMaterial, instance.SubMesh, 0, properties);
             }
+            command.SetInvertCulling(previousInversion);
         }
         internal void RecordHierarchy(CommandBuffer command)
         {

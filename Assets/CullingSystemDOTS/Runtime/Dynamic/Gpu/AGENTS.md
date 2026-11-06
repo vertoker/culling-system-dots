@@ -5,6 +5,10 @@ eye-depth resources and GPU tests, independently of URP and the legacy evaluator
 
 Depth uses the complete single-sample reference grid. Clear/uncovered samples remain far through
 maximum reduction, including odd edges. Shader results may hide only with complete current inputs.
+Manual view/projection shader matrices require explicit raster winding; ordinary Camera view
+matrices flip handedness. Restore the prior culling state after depth recording. Compare both
+sides of a one-sided surface against an independent ordinary material. Containing/near-clipped
+occluders are omitted for that view; near-plane safety applies to occluders as well as targets.
 Resources and snapshot leases must survive every queued reader; low-level owners release only
 after their submission fence. CPU preparation is not GPU readiness.
 
