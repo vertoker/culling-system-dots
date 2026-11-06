@@ -1,17 +1,17 @@
 using System.Collections;
 using NUnit.Framework;
-using PerfectCullingDOTS.Authoring;
-using PerfectCullingDOTS.Core;
+using CullingSystemDOTS.Authoring;
+using CullingSystemDOTS.Core;
 using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine.Rendering;
-using PerfectCullingDOTS.Runtime;
+using CullingSystemDOTS.Runtime;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.TestTools;
-namespace PerfectCullingDOTS.Rendering.Tests
+namespace CullingSystemDOTS.Rendering.Tests
 {
     public class AutomaticCameraTests
     {

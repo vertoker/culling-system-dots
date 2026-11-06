@@ -3,13 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
-using PerfectCullingDOTS.Authoring;
+using CullingSystemDOTS.Authoring;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Scenes;
-namespace PerfectCullingDOTS.Delivery.Tests
+namespace CullingSystemDOTS.Delivery.Tests
 {
     public class DeliveryFixtureTests
     {
@@ -21,13 +21,13 @@ namespace PerfectCullingDOTS.Delivery.Tests
             var opened = default(Scene);
             try
             {
-                var type = AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("PerfectCullingDOTS.Delivery.Editor.DeliveryFixtureBuilder")).FirstOrDefault(t=>t != null);
+                var type = AppDomain.CurrentDomain.GetAssemblies().Select(a=>a.GetType("CullingSystemDOTS.Delivery.Editor.DeliveryFixtureBuilder")).FirstOrDefault(t=>t != null);
                 Assert.That(type, Is.Not.Null,"The sample fixture builder has not been implemented.");
                 var create = type.GetMethod("CreateSample",BindingFlags.Public|BindingFlags.Static);
                 string scenePath = (string)create.Invoke(null,new object[] {folder});
                 Assert.That(SceneManager.sceneCount, Is.EqualTo(count)); Assert.That(SceneManager.GetActiveScene(), Is.EqualTo(host)); Assert.That(host.isDirty, Is.EqualTo(dirty));
                 Assert.That(File.Exists(scenePath), Is.True); Assert.That(File.Exists(folder+"/Geometry.unity"), Is.True);
-                var bake = AssetDatabase.LoadAssetAtPath<PerfectCullingDOTS.Runtime.CullingBakeAsset>(folder+"/Bake.asset"); Assert.That(bake, Is.Not.Null); Assert.That(bake.GroupCount, Is.EqualTo(3));
+                var bake = AssetDatabase.LoadAssetAtPath<CullingSystemDOTS.Runtime.CullingBakeAsset>(folder+"/Bake.asset"); Assert.That(bake, Is.Not.Null); Assert.That(bake.GroupCount, Is.EqualTo(3));
                 Assert.That(bake.TryCreateBlob(out var blob,out _,out var diagnostic), Is.True,diagnostic);
                 using (blob) { Assert.That(blob.Value.Cells.Length, Is.EqualTo(4)); Assert.That(blob.Value.CompressedBytes.Length, Is.Positive); }
                 byte[] previous = File.ReadAllBytes(scenePath); var failure = Assert.Throws<TargetInvocationException>(()=>create.Invoke(null,new object[] {folder}));

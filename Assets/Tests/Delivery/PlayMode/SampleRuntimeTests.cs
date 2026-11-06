@@ -1,16 +1,16 @@
 using System.Collections;
 using System.Linq;
 using NUnit.Framework;
-using PerfectCullingDOTS.Authoring;
-using PerfectCullingDOTS.Runtime;
-using PerfectCullingDOTS.Sample;
+using CullingSystemDOTS.Authoring;
+using CullingSystemDOTS.Runtime;
+using CullingSystemDOTS.Sample;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Rendering;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
-namespace PerfectCullingDOTS.Delivery.Rendering.Tests
+namespace CullingSystemDOTS.Delivery.Rendering.Tests
 {
     public class SampleRuntimeTests
     {
@@ -22,7 +22,7 @@ namespace PerfectCullingDOTS.Delivery.Rendering.Tests
         {
 #if UNITY_EDITOR
             string path = UnityEditor.AssetDatabase.FindAssets("Basic t:SceneAsset",new[] {"Assets"})
-                .Select(UnityEditor.AssetDatabase.GUIDToAssetPath).FirstOrDefault(p=>p.EndsWith("/Basic.unity") && (p.StartsWith("Assets/DeliverySample/Content/") || p.StartsWith("Assets/Samples/PerfectCullingDOTS/")));
+                .Select(UnityEditor.AssetDatabase.GUIDToAssetPath).FirstOrDefault(p=>p.EndsWith("/Basic.unity") && (p.StartsWith("Assets/DeliverySample/Content/") || p.StartsWith("Assets/Samples/CullingSystemDOTS/")));
             Assert.That(path, Is.Not.Null.And.Not.Empty,"Generate/import the owned Basic sample before this acceptance test.");
             yield return UnityEditor.SceneManagement.EditorSceneManager.LoadSceneAsyncInPlayMode(path,new LoadSceneParameters(LoadSceneMode.Additive));
             loaded = SceneManager.GetSceneByPath(path);

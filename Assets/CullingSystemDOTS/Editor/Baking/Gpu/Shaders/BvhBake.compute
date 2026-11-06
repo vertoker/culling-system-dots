@@ -1,0 +1,171 @@
+#pragma kernel CSMain
+
+// Independent binary BVH tracer. All uploaded records use 16-byte fields.
+struct Node { float4 Minimum; float4 Maximum; int4 Links; };
+struct Triangle { float4 A; float4 B; float4 C; };
+struct Instance { float4x4 WorldToLocal; float4 Minimum; float4 Maximum; int4 Data; };
+struct Ray { float3 Origin; float3 Direction; float Near; float Far; };
+StructuredBuffer<Node> Nodes;
+StructuredBuffer<Triangle> Triangles;
+StructuredBuffer<int> Order;
+StructuredBuffer<Instance> Instances;
+StructuredBuffer<float4> CamPos;
+RWStructuredBuffer<uint> VisibleIndices;
+int OpaqueRoot, TransparentRoot, GroupCount, WordsPerCell, ActiveCells;
+float4 ScreenParams, Rotation, CellSize;
+
+float3 Rotate(float3 value)
+{
+    float3 twice = 2 * cross(Rotation.xyz, value);
+    return value + Rotation.w * twice + cross(Rotation.xyz, twice);
+}
+
+bool Bounds(Ray ray, float3 minimum, float3 maximum, float limit)
+{
+    float entry = ray.Near, exit = limit;
+    for (int axis = 0; axis < 3; axis++)
+    {
+        float direction = ray.Direction[axis], origin = ray.Origin[axis];
+        if (abs(direction) < 1e-30)
+        {
+            if (origin < minimum[axis] || origin > maximum[axis]) return false;
+        }
+        else
+        {
+            float first = (minimum[axis] - origin) / direction;
+            float second = (maximum[axis] - origin) / direction;
+            entry = max(entry, min(first, second)); exit = min(exit, max(first, second));
+            if (entry > exit) return false;
+        }
+    }
+    return entry <= exit;
+}
+
+float Intersect(Ray ray, Triangle shape, float limit, bool doubleSided)
+{
+    float3 edge1 = shape.B.xyz - shape.A.xyz;
+    float3 edge2 = shape.C.xyz - shape.A.xyz;
+    float3 perpendicular = cross(ray.Direction, edge2);
+    precise float determinant = dot(edge1, perpendicular);
+    float epsilon = sqrt(dot(edge1,edge1) * dot(edge2,edge2) * dot(ray.Direction,ray.Direction)) * 1e-7;
+    if (doubleSided ? abs(determinant) <= epsilon : determinant <= epsilon) return asfloat(0x7f800000);
+    float3 offset = ray.Origin - shape.A.xyz;
+    precise float inverse = 1 / determinant;
+    precise float u = dot(offset, perpendicular) * inverse;
+    if (u < 0 || u > 1) return asfloat(0x7f800000);
+    float3 second = cross(offset, edge1);
+    precise float v = dot(ray.Direction, second) * inverse;
+    if (v < 0 || u + v > 1) return asfloat(0x7f800000);
+    precise float distance = dot(edge2, second) * inverse;
+    return distance >= ray.Near && distance < limit ? distance : asfloat(0x7f800000);
+}
+
+void SetGroup(int cell, int group)
+{
+    if (group >= 0 && group < GroupCount)
+        InterlockedOr(VisibleIndices[cell * WordsPerCell + 2 + (group >> 5)], 1u << (group & 31));
+}
+
+bool Trace(Ray world, int root, bool transparent, int cell, inout float closest, inout int bestInstance, inout int bestTriangle, inout int bestGroup)
+{
+    if (root < 0) return true;
+    int pending[64], length = 1; pending[0] = root;
+    while (length > 0)
+    {
+        Node node = Nodes[pending[--length]];
+        if (!Bounds(world, node.Minimum.xyz, node.Maximum.xyz, closest)) continue;
+        if (node.Links.w == 0)
+        {
+            if (length + 2 > 64) return false;
+            pending[length++] = node.Links.y; pending[length++] = node.Links.x;
+            continue;
+        }
+        for (int item = 0; item < node.Links.w; item++)
+        {
+            int instanceId = Order[node.Links.z + item];
+            Instance instance = Instances[instanceId];
+            if (!Bounds(world, instance.Minimum.xyz, instance.Maximum.xyz, closest) || instance.Data.x < 0) continue;
+            if (transparent && instance.Data.y < 0) continue;
+            Ray local = world;
+            local.Origin = mul(instance.WorldToLocal, float4(world.Origin,1)).xyz;
+            local.Direction = mul(instance.WorldToLocal, float4(world.Direction,0)).xyz;
+            int trianglesPending[64], triangleLength = 1; trianglesPending[0] = instance.Data.x;
+            bool found = false;
+            while (triangleLength > 0 && !found)
+            {
+                Node leaf = Nodes[trianglesPending[--triangleLength]];
+                if (!Bounds(local, leaf.Minimum.xyz, leaf.Maximum.xyz, closest)) continue;
+                if (leaf.Links.w == 0)
+                {
+                    if (triangleLength + 2 > 64) return false;
+                    trianglesPending[triangleLength++] = leaf.Links.y; trianglesPending[triangleLength++] = leaf.Links.x;
+                    continue;
+                }
+                for (int primitive = 0; primitive < leaf.Links.w; primitive++)
+                {
+                    int triangleId = Order[leaf.Links.z + primitive];
+                    float distance = Intersect(local, Triangles[triangleId], transparent ? closest : world.Far, instance.Data.w != 0);
+                    if (transparent)
+                    {
+                        if (distance < closest) { SetGroup(cell, instance.Data.y); found = true; break; }
+                    }
+                    else if (distance < closest || (distance == closest && distance < world.Far &&
+                        (instanceId < bestInstance || (instanceId == bestInstance && triangleId < bestTriangle))))
+                    {
+                        closest = distance; bestInstance = instanceId; bestTriangle = triangleId; bestGroup = instance.Data.y;
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+uint Neighbors(float3 direction, float distance)
+{
+    if (any(CellSize.xyz <= 0)) return 0;
+    float radius = max(CellSize.x, max(CellSize.y,CellSize.z)) * .25;
+    uint mask = 0;
+    for (int z = -1; z <= 1; z++) for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++)
+    {
+        if (x == 0 && y == 0 && z == 0) continue;
+        float3 center = Rotate(float3(x,y,z)) * CellSize.xyz;
+        float along = dot(center,direction), square = dot(center,center) - radius * radius;
+        float discriminant = along * along - square;
+        if (discriminant < 0) continue;
+        float hit = -along - sqrt(discriminant);
+        if (hit >= 0 && distance > hit) mask |= 1u << ((x+1) + 3 * ((y+1) + 3 * (z+1)));
+    }
+    return mask;
+}
+
+[numthreads(8,8,1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    int cell = id.z / 6, face = id.z % 6;
+    if (id.x >= (uint)ScreenParams.x || id.y >= (uint)ScreenParams.y || cell >= ActiveCells) return;
+    float u = 2 * ((id.x + .5) / ScreenParams.x) - 1;
+    float v = 2 * ((id.y + .5) / ScreenParams.y) - 1;
+    float3 direction;
+    switch (face)
+    {
+        case 0: direction = float3(1,v,-u); break;
+        case 1: direction = float3(-1,v,u); break;
+        case 2: direction = float3(u,1,-v); break;
+        case 3: direction = float3(u,-1,v); break;
+        case 4: direction = float3(u,v,1); break;
+        default: direction = float3(-u,v,-1); break;
+    }
+    direction = normalize(direction);
+    Ray ray; ray.Origin = CamPos[cell].xyz; ray.Near = ScreenParams.z;
+    ray.Far = ScreenParams.w / max(abs(direction.x),max(abs(direction.y),abs(direction.z)));
+    ray.Direction = Rotate(direction);
+    float closest = ray.Far; int bestInstance = 0x7fffffff, bestTriangle = 0x7fffffff, bestGroup = -1;
+    if (!Trace(ray,OpaqueRoot,false,cell,closest,bestInstance,bestTriangle,bestGroup) ||
+        !Trace(ray,TransparentRoot,true,cell,closest,bestInstance,bestTriangle,bestGroup))
+    {
+        InterlockedOr(VisibleIndices[cell * WordsPerCell + 1],1u); return;
+    }
+    SetGroup(cell,bestGroup);
+    InterlockedOr(VisibleIndices[cell * WordsPerCell],Neighbors(ray.Direction,closest));
+}

@@ -1,5 +1,0 @@
-{
-  "name": "PerfectCullingDOTS.Core",
-  "references": ["Unity.Entities", "Unity.Collections", "Unity.Mathematics", "Unity.Burst"],
-  "allowUnsafeCode": true
-}

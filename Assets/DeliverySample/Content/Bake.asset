@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca80ab9609ae9ce44ace58aca4c143a4, type: 3}
   m_Name: Bake
-  m_EditorClassIdentifier: PerfectCullingDOTS.Runtime::PerfectCullingDOTS.Runtime.CullingBakeAsset
+  m_EditorClassIdentifier: CullingSystemDOTS.Runtime::CullingSystemDOTS.Runtime.CullingBakeAsset
   formatVersion: 1
   volumeId:
     x: 3349427650
@@ -62,22 +62,22 @@ MonoBehaviour:
   - ByteOffset: 0
     ByteLength: 1
     EncodedLength: 2
-    MergeBitmask: 134205431
+    MergeBitmask: 4294967295
     HasMergeMetadata: 1
   - ByteOffset: 1
     ByteLength: 1
     EncodedLength: 2
-    MergeBitmask: 134193119
+    MergeBitmask: 4294967295
     HasMergeMetadata: 1
   - ByteOffset: 2
     ByteLength: 1
     EncodedLength: 2
-    MergeBitmask: 127913983
+    MergeBitmask: 4294967295
     HasMergeMetadata: 1
   - ByteOffset: 3
     ByteLength: 1
     EncodedLength: 2
-    MergeBitmask: 121610239
+    MergeBitmask: 4294967295
     HasMergeMetadata: 1
   compressed: 20482048y
-  inputFingerprint: tSV/JuNzUWN4tPEhedrVGI7Qgo1pJzqw7DUg1jE9w+M=
+  inputFingerprint: 5G5ClqKKVPyuaE57nVLsetWHIC19F+4YM9R9/pA3ItY=

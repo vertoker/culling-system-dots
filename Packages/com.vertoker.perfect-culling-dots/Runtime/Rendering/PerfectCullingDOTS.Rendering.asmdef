@@ -1,4 +1,0 @@
-{
-  "name": "PerfectCullingDOTS.Rendering",
-  "references": ["PerfectCullingDOTS.Core", "Unity.Entities", "Unity.Entities.Graphics", "Unity.Transforms", "Unity.Collections", "Unity.Mathematics"]
-}

@@ -1,0 +1,4 @@
+{
+  "name": "CullingSystemDOTS.Rendering",
+  "references": ["CullingSystemDOTS.Core", "Unity.Entities", "Unity.Entities.Graphics", "Unity.Transforms", "Unity.Collections", "Unity.Mathematics"]
+}

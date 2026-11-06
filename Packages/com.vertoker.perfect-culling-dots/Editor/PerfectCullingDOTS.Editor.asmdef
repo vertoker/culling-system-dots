@@ -1,5 +1,0 @@
-{
-  "name": "PerfectCullingDOTS.Editor",
-  "references": ["PerfectCullingDOTS.Core", "PerfectCullingDOTS.Runtime", "Unity.Entities", "Unity.Entities.Hybrid", "Unity.Entities.Graphics", "Unity.Transforms", "Unity.Collections", "Unity.Mathematics", "Unity.Burst"],
-  "includePlatforms": ["Editor"]
-}

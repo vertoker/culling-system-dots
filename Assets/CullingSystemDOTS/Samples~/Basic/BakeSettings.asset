@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 400ce32f4a5a54741add844f21423275, type: 3}
+  m_Name: BakeSettings
+  m_EditorClassIdentifier: CullingSystemDOTS.Editor::CullingSystemDOTS.Editor.Baking.BakeSettingsAsset
+  ExecutionMode: 2
+  InputProfile: 1
+  CellSize: {x: 4, y: 4, z: 4}
+  Resolution: 32
+  Far: 20
+  RenderTransparency: 1
+  MemoryBudgetMiB: 64
+  MaxCellsPerBatch: 8
+  MergeAxes: []

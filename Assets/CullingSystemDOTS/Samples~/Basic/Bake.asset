@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca80ab9609ae9ce44ace58aca4c143a4, type: 3}
+  m_Name: Bake
+  m_EditorClassIdentifier: CullingSystemDOTS.Runtime::CullingSystemDOTS.Runtime.CullingBakeAsset
+  formatVersion: 1
+  volumeId:
+    x: 3349427650
+    y: 26753975
+    z: 728040325
+    w: 2207472821
+  layout:
+    CellCount:
+      x: 2
+      y: 1
+      z: 2
+    CellSize:
+      x: 4
+      y: 4
+      z: 4
+    BakeOrientation:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+    InverseBakeOrientation:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+  groups:
+  - VolumeId:
+      x: 3349427650
+      y: 26753975
+      z: 728040325
+      w: 2207472821
+    GroupIndex: 0
+  - VolumeId:
+      x: 3349427650
+      y: 26753975
+      z: 728040325
+      w: 2207472821
+    GroupIndex: 1
+  - VolumeId:
+      x: 3349427650
+      y: 26753975
+      z: 728040325
+      w: 2207472821
+    GroupIndex: 2
+  cells:
+  - ByteOffset: 0
+    ByteLength: 1
+    EncodedLength: 2
+    MergeBitmask: 4294967295
+    HasMergeMetadata: 1
+  - ByteOffset: 1
+    ByteLength: 1
+    EncodedLength: 2
+    MergeBitmask: 4294967295
+    HasMergeMetadata: 1
+  - ByteOffset: 2
+    ByteLength: 1
+    EncodedLength: 2
+    MergeBitmask: 4294967295
+    HasMergeMetadata: 1
+  - ByteOffset: 3
+    ByteLength: 1
+    EncodedLength: 2
+    MergeBitmask: 4294967295
+    HasMergeMetadata: 1
+  compressed: 20482048y
+  inputFingerprint: 5G5ClqKKVPyuaE57nVLsetWHIC19F+4YM9R9/pA3ItY=

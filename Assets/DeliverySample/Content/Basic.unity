@@ -246,7 +246,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7379391d942ef374ab46b96fa20c51ca, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: PerfectCullingDOTS.Sample::PerfectCullingDOTS.Sample.SampleCameraPath
+  m_EditorClassIdentifier: CullingSystemDOTS.Sample::CullingSystemDOTS.Sample.SampleCameraPath
   AnimateCamera: 1
 --- !u!114 &1156741603
 MonoBehaviour:
@@ -259,7 +259,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66a95430e1a86464db7db3ce74bb179d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: PerfectCullingDOTS.Runtime::PerfectCullingDOTS.Authoring.CullingCameraAuthoring
+  m_EditorClassIdentifier: CullingSystemDOTS.Runtime::CullingSystemDOTS.Authoring.CullingCameraAuthoring
   Layers: 4294967295
   NeighborRadius: 0
   Invert: 0

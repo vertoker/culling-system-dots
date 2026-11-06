@@ -1,0 +1,21 @@
+{
+  "name": "CullingSystemDOTS.Editor.Tests",
+  "references": [
+    "CullingSystemDOTS.Core",
+    "CullingSystemDOTS.Runtime",
+    "CullingSystemDOTS.Editor",
+    "Unity.Entities",
+    "Unity.Entities.Hybrid",
+    "Unity.Entities.Graphics",
+    "Unity.Transforms",
+    "Unity.Collections",
+    "Unity.Mathematics",
+    "CullingSystemDOTS.Rendering"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

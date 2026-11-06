@@ -1,38 +1,30 @@
-"""Create an independent delivery consumer; never launches Unity or installs CLI tooling.
-
-Open the returned project normally in Unity6000.6.8f1. Tests and builds run through
-that project's explicitly selected Coplay MCP instance. An existing destination is
-never overwritten, including a partial project left for inspection after a failure.
-"""
+"""Generate one disposable Git-install check; open it normally in Unity, without CLI tooling."""
 import argparse
-import hashlib
+import io
 import json
 from pathlib import Path
 import shutil
+import subprocess
+import tarfile
+
+PACKAGE = "com.vertoker.culling-system-dots"
+SUBPATH = "Assets/CullingSystemDOTS"
 
 
-def create(project_root: Path, destination: Path) -> Path:
+def create(project_root: Path, destination: Path, revision: str = "master") -> Path:
     project_root, destination = project_root.resolve(), destination.resolve()
-    allowed = (project_root / ".superpowers/consumers").resolve()
-    if allowed not in destination.parents or destination.exists():
-        raise ValueError("Destination must be new and inside this project's .superpowers/consumers.")
-    package_names = ("com.vertoker.perfect-culling-dots", "com.unity.entities.graphics")
-    sample = project_root / "Packages/com.vertoker.perfect-culling-dots/Samples~/Basic"
-    if not (sample / "Basic.unity").is_file():
-        raise ValueError("Generate and package the complete Basic sample first.")
-    destination.mkdir(parents=True)
-    packages = destination / "Packages"
-    packages.mkdir()
-    for name in package_names:
-        shutil.copytree(project_root / "Packages" / name, packages / name)
+    allowed = (project_root / ".superpowers/consumers/GitInstall").resolve()
+    if destination != allowed or destination.exists():
+        raise ValueError("Only a new .superpowers/consumers/GitInstall destination is supported.")
+    commit = subprocess.check_output(["git", "-C", str(project_root), "rev-parse", "--verify", revision + "^{commit}"], text=True).strip()
+    archive = subprocess.check_output(["git", "-C", str(project_root), "archive", "--format=tar", commit, SUBPATH + "/Samples~/Basic"])
     original = json.loads((project_root / "Packages/manifest.json").read_text(encoding="utf-8-sig"))["dependencies"]
-    dependencies = {name: original[name] for name in (
-        "com.coplaydev.unity-mcp", "com.unity.entities", "com.unity.collections", "com.unity.burst",
-        "com.unity.mathematics", "com.unity.physics", "com.unity.render-pipelines.universal",
-        "com.unity.test-framework", "com.unity.test-framework.performance")}
-    dependencies.update({name: version for name, version in original.items() if name.startswith("com.unity.modules.")})
-    manifest = {"dependencies": dependencies, "testables": ["com.vertoker.perfect-culling-dots"]}
-    (packages / "manifest.json").write_text(json.dumps(manifest, indent=2)+"\n", encoding="utf-8")
+    names = ("com.coplaydev.unity-mcp", "com.unity.entities.graphics", "com.unity.physics", "com.unity.render-pipelines.universal", "com.unity.test-framework")
+    dependencies = {name: original[name] for name in names}
+    dependencies.update({key: value for key, value in original.items() if key.startswith("com.unity.modules.")})
+    dependencies[PACKAGE] = (project_root / ".git").as_uri() + "?path=/" + SUBPATH + "#" + commit
+    (destination / "Packages").mkdir(parents=True)
+    (destination / "Packages/manifest.json").write_text(json.dumps({"dependencies": dependencies, "testables": [PACKAGE]}, indent=2)+"\n", encoding="utf-8")
     settings = destination / "ProjectSettings"
     settings.mkdir()
     for name in ("ProjectVersion.txt", "GraphicsSettings.asset", "QualitySettings.asset", "ProjectSettings.asset"):
@@ -41,33 +33,29 @@ def create(project_root: Path, destination: Path) -> Path:
     assets.mkdir()
     shutil.copytree(project_root / "Assets/Settings", assets / "Settings")
     shutil.copy2(project_root / "Assets/Settings.meta", assets / "Settings.meta")
-    shutil.copytree(sample, assets / "Samples/PerfectCullingDOTS/Basic")
-    tests = assets / "Tests"
-    render_tests = tests / "Rendering"
-    render_tests.mkdir(parents=True)
-    for name in ("AutomaticCameraTests.cs", "AutomaticUrpStackTests.cs", "RenderParityTests.cs", "RenderSimulationParityTests.cs", "StreamingParityTests.cs"):
-        shutil.copy2(project_root / "Assets/Tests/PlayMode" / name, render_tests / name)
-    assembly = {"name": "PerfectCullingDOTS.Consumer.Tests", "references": [
-        "PerfectCullingDOTS.Core", "PerfectCullingDOTS.Runtime", "PerfectCullingDOTS.Rendering",
-        "Unity.Entities", "Unity.Entities.Graphics", "Unity.Scenes", "Unity.Transforms",
-        "Unity.Collections", "Unity.Mathematics", "Unity.Physics", "Unity.RenderPipelines.Universal.Runtime"],
-        "optionalUnityReferences": ["TestAssemblies"]}
-    (render_tests / "PerfectCullingDOTS.Consumer.Tests.asmdef").write_text(json.dumps(assembly, indent=2)+"\n", encoding="utf-8")
-    shutil.copytree(project_root / "Assets/Tests/Fixtures/Streaming", tests / "Fixtures/Streaming")
-    shutil.copytree(project_root / "Assets/Tests/Delivery/PlayMode", tests / "Delivery")
-    forbidden = list(assets.rglob("*.dll"))+list(packages.rglob("*.dll"))
-    if forbidden or (assets / "Reference").exists() or (destination / "Sources").exists():
-        raise ValueError("Consumer contains forbidden native/reference artifacts; inspect the partial project.")
-    hashes = {str(path.relative_to(destination)).replace("\\", "/"): hashlib.sha256(path.read_bytes()).hexdigest()
-              for base in (assets, packages) for path in sorted(base.rglob("*")) if path.is_file()}
-    (destination / "DeliveryContentHashes.json").write_text(json.dumps(hashes, indent=2)+"\n", encoding="utf-8")
+    prefix = SUBPATH + "/Samples~/Basic/"
+    sample = assets / "Samples/CullingSystemDOTS/Basic"
+    with tarfile.open(fileobj=io.BytesIO(archive)) as contents:
+        for member in contents:
+            if not member.name.startswith(prefix) or member.isdir():
+                continue
+            relative = Path(member.name[len(prefix):])
+            if not member.isfile() or relative.is_absolute() or ".." in relative.parts:
+                raise ValueError("Unsupported sample archive entry.")
+            target = sample / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(contents.extractfile(member).read())
+    for name in ("PlayMode", "Fixtures", "Delivery/PlayMode"):
+        source = project_root / "Assets/Tests" / name
+        if source.exists():
+            shutil.copytree(source, assets / "Tests" / name)
+    (destination / "GitInstall.json").write_text(json.dumps({"commit": commit, "package": PACKAGE, "gitUrl": dependencies[PACKAGE]}, indent=2)+"\n", encoding="utf-8")
     return destination
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project-root", type=Path, default=Path(__file__).resolve().parent.parent)
-    parser.add_argument("--destination", type=Path)
+    parser.add_argument("--revision", default="master")
     args = parser.parse_args()
-    target = args.destination or args.project_root / ".superpowers/consumers/Delivery6000_6_8f1"
-    print(create(args.project_root, target))
+    print(create(args.project_root, args.project_root / ".superpowers/consumers/GitInstall", args.revision))

@@ -127,4 +127,4 @@ __pycache__/
 /.agents/migration-work/
 /.agents/local-context.md
 # Disposable consumer projects used to verify package portability.
-/.superpowers/consumers/
+/.superpowers/

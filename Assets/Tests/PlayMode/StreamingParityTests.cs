@@ -1,8 +1,8 @@
 using System.Collections;
 using NUnit.Framework;
-using PerfectCullingDOTS.Core;
-using PerfectCullingDOTS.Runtime;
-using PerfectCullingDOTS.Rendering;
+using CullingSystemDOTS.Core;
+using CullingSystemDOTS.Runtime;
+using CullingSystemDOTS.Rendering;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -13,7 +13,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.TestTools;
 
-namespace PerfectCullingDOTS.Rendering.Tests
+namespace CullingSystemDOTS.Rendering.Tests
 {
     public class StreamingParityTests
     {

@@ -1,0 +1,6 @@
+{
+  "name": "CullingSystemDOTS.Delivery.Tests",
+  "references": ["CullingSystemDOTS.Core", "CullingSystemDOTS.Runtime", "CullingSystemDOTS.Editor", "Unity.Entities", "Unity.Scenes", "Unity.Collections", "Unity.Mathematics"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

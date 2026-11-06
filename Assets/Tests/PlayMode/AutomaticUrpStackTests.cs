@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using PerfectCullingDOTS.Authoring;
-using PerfectCullingDOTS.Runtime;
+using CullingSystemDOTS.Authoring;
+using CullingSystemDOTS.Runtime;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.TestTools;
-namespace PerfectCullingDOTS.Rendering.Tests
+namespace CullingSystemDOTS.Rendering.Tests
 {
     public class AutomaticUrpStackTests
     {

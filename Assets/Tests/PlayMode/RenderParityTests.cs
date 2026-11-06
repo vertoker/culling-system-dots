@@ -8,10 +8,10 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.TestTools;
-using PerfectCullingDOTS.Core;
-using PerfectCullingDOTS.Rendering;
+using CullingSystemDOTS.Core;
+using CullingSystemDOTS.Rendering;
 
-namespace PerfectCullingDOTS.Rendering.Tests
+namespace CullingSystemDOTS.Rendering.Tests
 {
     public class RenderParityTests
     {
@@ -88,7 +88,6 @@ namespace PerfectCullingDOTS.Rendering.Tests
             var graphics = world.GetExistingSystemManaged<EntitiesGraphicsSystem>();
             Assert.That(graphics, Is.Not.Null);
             var manager = world.EntityManager;
-            var previousFilter = graphics.CullingFilter;
             var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             cube.SetActive(false);
             var mesh = cube.GetComponent<MeshFilter>().sharedMesh;
@@ -104,7 +103,6 @@ namespace PerfectCullingDOTS.Rendering.Tests
             camera.cullingMask = 1 << 31;
             camera.transform.position = new Vector3(0, 0, -5);
             var entity = manager.CreateEntity();
-            int calls = 0;
             try
             {
                 RenderMeshUtility.AddComponents(entity, manager,
@@ -113,22 +111,15 @@ namespace PerfectCullingDOTS.Rendering.Tests
                 manager.SetComponentData(entity, new LocalToWorld { Value = float4x4.identity });
                 for (int i = 0; i < 4; i++) yield return null;
                 Assert.That(Center(target).r, Is.GreaterThan(200), "Stand must actually render the ECS cube before filtering.");
-                graphics.CullingFilter = context => {
-                    calls++;
-                    var excluded = new NativeParallelHashSet<Entity>(1, Allocator.TempJob);
-                    excluded.Add(entity);
-                    return new EntitiesGraphicsCullingFilter { ExcludedEntities = excluded };
-                };
+                manager.SetComponentEnabled<MaterialMeshInfo>(entity, false);
                 for (int i = 0; i < 3; i++) yield return null;
                 Assert.That(Center(target), Is.EqualTo(new Color32(0, 0, 0, 255)), "Excluded graphics entity still drew into its camera.");
-                Assert.That(calls, Is.GreaterThan(0));
                 Assert.That(manager.Exists(entity), Is.True);
                 Assert.That(manager.IsEnabled(entity), Is.True);
-                Assert.That(manager.IsComponentEnabled<MaterialMeshInfo>(entity), Is.True);
+                Assert.That(manager.IsComponentEnabled<MaterialMeshInfo>(entity), Is.False);
             }
             finally
             {
-                graphics.CullingFilter = previousFilter;
                 manager.CompleteAllTrackedJobs();
                 if (manager.Exists(entity)) manager.DestroyEntity(entity);
                 camera.targetTexture = null;

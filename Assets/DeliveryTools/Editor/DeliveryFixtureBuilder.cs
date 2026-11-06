@@ -1,16 +1,16 @@
 using System;
 using System.IO;
 using System.Linq;
-using PerfectCullingDOTS.Authoring;
-using PerfectCullingDOTS.Editor.Baking;
-using PerfectCullingDOTS.Sample;
+using CullingSystemDOTS.Authoring;
+using CullingSystemDOTS.Editor.Baking;
+using CullingSystemDOTS.Sample;
 using Unity.Scenes;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
-namespace PerfectCullingDOTS.Delivery.Editor
+namespace CullingSystemDOTS.Delivery.Editor
 {
     public static class DeliveryFixtureBuilder
     {

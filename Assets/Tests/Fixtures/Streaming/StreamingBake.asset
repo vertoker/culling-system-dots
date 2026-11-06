@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca80ab9609ae9ce44ace58aca4c143a4, type: 3}
   m_Name: StreamingBake
-  m_EditorClassIdentifier: PerfectCullingDOTS.Runtime::PerfectCullingDOTS.Runtime.CullingBakeAsset
+  m_EditorClassIdentifier: CullingSystemDOTS.Runtime::CullingSystemDOTS.Runtime.CullingBakeAsset
   formatVersion: 1
   volumeId:
     x: 91

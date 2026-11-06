@@ -1,8 +1,8 @@
 using System.Collections;
 using NUnit.Framework;
-using PerfectCullingDOTS.Core;
-using PerfectCullingDOTS.Rendering;
-using PerfectCullingDOTS.Runtime;
+using CullingSystemDOTS.Core;
+using CullingSystemDOTS.Rendering;
+using CullingSystemDOTS.Runtime;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -14,7 +14,7 @@ using UnityEngine.Rendering;
 using UnityEngine.TestTools;
 using Material = UnityEngine.Material;
 
-namespace PerfectCullingDOTS.Rendering.Tests
+namespace CullingSystemDOTS.Rendering.Tests
 {
     public struct RenderLogicProbe : IComponentData { public int Ticks; }
 

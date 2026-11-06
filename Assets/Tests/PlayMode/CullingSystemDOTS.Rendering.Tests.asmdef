@@ -1,0 +1,5 @@
+{
+  "name": "CullingSystemDOTS.Rendering.Tests",
+  "references": ["CullingSystemDOTS.Core", "CullingSystemDOTS.Runtime", "CullingSystemDOTS.Rendering", "Unity.Entities", "Unity.Entities.Graphics", "Unity.Scenes", "Unity.Transforms", "Unity.Collections", "Unity.Mathematics", "Unity.Physics", "Unity.RenderPipelines.Universal.Runtime"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

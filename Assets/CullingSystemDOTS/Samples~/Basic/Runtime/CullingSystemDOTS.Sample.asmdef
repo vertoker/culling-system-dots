@@ -1,0 +1,4 @@
+{
+  "name": "CullingSystemDOTS.Sample",
+  "references": ["CullingSystemDOTS.Core", "CullingSystemDOTS.Runtime", "CullingSystemDOTS.Rendering", "Unity.Entities", "Unity.Entities.Graphics", "Unity.Collections", "Unity.Mathematics"]
+}
