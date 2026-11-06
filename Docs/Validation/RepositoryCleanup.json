@@ -1,0 +1,11 @@
+{
+  "localHistoryPurged": true,
+  "removedHistoricalPaths": 1148,
+  "removedMarkedBlobs": 253,
+  "removedMarkedBlobsRemaining": 0,
+  "currentFilesPreservedDuringRewrite": true,
+  "existingUserDeletionsPreserved": 21,
+  "remoteRewritten": false,
+  "remotePublication": "pending approval for force-with-lease master push",
+  "knownRemoteMasterBeforeRewrite": "bbbebd8b8a317f938c0799c49d50c879e10b0ab4"
+}

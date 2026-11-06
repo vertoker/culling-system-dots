@@ -9,7 +9,7 @@ No Minor findings were reported.
 
 ## Rulings on review exclusions
 
-- Actual Player behavior is verified separately in the fresh Git-install consumer; Editor tests alone do not establish it.
+- Actual Windows DX12 Player behavior passed in the fresh Git-install consumer: SubScene loaded and visibility pixels576→0→576. This offscreen SRP request path does not certify every ordinary windowed render-loop configuration.
 - Consumer test and payload results are supplied by recorded tool runs/XML, not independently rerun by the reviewer.
 - All disabled/inactive renderer-authoring combinations remain unaccepted. Existing functional fixtures establish only their tested combinations; no expanded guarantee is made.
 - Closed triangle edges do not establish arbitrary floating-point watertightness on all transformed meshes. Sampling resolution and numeric edge limits remain explicit.

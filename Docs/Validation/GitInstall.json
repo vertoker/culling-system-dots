@@ -1,10 +1,18 @@
 {
-  "revision": "65a73679b594ae0ebd0378d20a9e8238c6285aec",
+  "revision": "ce3ffa20e0d5831041910b00abce17691d389b2d",
   "packageSource": "Git",
   "packagePath": "Assets/CullingSystemDOTS",
   "verifiedFiles": 233,
   "packageJsonDifference": "Only Unity-added _fingerprint; all declared fields identical",
   "graphicsSource": "Unmodified UPM BuiltIn 6.6.0 in Library/PackageCache",
   "copiedProductionPackages": false,
-  "urlKind": "local file Git URL with subpath and pinned commit; GitHub publication pending"
+  "urlKind": "local file Git URL with subpath and pinned commit; GitHub publication pending",
+  "directConsumerEngineModules": [],
+  "aiModuleDepth": 1,
+  "declaredEngineModules": {
+    "com.unity.modules.ai": "1.0.0",
+    "com.unity.modules.imageconversion": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.imgui": "1.0.0"
+  }
 }

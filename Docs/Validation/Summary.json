@@ -1,0 +1,50 @@
+{
+  "reports": {
+    "Main-EditMode.xml": {
+      "result": "Passed",
+      "total": "171",
+      "passed": "171",
+      "failed": "0",
+      "skipped": "0"
+    },
+    "Main-PlayMode.xml": {
+      "result": "Passed",
+      "total": "15",
+      "passed": "15",
+      "failed": "0",
+      "skipped": "0"
+    },
+    "GitInstall-EditMode.xml": {
+      "result": "Passed",
+      "total": "170",
+      "passed": "170",
+      "failed": "0",
+      "skipped": "0"
+    },
+    "GitInstall-PlayMode.xml": {
+      "result": "Passed",
+      "total": "15",
+      "passed": "15",
+      "failed": "0",
+      "skipped": "0"
+    }
+  },
+  "pythonTests": {
+    "passed": 5,
+    "failed": 0
+  },
+  "windowsPlayer": {
+    "passed": true,
+    "api": "Direct3D12",
+    "redPixels": [
+      576,
+      0,
+      576
+    ],
+    "renderMethod": "explicit offscreen SRP StandardRequest"
+  },
+  "gitPayloadRevision": "ce3ffa20e0d5831041910b00abce17691d389b2d",
+  "temporaryProjectsRemaining": 0,
+  "editorSceneSavedOrDiscarded": false,
+  "remotePushed": false
+}

@@ -1,0 +1,16 @@
+{
+  "success": true,
+  "message": "Build Succeeded.",
+  "data": {
+    "job_id": "build-6622f81791",
+    "result": "succeeded",
+    "platform": "StandaloneWindows64",
+    "output_path": "C:/Projects/UnityPlugins/CullingSystemDOTS/.superpowers/consumers/GitInstall/Build/CullingSystemDOTS.exe",
+    "started_at": "2026-11-06T08:43:29.2344184Z",
+    "duration_seconds": 56.7957682,
+    "completed_at": "2026-11-06T08:44:26.0301866Z",
+    "total_size_mb": 196.29,
+    "errors": 0,
+    "warnings": 0
+  }
+}

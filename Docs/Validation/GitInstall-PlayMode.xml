@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<test-run id="2" testcasecount="15" result="Passed" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-06 08:34:16Z" end-time="2026-11-06 08:34:25Z" duration="9,5257048">
-  <test-suite type="TestSuite" id="1035" name="CullingSystemDOTS GitInstall" fullname="CullingSystemDOTS GitInstall" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-11-06 08:34:16Z" end-time="2026-11-06 08:34:25Z" duration="9.525705" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0">
+<test-run id="2" testcasecount="15" result="Passed" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-06 08:42:56Z" end-time="2026-11-06 08:43:02Z" duration="5,6943629">
+  <test-suite type="TestSuite" id="1269" name="CullingSystemDOTS GitInstall" fullname="CullingSystemDOTS GitInstall" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-11-06 08:42:56Z" end-time="2026-11-06 08:43:02Z" duration="5.694363" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0">
     <properties>
       <property name="platform" value="PlayMode" />
     </properties>
-    <test-suite type="Assembly" id="1038" name="CullingSystemDOTS.Delivery.Rendering.Tests.dll" fullname="C:/Projects/UnityPlugins/CullingSystemDOTS/.superpowers/consumers/GitInstall/Library/ScriptAssemblies/CullingSystemDOTS.Delivery.Rendering.Tests.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:34:16Z" end-time="2026-11-06 08:34:19Z" duration="3.064164" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <test-suite type="Assembly" id="1272" name="CullingSystemDOTS.Delivery.Rendering.Tests.dll" fullname="C:/Projects/UnityPlugins/CullingSystemDOTS/.superpowers/consumers/GitInstall/Library/ScriptAssemblies/CullingSystemDOTS.Delivery.Rendering.Tests.dll" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:42:56Z" end-time="2026-11-06 08:42:57Z" duration="0.959159" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
       <properties>
         <property name="_PID" value="35988" />
         <property name="_APPDOMAIN" value="Unity Child Domain" />
         <property name="platform" value="PlayMode" />
         <property name="EditorOnly" value="False" />
       </properties>
-      <test-suite type="TestSuite" id="1039" name="CullingSystemDOTS" fullname="CullingSystemDOTS" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:34:16Z" end-time="2026-11-06 08:34:19Z" duration="3.059016" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <test-suite type="TestSuite" id="1273" name="CullingSystemDOTS" fullname="CullingSystemDOTS" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:42:56Z" end-time="2026-11-06 08:42:57Z" duration="0.954567" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
         <properties />
-        <test-suite type="TestSuite" id="1040" name="Delivery" fullname="CullingSystemDOTS.Delivery" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:34:16Z" end-time="2026-11-06 08:34:19Z" duration="3.054449" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <test-suite type="TestSuite" id="1274" name="Delivery" fullname="CullingSystemDOTS.Delivery" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:42:56Z" end-time="2026-11-06 08:42:57Z" duration="0.949510" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
           <properties />
-          <test-suite type="TestSuite" id="1041" name="Rendering" fullname="CullingSystemDOTS.Delivery.Rendering" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:34:16Z" end-time="2026-11-06 08:34:19Z" duration="3.049638" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <test-suite type="TestSuite" id="1275" name="Rendering" fullname="CullingSystemDOTS.Delivery.Rendering" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:42:56Z" end-time="2026-11-06 08:42:57Z" duration="0.943060" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
             <properties />
-            <test-suite type="TestSuite" id="1042" name="Tests" fullname="CullingSystemDOTS.Delivery.Rendering.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:34:16Z" end-time="2026-11-06 08:34:19Z" duration="3.044445" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <test-suite type="TestSuite" id="1276" name="Tests" fullname="CullingSystemDOTS.Delivery.Rendering.Tests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:42:56Z" end-time="2026-11-06 08:42:57Z" duration="0.938492" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
               <properties />
-              <test-suite type="TestFixture" id="1036" name="SampleRuntimeTests" fullname="CullingSystemDOTS.Delivery.Rendering.Tests.SampleRuntimeTests" classname="CullingSystemDOTS.Delivery.Rendering.Tests.SampleRuntimeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:34:16Z" end-time="2026-11-06 08:34:19Z" duration="3.037304" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <test-suite type="TestFixture" id="1270" name="SampleRuntimeTests" fullname="CullingSystemDOTS.Delivery.Rendering.Tests.SampleRuntimeTests" classname="CullingSystemDOTS.Delivery.Rendering.Tests.SampleRuntimeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:42:56Z" end-time="2026-11-06 08:42:57Z" duration="0.933435" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
                 <properties />
-                <test-case id="1037" name="ImportedSampleLoadsLodMaterialBindingsAndActuallyCullsPixels" fullname="CullingSystemDOTS.Delivery.Rendering.Tests.SampleRuntimeTests.ImportedSampleLoadsLodMaterialBindingsAndActuallyCullsPixels" methodname="ImportedSampleLoadsLodMaterialBindingsAndActuallyCullsPixels" classname="CullingSystemDOTS.Delivery.Rendering.Tests.SampleRuntimeTests" runstate="Runnable" seed="726913734" result="Passed" start-time="2026-11-06 08:34:16Z" end-time="2026-11-06 08:34:19Z" duration="3.020042" asserts="0">
+                <test-case id="1271" name="ImportedSampleLoadsLodMaterialBindingsAndActuallyCullsPixels" fullname="CullingSystemDOTS.Delivery.Rendering.Tests.SampleRuntimeTests.ImportedSampleLoadsLodMaterialBindingsAndActuallyCullsPixels" methodname="ImportedSampleLoadsLodMaterialBindingsAndActuallyCullsPixels" classname="CullingSystemDOTS.Delivery.Rendering.Tests.SampleRuntimeTests" runstate="Runnable" seed="1645279432" result="Passed" start-time="2026-11-06 08:42:56Z" end-time="2026-11-06 08:42:57Z" duration="0.926187" asserts="0">
                   <properties>
                     <property name="_JOINTYPE" value="UnityCombinatorial" />
                     <property name="retryIteration" value="0" />
@@ -34,29 +34,29 @@
         </test-suite>
       </test-suite>
     </test-suite>
-    <test-suite type="Assembly" id="1064" name="CullingSystemDOTS.Rendering.Tests.dll" fullname="C:/Projects/UnityPlugins/CullingSystemDOTS/.superpowers/consumers/GitInstall/Library/ScriptAssemblies/CullingSystemDOTS.Rendering.Tests.dll" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-11-06 08:34:19Z" end-time="2026-11-06 08:34:25Z" duration="6.449703" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <test-suite type="Assembly" id="1298" name="CullingSystemDOTS.Rendering.Tests.dll" fullname="C:/Projects/UnityPlugins/CullingSystemDOTS/.superpowers/consumers/GitInstall/Library/ScriptAssemblies/CullingSystemDOTS.Rendering.Tests.dll" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-11-06 08:42:57Z" end-time="2026-11-06 08:43:02Z" duration="4.728994" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
       <properties>
         <property name="_PID" value="35988" />
         <property name="_APPDOMAIN" value="Unity Child Domain" />
         <property name="platform" value="PlayMode" />
         <property name="EditorOnly" value="False" />
       </properties>
-      <test-suite type="TestSuite" id="1065" name="CullingSystemDOTS" fullname="CullingSystemDOTS" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-11-06 08:34:19Z" end-time="2026-11-06 08:34:25Z" duration="6.436380" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <test-suite type="TestSuite" id="1299" name="CullingSystemDOTS" fullname="CullingSystemDOTS" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-11-06 08:42:57Z" end-time="2026-11-06 08:43:02Z" duration="4.717325" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
         <properties />
-        <test-suite type="TestSuite" id="1066" name="Rendering" fullname="CullingSystemDOTS.Rendering" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-11-06 08:34:19Z" end-time="2026-11-06 08:34:25Z" duration="6.425603" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <test-suite type="TestSuite" id="1300" name="Rendering" fullname="CullingSystemDOTS.Rendering" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-11-06 08:42:57Z" end-time="2026-11-06 08:43:02Z" duration="4.706427" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
           <properties />
-          <test-suite type="TestSuite" id="1067" name="Tests" fullname="CullingSystemDOTS.Rendering.Tests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-11-06 08:34:19Z" end-time="2026-11-06 08:34:25Z" duration="6.420019" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <test-suite type="TestSuite" id="1301" name="Tests" fullname="CullingSystemDOTS.Rendering.Tests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-11-06 08:42:57Z" end-time="2026-11-06 08:43:02Z" duration="4.701038" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
             <properties />
-            <test-suite type="TestFixture" id="1043" name="AutomaticCameraTests" fullname="CullingSystemDOTS.Rendering.Tests.AutomaticCameraTests" classname="CullingSystemDOTS.Rendering.Tests.AutomaticCameraTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 08:34:19Z" end-time="2026-11-06 08:34:19Z" duration="0.346764" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <test-suite type="TestFixture" id="1277" name="AutomaticCameraTests" fullname="CullingSystemDOTS.Rendering.Tests.AutomaticCameraTests" classname="CullingSystemDOTS.Rendering.Tests.AutomaticCameraTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 08:42:57Z" end-time="2026-11-06 08:42:58Z" duration="0.175342" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
               <properties />
-              <test-case id="1044" name="AutomaticCameraHidesInvertsAndRestoresActualGraphics" fullname="CullingSystemDOTS.Rendering.Tests.AutomaticCameraTests.AutomaticCameraHidesInvertsAndRestoresActualGraphics" methodname="AutomaticCameraHidesInvertsAndRestoresActualGraphics" classname="CullingSystemDOTS.Rendering.Tests.AutomaticCameraTests" runstate="Runnable" seed="285188073" result="Passed" start-time="2026-11-06 08:34:19Z" end-time="2026-11-06 08:34:19Z" duration="0.282147" asserts="0">
+              <test-case id="1278" name="AutomaticCameraHidesInvertsAndRestoresActualGraphics" fullname="CullingSystemDOTS.Rendering.Tests.AutomaticCameraTests.AutomaticCameraHidesInvertsAndRestoresActualGraphics" methodname="AutomaticCameraHidesInvertsAndRestoresActualGraphics" classname="CullingSystemDOTS.Rendering.Tests.AutomaticCameraTests" runstate="Runnable" seed="201736340" result="Passed" start-time="2026-11-06 08:42:57Z" end-time="2026-11-06 08:42:58Z" duration="0.115819" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
                   <property name="repeatIteration" value="0" />
                 </properties>
               </test-case>
-              <test-case id="1045" name="SrpContextIncludesUnknownCamerasAndConsumesEveryPreparedPass" fullname="CullingSystemDOTS.Rendering.Tests.AutomaticCameraTests.SrpContextIncludesUnknownCamerasAndConsumesEveryPreparedPass" methodname="SrpContextIncludesUnknownCamerasAndConsumesEveryPreparedPass" classname="CullingSystemDOTS.Rendering.Tests.AutomaticCameraTests" runstate="Runnable" seed="2138796644" result="Passed" start-time="2026-11-06 08:34:19Z" end-time="2026-11-06 08:34:19Z" duration="0.058293" asserts="0">
+              <test-case id="1279" name="SrpContextIncludesUnknownCamerasAndConsumesEveryPreparedPass" fullname="CullingSystemDOTS.Rendering.Tests.AutomaticCameraTests.SrpContextIncludesUnknownCamerasAndConsumesEveryPreparedPass" methodname="SrpContextIncludesUnknownCamerasAndConsumesEveryPreparedPass" classname="CullingSystemDOTS.Rendering.Tests.AutomaticCameraTests" runstate="Runnable" seed="346488641" result="Passed" start-time="2026-11-06 08:42:58Z" end-time="2026-11-06 08:42:58Z" duration="0.053390" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
@@ -64,16 +64,16 @@
                 </properties>
               </test-case>
             </test-suite>
-            <test-suite type="TestFixture" id="1046" name="AutomaticUrpStackTests" fullname="CullingSystemDOTS.Rendering.Tests.AutomaticUrpStackTests" classname="CullingSystemDOTS.Rendering.Tests.AutomaticUrpStackTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 08:34:19Z" end-time="2026-11-06 08:34:19Z" duration="0.128162" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <test-suite type="TestFixture" id="1280" name="AutomaticUrpStackTests" fullname="CullingSystemDOTS.Rendering.Tests.AutomaticUrpStackTests" classname="CullingSystemDOTS.Rendering.Tests.AutomaticUrpStackTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 08:42:58Z" end-time="2026-11-06 08:42:58Z" duration="0.143925" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
               <properties />
-              <test-case id="1047" name="OverlayWithLowerDepthUsesStackOrder" fullname="CullingSystemDOTS.Rendering.Tests.AutomaticUrpStackTests.OverlayWithLowerDepthUsesStackOrder" methodname="OverlayWithLowerDepthUsesStackOrder" classname="CullingSystemDOTS.Rendering.Tests.AutomaticUrpStackTests" runstate="Runnable" seed="1568062815" result="Passed" start-time="2026-11-06 08:34:19Z" end-time="2026-11-06 08:34:19Z" duration="0.063393" asserts="0">
+              <test-case id="1281" name="OverlayWithLowerDepthUsesStackOrder" fullname="CullingSystemDOTS.Rendering.Tests.AutomaticUrpStackTests.OverlayWithLowerDepthUsesStackOrder" methodname="OverlayWithLowerDepthUsesStackOrder" classname="CullingSystemDOTS.Rendering.Tests.AutomaticUrpStackTests" runstate="Runnable" seed="1697991613" result="Passed" start-time="2026-11-06 08:42:58Z" end-time="2026-11-06 08:42:58Z" duration="0.068163" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
                   <property name="repeatIteration" value="0" />
                 </properties>
               </test-case>
-              <test-case id="1048" name="SharedOverlayConsumesASeparatePassForEachBase" fullname="CullingSystemDOTS.Rendering.Tests.AutomaticUrpStackTests.SharedOverlayConsumesASeparatePassForEachBase" methodname="SharedOverlayConsumesASeparatePassForEachBase" classname="CullingSystemDOTS.Rendering.Tests.AutomaticUrpStackTests" runstate="Runnable" seed="490350404" result="Passed" start-time="2026-11-06 08:34:19Z" end-time="2026-11-06 08:34:19Z" duration="0.056629" asserts="0">
+              <test-case id="1282" name="SharedOverlayConsumesASeparatePassForEachBase" fullname="CullingSystemDOTS.Rendering.Tests.AutomaticUrpStackTests.SharedOverlayConsumesASeparatePassForEachBase" methodname="SharedOverlayConsumesASeparatePassForEachBase" classname="CullingSystemDOTS.Rendering.Tests.AutomaticUrpStackTests" runstate="Runnable" seed="485519428" result="Passed" start-time="2026-11-06 08:42:58Z" end-time="2026-11-06 08:42:58Z" duration="0.066992" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
@@ -81,9 +81,9 @@
                 </properties>
               </test-case>
             </test-suite>
-            <test-suite type="TestFixture" id="1049" name="RenderLodParityTests" fullname="CullingSystemDOTS.Rendering.Tests.RenderLodParityTests" classname="CullingSystemDOTS.Rendering.Tests.RenderLodParityTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:34:19Z" end-time="2026-11-06 08:34:20Z" duration="0.289288" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <test-suite type="TestFixture" id="1283" name="RenderLodParityTests" fullname="CullingSystemDOTS.Rendering.Tests.RenderLodParityTests" classname="CullingSystemDOTS.Rendering.Tests.RenderLodParityTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:42:58Z" end-time="2026-11-06 08:42:58Z" duration="0.267716" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
               <properties />
-              <test-case id="1050" name="EveryMaterialAndLodEntityFollowsTheGroup" fullname="CullingSystemDOTS.Rendering.Tests.RenderLodParityTests.EveryMaterialAndLodEntityFollowsTheGroup" methodname="EveryMaterialAndLodEntityFollowsTheGroup" classname="CullingSystemDOTS.Rendering.Tests.RenderLodParityTests" runstate="Runnable" seed="1051942511" result="Passed" start-time="2026-11-06 08:34:19Z" end-time="2026-11-06 08:34:20Z" duration="0.279452" asserts="0">
+              <test-case id="1284" name="EveryMaterialAndLodEntityFollowsTheGroup" fullname="CullingSystemDOTS.Rendering.Tests.RenderLodParityTests.EveryMaterialAndLodEntityFollowsTheGroup" methodname="EveryMaterialAndLodEntityFollowsTheGroup" classname="CullingSystemDOTS.Rendering.Tests.RenderLodParityTests" runstate="Runnable" seed="2065278837" result="Passed" start-time="2026-11-06 08:42:58Z" end-time="2026-11-06 08:42:58Z" duration="0.258494" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
@@ -93,26 +93,16 @@
 ]]></output>
               </test-case>
             </test-suite>
-            <test-suite type="TestFixture" id="1051" name="RenderParityTests" fullname="CullingSystemDOTS.Rendering.Tests.RenderParityTests" classname="CullingSystemDOTS.Rendering.Tests.RenderParityTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 08:34:20Z" end-time="2026-11-06 08:34:20Z" duration="0.235946" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <test-suite type="TestFixture" id="1285" name="RenderParityTests" fullname="CullingSystemDOTS.Rendering.Tests.RenderParityTests" classname="CullingSystemDOTS.Rendering.Tests.RenderParityTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-06 08:42:58Z" end-time="2026-11-06 08:42:58Z" duration="0.264881" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
               <properties />
-              <test-case id="1052" name="TwoCamerasUseDifferentMasksInBothOrders" fullname="CullingSystemDOTS.Rendering.Tests.RenderParityTests.TwoCamerasUseDifferentMasksInBothOrders" methodname="TwoCamerasUseDifferentMasksInBothOrders" classname="CullingSystemDOTS.Rendering.Tests.RenderParityTests" runstate="Runnable" seed="1539188052" result="Passed" start-time="2026-11-06 08:34:20Z" end-time="2026-11-06 08:34:20Z" duration="0.155226" asserts="0">
+              <test-case id="1286" name="TwoCamerasUseDifferentMasksInBothOrders" fullname="CullingSystemDOTS.Rendering.Tests.RenderParityTests.TwoCamerasUseDifferentMasksInBothOrders" methodname="TwoCamerasUseDifferentMasksInBothOrders" classname="CullingSystemDOTS.Rendering.Tests.RenderParityTests" runstate="Runnable" seed="2032628402" result="Passed" start-time="2026-11-06 08:42:58Z" end-time="2026-11-06 08:42:58Z" duration="0.173738" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
                   <property name="repeatIteration" value="0" />
                 </properties>
               </test-case>
-              <test-case id="1053" name="ViewFilterHidesTheDrawWithoutDisablingItsEntity" fullname="CullingSystemDOTS.Rendering.Tests.RenderParityTests.ViewFilterHidesTheDrawWithoutDisablingItsEntity" methodname="ViewFilterHidesTheDrawWithoutDisablingItsEntity" classname="CullingSystemDOTS.Rendering.Tests.RenderParityTests" runstate="Runnable" seed="504978320" result="Passed" start-time="2026-11-06 08:34:20Z" end-time="2026-11-06 08:34:20Z" duration="0.071115" asserts="0">
-                <properties>
-                  <property name="_JOINTYPE" value="UnityCombinatorial" />
-                  <property name="retryIteration" value="0" />
-                  <property name="repeatIteration" value="0" />
-                </properties>
-              </test-case>
-            </test-suite>
-            <test-suite type="TestFixture" id="1054" name="RenderSimulationParityTests" fullname="CullingSystemDOTS.Rendering.Tests.RenderSimulationParityTests" classname="CullingSystemDOTS.Rendering.Tests.RenderSimulationParityTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:34:20Z" end-time="2026-11-06 08:34:21Z" duration="0.561391" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
-              <properties />
-              <test-case id="1055" name="GraphicsToggleKeepsPhysicsAndLogicAlive" fullname="CullingSystemDOTS.Rendering.Tests.RenderSimulationParityTests.GraphicsToggleKeepsPhysicsAndLogicAlive" methodname="GraphicsToggleKeepsPhysicsAndLogicAlive" classname="CullingSystemDOTS.Rendering.Tests.RenderSimulationParityTests" runstate="Runnable" seed="1957754353" result="Passed" start-time="2026-11-06 08:34:20Z" end-time="2026-11-06 08:34:21Z" duration="0.553090" asserts="0">
+              <test-case id="1287" name="ViewFilterHidesTheDrawWithoutDisablingItsEntity" fullname="CullingSystemDOTS.Rendering.Tests.RenderParityTests.ViewFilterHidesTheDrawWithoutDisablingItsEntity" methodname="ViewFilterHidesTheDrawWithoutDisablingItsEntity" classname="CullingSystemDOTS.Rendering.Tests.RenderParityTests" runstate="Runnable" seed="1581697716" result="Passed" start-time="2026-11-06 08:42:58Z" end-time="2026-11-06 08:42:58Z" duration="0.081027" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
@@ -120,9 +110,19 @@
                 </properties>
               </test-case>
             </test-suite>
-            <test-suite type="TestFixture" id="1056" name="ShadowRenderParityTests" fullname="CullingSystemDOTS.Rendering.Tests.ShadowRenderParityTests" classname="CullingSystemDOTS.Rendering.Tests.ShadowRenderParityTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:34:21Z" end-time="2026-11-06 08:34:25Z" duration="4.198182" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <test-suite type="TestFixture" id="1288" name="RenderSimulationParityTests" fullname="CullingSystemDOTS.Rendering.Tests.RenderSimulationParityTests" classname="CullingSystemDOTS.Rendering.Tests.RenderSimulationParityTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:42:58Z" end-time="2026-11-06 08:42:59Z" duration="0.586650" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
               <properties />
-              <test-case id="1057" name="HiddenShadowCasterMatchesLegacyInBothCameraOrders" fullname="CullingSystemDOTS.Rendering.Tests.ShadowRenderParityTests.HiddenShadowCasterMatchesLegacyInBothCameraOrders" methodname="HiddenShadowCasterMatchesLegacyInBothCameraOrders" classname="CullingSystemDOTS.Rendering.Tests.ShadowRenderParityTests" runstate="Runnable" seed="1852465220" result="Passed" start-time="2026-11-06 08:34:21Z" end-time="2026-11-06 08:34:25Z" duration="4.180036" asserts="0">
+              <test-case id="1289" name="GraphicsToggleKeepsPhysicsAndLogicAlive" fullname="CullingSystemDOTS.Rendering.Tests.RenderSimulationParityTests.GraphicsToggleKeepsPhysicsAndLogicAlive" methodname="GraphicsToggleKeepsPhysicsAndLogicAlive" classname="CullingSystemDOTS.Rendering.Tests.RenderSimulationParityTests" runstate="Runnable" seed="1875742194" result="Passed" start-time="2026-11-06 08:42:58Z" end-time="2026-11-06 08:42:59Z" duration="0.576764" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1290" name="ShadowRenderParityTests" fullname="CullingSystemDOTS.Rendering.Tests.ShadowRenderParityTests" classname="CullingSystemDOTS.Rendering.Tests.ShadowRenderParityTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-06 08:42:59Z" end-time="2026-11-06 08:43:02Z" duration="2.824023" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1291" name="HiddenShadowCasterMatchesLegacyInBothCameraOrders" fullname="CullingSystemDOTS.Rendering.Tests.ShadowRenderParityTests.HiddenShadowCasterMatchesLegacyInBothCameraOrders" methodname="HiddenShadowCasterMatchesLegacyInBothCameraOrders" classname="CullingSystemDOTS.Rendering.Tests.ShadowRenderParityTests" runstate="Runnable" seed="1396110420" result="Passed" start-time="2026-11-06 08:42:59Z" end-time="2026-11-06 08:43:02Z" duration="2.815064" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
@@ -155,37 +155,37 @@ Exact two-camera image parity: toggle=ForceRenderingOff, shadow=ShadowsOnly, rev
 ]]></output>
               </test-case>
             </test-suite>
-            <test-suite type="TestFixture" id="1058" name="StreamingParityTests" fullname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" classname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-06 08:34:25Z" end-time="2026-11-06 08:34:25Z" duration="0.653842" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <test-suite type="TestFixture" id="1292" name="StreamingParityTests" fullname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" classname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-06 08:43:02Z" end-time="2026-11-06 08:43:02Z" duration="0.431835" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
               <properties />
-              <test-case id="1063" name="EcsReceiversAndGraphicsUseTheSameOrderedCameraPasses" fullname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests.EcsReceiversAndGraphicsUseTheSameOrderedCameraPasses" methodname="EcsReceiversAndGraphicsUseTheSameOrderedCameraPasses" classname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" runstate="Runnable" seed="1025361112" result="Passed" start-time="2026-11-06 08:34:25Z" end-time="2026-11-06 08:34:25Z" duration="0.097687" asserts="0">
+              <test-case id="1297" name="EcsReceiversAndGraphicsUseTheSameOrderedCameraPasses" fullname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests.EcsReceiversAndGraphicsUseTheSameOrderedCameraPasses" methodname="EcsReceiversAndGraphicsUseTheSameOrderedCameraPasses" classname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" runstate="Runnable" seed="608266284" result="Passed" start-time="2026-11-06 08:43:02Z" end-time="2026-11-06 08:43:02Z" duration="0.089933" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
                   <property name="repeatIteration" value="0" />
                 </properties>
               </test-case>
-              <test-case id="1061" name="RemovingGraphicsBindingsRestoresInitiallyDisabledRenderer" fullname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests.RemovingGraphicsBindingsRestoresInitiallyDisabledRenderer" methodname="RemovingGraphicsBindingsRestoresInitiallyDisabledRenderer" classname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" runstate="Runnable" seed="1219543940" result="Passed" start-time="2026-11-06 08:34:25Z" end-time="2026-11-06 08:34:25Z" duration="0.080408" asserts="0">
+              <test-case id="1295" name="RemovingGraphicsBindingsRestoresInitiallyDisabledRenderer" fullname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests.RemovingGraphicsBindingsRestoresInitiallyDisabledRenderer" methodname="RemovingGraphicsBindingsRestoresInitiallyDisabledRenderer" classname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" runstate="Runnable" seed="1501361125" result="Passed" start-time="2026-11-06 08:43:02Z" end-time="2026-11-06 08:43:02Z" duration="0.083917" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
                   <property name="repeatIteration" value="0" />
                 </properties>
               </test-case>
-              <test-case id="1059" name="RemovingOverlappingVolumeRestoresRendererUntilSurvivorExecutesAgain" fullname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests.RemovingOverlappingVolumeRestoresRendererUntilSurvivorExecutesAgain" methodname="RemovingOverlappingVolumeRestoresRendererUntilSurvivorExecutesAgain" classname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" runstate="Runnable" seed="856783269" result="Passed" start-time="2026-11-06 08:34:25Z" end-time="2026-11-06 08:34:25Z" duration="0.077653" asserts="0">
+              <test-case id="1293" name="RemovingOverlappingVolumeRestoresRendererUntilSurvivorExecutesAgain" fullname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests.RemovingOverlappingVolumeRestoresRendererUntilSurvivorExecutesAgain" methodname="RemovingOverlappingVolumeRestoresRendererUntilSurvivorExecutesAgain" classname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" runstate="Runnable" seed="1064657244" result="Passed" start-time="2026-11-06 08:43:02Z" end-time="2026-11-06 08:43:02Z" duration="0.074670" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
                   <property name="repeatIteration" value="0" />
                 </properties>
               </test-case>
-              <test-case id="1062" name="SubSceneReloadPreservesEveryBakedBindingAndStableKey" fullname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests.SubSceneReloadPreservesEveryBakedBindingAndStableKey" methodname="SubSceneReloadPreservesEveryBakedBindingAndStableKey" classname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" runstate="Runnable" seed="19408793" result="Passed" start-time="2026-11-06 08:34:25Z" end-time="2026-11-06 08:34:25Z" duration="0.312039" asserts="0">
+              <test-case id="1296" name="SubSceneReloadPreservesEveryBakedBindingAndStableKey" fullname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests.SubSceneReloadPreservesEveryBakedBindingAndStableKey" methodname="SubSceneReloadPreservesEveryBakedBindingAndStableKey" classname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" runstate="Runnable" seed="392689362" result="Passed" start-time="2026-11-06 08:43:02Z" end-time="2026-11-06 08:43:02Z" duration="0.104336" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
                   <property name="repeatIteration" value="0" />
                 </properties>
               </test-case>
-              <test-case id="1060" name="UnknownCameraBeforeFirstCullingPassKeepsOriginalRendererFlags" fullname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests.UnknownCameraBeforeFirstCullingPassKeepsOriginalRendererFlags" methodname="UnknownCameraBeforeFirstCullingPassKeepsOriginalRendererFlags" classname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" runstate="Runnable" seed="173099556" result="Passed" start-time="2026-11-06 08:34:25Z" end-time="2026-11-06 08:34:25Z" duration="0.069329" asserts="0">
+              <test-case id="1294" name="UnknownCameraBeforeFirstCullingPassKeepsOriginalRendererFlags" fullname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests.UnknownCameraBeforeFirstCullingPassKeepsOriginalRendererFlags" methodname="UnknownCameraBeforeFirstCullingPassKeepsOriginalRendererFlags" classname="CullingSystemDOTS.Rendering.Tests.StreamingParityTests" runstate="Runnable" seed="1617603129" result="Passed" start-time="2026-11-06 08:43:02Z" end-time="2026-11-06 08:43:02Z" duration="0.069208" asserts="0">
                 <properties>
                   <property name="_JOINTYPE" value="UnityCombinatorial" />
                   <property name="retryIteration" value="0" />
