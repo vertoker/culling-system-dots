@@ -12,5 +12,8 @@ Read [the Runtime guide](../AGENTS.md) first.
   also affect `Editor/Authoring` and its additional-entity identity filtering.
 - Test observed pixels/shadows as well as data structure state. Synchronization costs are a known
   tradeoff; do not promise zero allocations or speedup without measurements.
+- `GraphicsVisibilityOwner` arbitrates full-Entity claims per World. Preflight a whole publication
+  before graphics mutations; rejected batches preserve existing ownership. Release only after
+  restoring stock presentation, including during World teardown.
 
 See [RenderingIntegration](../../Documentation~/RenderingIntegration.md).

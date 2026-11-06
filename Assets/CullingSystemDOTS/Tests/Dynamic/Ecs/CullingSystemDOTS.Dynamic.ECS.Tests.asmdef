@@ -1,0 +1,6 @@
+{
+  "name": "CullingSystemDOTS.Dynamic.ECS.Tests",
+  "references": ["CullingSystemDOTS.Dynamic", "CullingSystemDOTS.Dynamic.ECS", "CullingSystemDOTS.Rendering", "Unity.Entities", "Unity.Entities.Graphics", "Unity.Transforms", "Unity.Collections", "Unity.Mathematics"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

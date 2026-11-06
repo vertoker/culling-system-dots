@@ -1,5 +1,5 @@
 {
   "name": "CullingSystemDOTS.DynamicPrototype.Tests",
-  "references": ["Unity.Entities", "Unity.Entities.Graphics", "Unity.Transforms", "Unity.Collections", "Unity.Mathematics", "Unity.RenderPipelines.Universal.Runtime"],
+  "references": ["CullingSystemDOTS.Core", "CullingSystemDOTS.Dynamic", "CullingSystemDOTS.Dynamic.ECS", "CullingSystemDOTS.Rendering", "Unity.Entities", "Unity.Entities.Graphics", "Unity.Transforms", "Unity.Collections", "Unity.Mathematics", "Unity.RenderPipelines.Universal.Runtime"],
   "optionalUnityReferences": ["TestAssemblies"]
 }

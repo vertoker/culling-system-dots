@@ -1,0 +1,71 @@
+{
+    "utc": "2026-11-06T14:37:32.8195796Z",
+    "unity": "6000.6.8f1",
+    "cpu": "AMD Ryzen 7 7700 8-Core Processor ",
+    "gpu": "NVIDIA GeForce RTX 4060 Ti",
+    "scope": "Editor main-thread capture and logical preparation only; excludes transform writes, registration, rendering, snapshots and GPU upload.",
+    "sourceSha256": [
+        "Runtime/Dynamic/Ecs/DynamicOcclusionBindings.cs e8653939f6d9b4f573f3db10750c3534441110e193a09cee7aa748b61ccd1c33",
+        "Runtime/Dynamic/Ecs/DynamicOcclusionSystem.cs ea719361d8b70a1ff6fbce24d8552144d70caecee19288711cb1852dc948d96a",
+        "Runtime/Dynamic/Ecs/DynamicOcclusionCaptureSystem.cs e804dbad83352f0a40d1b537971b65ff2b1308e8e2dc55b2dd27f06fe220da05",
+        "Runtime/Dynamic/OcclusionGeometry.cs 633a8b5244e05592ad88f50fc7b29a10e26da1a0f52a86b819fb1d8febd280ee",
+        "Runtime/Dynamic/OcclusionWorld.cs 00e43cd617e1b86c7e208f704808ccc8fb660c0044a38d7481c35400cd46d42d",
+        "Runtime/Dynamic/OcclusionWorld.Updates.cs aa993f586777c22900524322e5c4a3d565ccd1bbca94f8f3b89da63c3ac1f923",
+        "Runtime/Dynamic/OcclusionUpdateQueue.cs 3e234efcbaf9e3544efbdc51d2e724bdd0daa88d8e0f6dccf5d1b1b28e473f91"
+    ],
+    "managedAllocationCounterAvailable": false,
+    "cases": [
+        {
+            "instances": 512,
+            "warmup": 20,
+            "samples": 120,
+            "maxPreparedBytes": 0,
+            "pendingAtEnd": 0,
+            "moving": false,
+            "captureMedianMs": 0.2609,
+            "captureP95Ms": 0.45730000000000004,
+            "preparationMedianMs": 0.0027,
+            "preparationP95Ms": 0.0049,
+            "allocatedBytesPerSample": -1.0
+        },
+        {
+            "instances": 512,
+            "warmup": 20,
+            "samples": 120,
+            "maxPreparedBytes": 81920,
+            "pendingAtEnd": 0,
+            "moving": true,
+            "captureMedianMs": 1.9207,
+            "captureP95Ms": 2.1806,
+            "preparationMedianMs": 0.1111,
+            "preparationP95Ms": 0.1365,
+            "allocatedBytesPerSample": -1.0
+        },
+        {
+            "instances": 4096,
+            "warmup": 20,
+            "samples": 120,
+            "maxPreparedBytes": 0,
+            "pendingAtEnd": 0,
+            "moving": false,
+            "captureMedianMs": 1.8623,
+            "captureP95Ms": 2.1238,
+            "preparationMedianMs": 0.0032,
+            "preparationP95Ms": 0.0048000000000000004,
+            "allocatedBytesPerSample": -1.0
+        },
+        {
+            "instances": 4096,
+            "warmup": 20,
+            "samples": 120,
+            "maxPreparedBytes": 262144,
+            "pendingAtEnd": 2458,
+            "moving": true,
+            "captureMedianMs": 15.059600000000001,
+            "captureP95Ms": 16.657,
+            "preparationMedianMs": 0.4128,
+            "preparationP95Ms": 0.6741,
+            "allocatedBytesPerSample": -1.0
+        }
+    ]
+}

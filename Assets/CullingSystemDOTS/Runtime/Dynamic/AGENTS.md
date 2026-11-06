@@ -15,3 +15,5 @@ Block preparation is bounded/coalesced CPU work. `Prepared` does not assert GPU 
 the GPU owner validates its own resource revisions. Geometry, instance and occluder-block updates
 have separate keys. Moving an occludee must not dirty an occluder block. Rejected pose/geometry
 capture withdraws its old occluder immediately; unknown state must not preserve a hidden result.
+
+- [Ecs](Ecs/AGENTS.md) owns full-Entity capture and explicit graphics registration.

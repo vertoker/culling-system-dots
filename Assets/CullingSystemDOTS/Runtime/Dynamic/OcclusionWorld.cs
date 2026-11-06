@@ -37,6 +37,7 @@ namespace CullingSystemDOTS.Dynamic
         public ulong Revision { get; private set; } = 1;
         public ulong OccluderEpoch { get; private set; } = 1;
         public long AccountedResourceBytes => budget.Used;
+        internal OcclusionMemoryBudget ResourceBudget => budget;
 
         public OcclusionWorld(OcclusionSettings settings = null)
         {
@@ -74,10 +75,10 @@ namespace CullingSystemDOTS.Dynamic
                 foreach (var instance in instances)
                     if (instance.Active && instance.Descriptor.Geometry.Equals(handle))
                     {
-                        if ((uint)instance.Descriptor.SubMesh >= next.Mesh.subMeshCount)
+                        if ((uint)instance.Descriptor.SubMesh >= next.SubMeshCount)
                             throw new ArgumentException("Replacement removes a submesh used by a live instance.", nameof(mesh));
                         var expanded = instance.Descriptor.State.WorldBounds;
-                        expanded.Encapsulate(TransformBounds(next.Mesh.bounds, instance.Descriptor.State.LocalToWorld));
+                        expanded.Encapsulate(TransformBounds(next.LocalBounds, instance.Descriptor.State.LocalToWorld));
                         if (!BoundsFinite(expanded) || instance.BoundsRevision == uint.MaxValue)
                             throw new ArgumentException("Replacement overflows live instance bounds or revision.", nameof(mesh));
                     }
@@ -92,7 +93,7 @@ namespace CullingSystemDOTS.Dynamic
                 {
                     var oldState = instance.Descriptor.State; var oldRange = instance.Range;
                     var state = oldState;
-                    state.WorldBounds.Encapsulate(TransformBounds(next.Mesh.bounds, state.LocalToWorld));
+                    state.WorldBounds.Encapsulate(TransformBounds(next.LocalBounds, state.LocalToWorld));
                     instance.Descriptor.State = state; instance.BoundsRevision++;
                     TrackInstance(new InstanceHandle(Identity, index, instance.Generation), instance, oldState, oldRange);
                 }
@@ -138,6 +139,14 @@ namespace CullingSystemDOTS.Dynamic
             RemoveMembership(handle, slot.Range); updates.Remove(OcclusionUpdateKey.ForInstance(handle)); slot.Range = default;
             slot.Active = false; slot.Descriptor = default; instanceCount--;
             if (slot.Generation != uint.MaxValue) { slot.Generation++; freeInstances.Push(handle.Index); }
+        }
+
+        internal void WithdrawInstance(InstanceHandle handle)
+        {
+            CheckAlive(); var slot = GetInstance(handle);
+            if (!slot.Available) return;
+            slot.Available = false; slot.PreparedRevision = 0;
+            updates.Remove(OcclusionUpdateKey.ForInstance(handle)); Changed(slot.Descriptor.State.Roles);
         }
 
         public void RemoveGeometry(GeometryHandle handle)
@@ -207,8 +216,8 @@ namespace CullingSystemDOTS.Dynamic
             if (descriptor.Geometry.IsValid)
             {
                 var geometry = GetGeometry(descriptor.Geometry).Data;
-                if ((uint)descriptor.SubMesh >= geometry.Mesh.subMeshCount) throw new ArgumentException("Submesh is outside the registered Mesh.");
-                var bounds = TransformBounds(geometry.Mesh.bounds, matrix);
+                if ((uint)descriptor.SubMesh >= geometry.SubMeshCount) throw new ArgumentException("Submesh is outside the registered Mesh.");
+                var bounds = TransformBounds(geometry.LocalBounds, matrix);
                 if (math.any((float3)state.WorldBounds.min > (float3)bounds.min) || math.any((float3)state.WorldBounds.max < (float3)bounds.max))
                     throw new ArgumentException("World bounds must enclose the transformed registered geometry.");
             }

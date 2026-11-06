@@ -1,0 +1,68 @@
+{
+    "utc": "2026-11-06T14:31:31.1714466Z",
+    "unity": "6000.6.8f1",
+    "cpu": "AMD Ryzen 7 7700 8-Core Processor ",
+    "gpu": "NVIDIA GeForce RTX 4060 Ti",
+    "scope": "Editor main-thread capture and logical preparation only; excludes transform writes, registration, rendering, snapshots and GPU upload.",
+    "sourceSha256": [
+        "Runtime/Dynamic/Ecs/DynamicOcclusionBindings.cs 7f34fb7a6c820dd274e52784a841a8554db767f9fa788331aee7223eea8b5422",
+        "Runtime/Dynamic/Ecs/DynamicOcclusionSystem.cs 299dd6fe122642bcc6a8a2c79d58854e0582014b219031fdcd89373a1e9fa55b",
+        "Runtime/Dynamic/OcclusionWorld.cs 23825b417042ae8b9a9734887f26584c9b4cce11dba37a18275d94775c78eb84",
+        "Runtime/Dynamic/OcclusionWorld.Updates.cs 84b6933ea49c993d981058935021ddf683dc7b427b2195b8587ce341ed4d9947",
+        "Runtime/Dynamic/OcclusionUpdateQueue.cs 3e234efcbaf9e3544efbdc51d2e724bdd0daa88d8e0f6dccf5d1b1b28e473f91"
+    ],
+    "cases": [
+        {
+            "instances": 512,
+            "warmup": 20,
+            "samples": 120,
+            "maxPreparedBytes": 0,
+            "pendingAtEnd": 0,
+            "moving": false,
+            "captureMedianMs": 2.5312,
+            "captureP95Ms": 3.7958000000000003,
+            "preparationMedianMs": 0.0048000000000000004,
+            "preparationP95Ms": 0.0066,
+            "allocatedBytesPerSample": 0.0
+        },
+        {
+            "instances": 512,
+            "warmup": 20,
+            "samples": 120,
+            "maxPreparedBytes": 10240,
+            "pendingAtEnd": 448,
+            "moving": true,
+            "captureMedianMs": 4.1186,
+            "captureP95Ms": 4.614,
+            "preparationMedianMs": 0.0246,
+            "preparationP95Ms": 0.038900000000000004,
+            "allocatedBytesPerSample": 0.0
+        },
+        {
+            "instances": 4096,
+            "warmup": 20,
+            "samples": 120,
+            "maxPreparedBytes": 0,
+            "pendingAtEnd": 0,
+            "moving": false,
+            "captureMedianMs": 19.9175,
+            "captureP95Ms": 20.6142,
+            "preparationMedianMs": 0.0077,
+            "preparationP95Ms": 0.0106,
+            "allocatedBytesPerSample": 0.0
+        },
+        {
+            "instances": 4096,
+            "warmup": 20,
+            "samples": 120,
+            "maxPreparedBytes": 10240,
+            "pendingAtEnd": 4032,
+            "moving": true,
+            "captureMedianMs": 32.616800000000005,
+            "captureP95Ms": 34.578,
+            "preparationMedianMs": 0.0371,
+            "preparationP95Ms": 0.046200000000000005,
+            "allocatedBytesPerSample": 0.0
+        }
+    ]
+}

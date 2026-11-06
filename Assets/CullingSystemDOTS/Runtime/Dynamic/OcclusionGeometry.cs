@@ -12,6 +12,8 @@ namespace CullingSystemDOTS.Dynamic
     internal sealed class OcclusionGeometry : IDisposable
     {
         internal readonly Mesh Mesh;
+        internal readonly Bounds LocalBounds;
+        internal readonly int SubMeshCount;
         internal NativeArray<float3> Vertices;
         internal NativeArray<int> Indices;
         internal readonly uint Revision;
@@ -48,6 +50,7 @@ namespace CullingSystemDOTS.Dynamic
                 Mesh = Object.Instantiate(source); Mesh.name = "Owned runtime occlusion geometry";
                 Mesh.hideFlags = HideFlags.HideAndDontSave;
                 Mesh.RecalculateBounds();
+                LocalBounds = Mesh.bounds; SubMeshCount = Mesh.subMeshCount;
                 if (Mesh.normals.Length != vertices.Length) Mesh.RecalculateNormals();
                 long actual = checked(nativeBytes + MeshPayload(Mesh) * 2);
                 if (actual > bytes) budget.Reserve(actual - bytes); else budget.Release(bytes - actual);

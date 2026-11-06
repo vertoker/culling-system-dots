@@ -73,7 +73,7 @@ namespace CullingSystemDOTS.Dynamic
             }
             return batch;
         }
-        public Bounds GetGeometryBounds(GeometryHandle handle) { CheckAlive(); return GetGeometry(handle).Data.Mesh.bounds; }
+        public Bounds GetGeometryBounds(GeometryHandle handle) { CheckAlive(); return GetGeometry(handle).Data.LocalBounds; }
 
         private void InitializeUpdates()
         {

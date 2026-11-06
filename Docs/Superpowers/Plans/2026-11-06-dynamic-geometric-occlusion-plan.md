@@ -5,8 +5,8 @@
 
 **Status:** Task 0 stock investigation completed; Gate G1 failed. At the planned boundary the user
 selected and authorized a package-owned GPU indirect continuation. Task 0b passed its transport
-proof; Task 1 registry foundation is complete. Task 2 block preparation is complete; ECS binding
-and ownership capture are in progress. See the
+proof; Task 1 registry foundation and Task 2 block/ECS capture are complete. Task 3 GPU depth
+and retirement are next. See the
 [integration evidence and continuation options](../../Validation/DynamicOcclusion-Integration.md).
 
 **Goal:** Implement independent algorithm 3: configurable runtime geometric occlusion for a
@@ -270,13 +270,13 @@ wall-clock bound for indivisible engine calls. Apply render bindings only throug
 - [ ] Add `MovingOccludeeDoesNotRebuildOccluderGeometry`, `RemovalInvalidatesBeforeQueuedUpload`,
   `NewRevisionSupersedesPendingBuild`, `EditFloodBoundsQueueMemory`, and
   `WorldDisposeJoinsJobsAndRetiresGpuReaders` (GPU half completed with Task 3).
-- [ ] Add `LegacyOwnershipConflictIsExplicit` at actual ECS/graphics ownership registration,
+- [x] Add `LegacyOwnershipConflictIsExplicit` at actual ECS/graphics ownership registration,
   including both registration orders and rejected-publication rollback.
-- [ ] Observe RED; implement sparse hashed block membership, revision coalescing, bounded queues,
+- [x] Observe RED; implement sparse hashed block membership, revision coalescing, bounded queues,
   immediate global invalidation and omission of unavailable occluders from the depth source.
-- [ ] Implement full-Entity binding capture and explicit scene/World unload cleanup. Geometry must
+- [x] Implement full-Entity binding capture and explicit scene/World unload cleanup. Geometry must
   be current even when last frame's object was hidden. Unknown state retains normal rendering.
-- [ ] Observe GREEN; profile capture/upload preparation at 512 and 4,096 instances without claiming
+- [x] Observe GREEN; profile capture/upload preparation at 512 and 4,096 instances without claiming
   render speedup yet. Commit exact owned paths on master.
 
 **Core update outcome (ECS portion still pending):** Sparse block membership with checked negative
@@ -293,6 +293,17 @@ Standalone RED `7f4cd025237a4e99aaf427fb07a1c3e0`: 0/9; dynamic GREEN
 occluder epoch (`800d046df87d410bb79a2c7056b1b288`: 46/47); fixed by withdrawing failed capture.
 Final coupled `9d032a3687254ddfa858bea3766314c2`: 89/89 (47 dynamic, 42 existing Core/Runtime),
 zero failed/skipped. The earlier zero-discovery filter run is not acceptance evidence.
+
+**ECS outcome:** Explicit full-Entity bindings, opt-out and baseline restoration; Burst numeric
+capture after transforms, including hidden graphics; accounted temporary capture memory and
+exclusive graphics claims shared with the legacy adapter. Rejected legacy publications preserve
+their previous claims. `Configure` accepts checked settings before first registration.
+Final coupled EditMode `ae552c14bf7a4195ae9ff8914f0c131e`: 104/104; coupled PlayMode
+`29e45925a717472d8d498c6d5c230772`: 26/26. Scoped Editor profile completed at 512/4096 instances;
+see [capture evidence](../../Validation/DynamicOcclusion-Capture.md). Fully moving 4096 capture
+is still expensive and saturates the default preparation ceiling; this is not render-performance
+acceptance. The unchecked aggregate test item above retains its GPU-retirement half for Task 3;
+its CPU movement/removal/coalescing/flood/reader contracts are covered by the recorded suites.
 
 ## Task 3: conservative GPU depth, hierarchy and tests
 

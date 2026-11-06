@@ -5,5 +5,6 @@ independent runtime geometric algorithm. Use synthetic meshes and owned Worlds; 
 Editor resource paths or external commercial fixtures.
 
 - [EditMode](EditMode/AGENTS.md) owns numeric, registration and snapshot contracts.
+- [Ecs](Ecs/AGENTS.md) owns live World capture and graphics claims.
 
 Do not infer GPU rendering, shadow or Player acceptance from numeric registry tests.
