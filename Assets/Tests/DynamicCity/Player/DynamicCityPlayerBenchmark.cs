@@ -32,6 +32,8 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
             public Distribution Total,Main,Render,Gpu,Allocations,DrawCalls,Triangles;
             public long MaxAccountedBytes,MaxManagedBytes,MaxUploadBytes;
             public int Collections;
+            public int SimulationFrames,MinReadyInstances=int.MaxValue,MaxReadyInstances,MaxPendingUpdates,QueueOverflowFrames;
+            public uint CameraTrace,CommandTrace,AgentState,ConstructionState;
         }
         [Serializable] private sealed class Report
         {
@@ -59,8 +61,8 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
         private bool drive,measuring;
         private int frame,gpuFrames,fallbackFrames,appliedEdits;
         private int views,editRate;
-        private float editAccumulator;
-        private uint random;
+        private int editAccumulator;
+        private uint random,cameraTrace,commandTrace;
         private string directory;
         private bool complete;
 
@@ -123,6 +125,9 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
             {
                 int current=index++;if(current<skip || current>=skip+limit)continue;
                 Configure(count,viewCount,open,enabled,rate);
+                // Configure may resume either before or after Update when retirement yields.
+                // Start every case after a rendered boundary, before its first driven Update.
+                drive=false;yield return new WaitForEndOfFrame();drive=true;
                 var result=new Result{Index=current,Targets=count,Views=viewCount,Layout=open?"open":"occluded",Enabled=enabled,EditsPerSecond=rate};
                 const int measured=1800;var total=new double[measured];var main=new double[measured];var render=new double[measured];var gpu=new double[measured];
                 var allocated=new double[measured];var draws=new double[measured];var triangles=new double[measured];var timings=new FrameTiming[1];
@@ -135,6 +140,7 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
                     for(int i=0;i<300+measured;i++)
                     {
                         measuring=i>=300;FrameTimingManager.CaptureFrameTimings();yield return new WaitForEndOfFrame();
+                        Require(frame==i+1,"Benchmark simulation/render phase drifted.");
                         long now=System.Diagnostics.Stopwatch.GetTimestamp();double elapsed=(now-previous)*1000.0/System.Diagnostics.Stopwatch.Frequency;previous=now;
                         if(i==10){var probe=new byte[4096];GC.KeepAlive(probe);}
                         gcAvailable|=gc.Valid && gc.LastValue>0;drawAvailable|=draw.Valid && draw.LastValue>0;triAvailable|=tri.Valid && tri.LastValue>0;
@@ -146,11 +152,21 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
                         allocated[at]=gcAvailable?gc.LastValue:-1;draws[at]=drawAvailable?draw.LastValue:-1;triangles[at]=triAvailable?tri.LastValue:-1;
                         result.MaxAccountedBytes=Math.Max(result.MaxAccountedBytes,sample.Presentation.AccountedResourceBytes);
                         result.MaxManagedBytes=Math.Max(result.MaxManagedBytes,GC.GetTotalMemory(false));result.MaxUploadBytes=Math.Max(result.MaxUploadBytes,sample.Presentation.UploadedBytes);
+                        result.MinReadyInstances=Math.Min(result.MinReadyInstances,sample.Presentation.ReadyInstances);result.MaxReadyInstances=Math.Max(result.MaxReadyInstances,sample.Presentation.ReadyInstances);
+                        result.MaxPendingUpdates=Math.Max(result.MaxPendingUpdates,sample.Culling.Registry.PendingUpdateCount);if(sample.Culling.Registry.QueueOverflowed)result.QueueOverflowFrames++;
                     }
                     for(int generation=0;generation<=GC.MaxGeneration;generation++)result.Collections+=GC.CollectionCount(generation);
                     result.Collections-=collections;
                 }
                 measuring=false;result.GpuFrames=gpuFrames;result.FallbackFrames=fallbackFrames;result.AppliedEdits=appliedEdits;
+                result.SimulationFrames=frame;result.CameraTrace=cameraTrace;result.CommandTrace=commandTrace;CaptureState(result);
+                Require(frame==2100 && appliedEdits==2100*rate/60,"Benchmark input count drifted.");
+                if(enabled && report.Results.Count>0 && report.Results[report.Results.Count-1].Index==current-1)
+                {
+                    var reference=report.Results[report.Results.Count-1];
+                    Require(reference.SimulationFrames==result.SimulationFrames && reference.AppliedEdits==result.AppliedEdits && reference.CameraTrace==result.CameraTrace &&
+                        reference.CommandTrace==result.CommandTrace && reference.AgentState==result.AgentState && reference.ConstructionState==result.ConstructionState,"Paired benchmark states differ.");
+                }
                 result.Total=Summarize(total);result.Main=Summarize(main);result.Render=Summarize(render);result.Gpu=Summarize(gpu);
                 result.Allocations=Summarize(allocated);result.DrawCalls=Summarize(draws);result.Triangles=Summarize(triangles);
                 WriteCsv(current,total,main,render,gpu,allocated,draws,triangles);report.Results.Add(result);Save();Cleanup();
@@ -165,7 +181,7 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
             sample.Initialize();sample.AutomaticEdits=false;sample.PauseSimulation(false);sample.View.GetComponent<DynamicCityCamera>().enabled=false;
             ScriptBehaviourUpdateOrder.RemoveWorldFromCurrentPlayerLoop(sample.World);
             initialization=sample.World.GetExistingSystemManaged<InitializationSystemGroup>();simulation=sample.World.GetExistingSystemManaged<SimulationSystemGroup>();presentation=sample.World.GetExistingSystemManaged<PresentationSystemGroup>();
-            views=viewCount;editRate=edits;frame=0;editAccumulator=0;appliedEdits=0;random=12345;
+            views=viewCount;editRate=edits;frame=0;editAccumulator=0;appliedEdits=0;random=12345;cameraTrace=commandTrace=2166136261;
             var manager=sample.World.EntityManager;
             for(int i=0;i<sample.Agents.Length;i++){var agent=manager.GetComponentData<DynamicCityAgent>(sample.Agents[i]);agent.Home=DynamicCityBootstrap.Home(i%16);manager.SetComponentData(sample.Agents[i],agent);}
             if(open)
@@ -197,13 +213,15 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
                 float t=frame/60f;int block=CameraBlocks[i];var home=(Vector3)DynamicCityBootstrap.Home(block);
                 cameras[i].transform.position=home+new Vector3(-1.5f+Mathf.Sin(t*.31f)*3,1.7f+Mathf.Sin(t*.17f)*.4f,-10+Mathf.Sin(t*.4f)*8);
                 cameras[i].transform.LookAt(home+new Vector3(0,1.7f,0));
+                cameraTrace=Mix(cameraTrace,math.hash((float4x4)cameras[i].transform.localToWorldMatrix));
             }
-            editAccumulator+=editRate/60f;while(editAccumulator>=1){Edit();editAccumulator--;}
+            editAccumulator+=editRate;while(editAccumulator>=60){Edit();editAccumulator-=60;}
             initialization.Update();sample.World.SetTime(new TimeData(frame/60.0,1f/60));simulation.Update();presentation.Update();frame++;
         }
         private void Edit()
         {
             random^=random<<13;random^=random>>17;random^=random<<5;
+            commandTrace=Mix(commandTrace,random);
             if(openParts.Count>0)
             {
                 var part=openParts[(int)(random%(uint)openParts.Count)];
@@ -215,6 +233,21 @@ namespace CullingSystemDOTS.DynamicCity.PlayerChecks
                 sample.Construction.Apply(new ConstructionCommand{PieceId=piece.Id,Operation=piece.Present?ConstructionOperation.Remove:ConstructionOperation.Place,Tick=sample.Construction.LastTick+1});
             }
             appliedEdits++;report.StressEdits++;
+        }
+        private static uint Mix(uint hash,uint value){unchecked{return (hash^value)*16777619;}}
+        private void CaptureState(Result result)
+        {
+            // Assertions and full-population inspection are outside measured frames.
+            var manager=sample.World.EntityManager;manager.CompleteDependencyBeforeRO<LocalToWorld>();manager.CompleteDependencyBeforeRO<DynamicCityAgent>();
+            uint agents=2166136261,pieces=2166136261;
+            foreach(var entity in sample.Agents)
+            {
+                var agent=manager.GetComponentData<DynamicCityAgent>(entity);Require(agent.Tick==(uint)frame,"Agent simulation count drifted.");
+                agents=Mix(agents,math.hash(manager.GetComponentData<LocalToWorld>(entity).Value));agents=Mix(agents,agent.Tick);
+            }
+            foreach(var piece in sample.Construction.Pieces){pieces=Mix(pieces,(uint)piece.Id);pieces=Mix(pieces,piece.Present?1u:0u);}
+            foreach(var part in openParts)pieces=Mix(pieces,part.Entity==Entity.Null?0u:1u);
+            result.AgentState=agents;result.ConstructionState=pieces;
         }
         private void Rendered(ScriptableRenderContext context,List<Camera> rendered)
         {
