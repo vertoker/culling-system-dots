@@ -5,7 +5,8 @@
 
 **Status:** Task 0 stock investigation completed; Gate G1 failed. At the planned boundary the user
 selected and authorized a package-owned GPU indirect continuation. Task 0b passed its transport
-proof; Task 1 registry foundation is complete. Task 2 is next. See the
+proof; Task 1 registry foundation is complete. Task 2 block preparation is complete; ECS binding
+and ownership capture are in progress. See the
 [integration evidence and continuation options](../../Validation/DynamicOcclusion-Integration.md).
 
 **Goal:** Implement independent algorithm 3: configurable runtime geometric occlusion for a
@@ -264,7 +265,7 @@ registry per World and captures current world bounds/transforms before presentat
 registration is separate from numeric Jobs work. Update budget limits accounted payload, not a hard
 wall-clock bound for indivisible engine calls. Apply render bindings only through Task 4's boundary.
 
-- [ ] Add failing tests for negative coordinates, cross-block bounds, empty blocks, off-grid rotated
+- [x] Add failing tests for negative coordinates, cross-block bounds, empty blocks, off-grid rotated
   pieces, repeated edits to the same block, and overflow-safe huge/invalid coordinates.
 - [ ] Add `MovingOccludeeDoesNotRebuildOccluderGeometry`, `RemovalInvalidatesBeforeQueuedUpload`,
   `NewRevisionSupersedesPendingBuild`, `EditFloodBoundsQueueMemory`, and
@@ -277,6 +278,21 @@ wall-clock bound for indivisible engine calls. Apply render bindings only throug
   be current even when last frame's object was hidden. Unknown state retains normal rendering.
 - [ ] Observe GREEN; profile capture/upload preparation at 512 and 4,096 instances without claiming
   render speedup yet. Commit exact owned paths on master.
+
+**Core update outcome (ECS portion still pending):** Sparse block membership with checked negative
+coordinate floor/range limits, separate geometry/instance/block revisions, coalesced bounded queue,
+fair partial slices, upload-preparation byte limits and overflow rescan. Pending/rejected occluders
+are omitted immediately. CPU `Prepared` flags never substitute for actual GPU upload validation.
+Managed block/membership/queue counts have explicit configurable caps; they are not a whole-process
+memory bound. Engine Mesh copying remains an indivisible registration operation outside the slice loop.
+
+Standalone RED `7f4cd025237a4e99aaf427fb07a1c3e0`: 0/9; dynamic GREEN
+`1ad4343181c7482d8c08367e88d2bf64`: 39/39. World integration RED
+`e0770ea169e448c2b2f718f7f41732d3`: 40/44; coupled GREEN
+`15e0ce84796845ba853499da24382729`: 86/86. A rejected-pose regression then exposed an obsolete
+occluder epoch (`800d046df87d410bb79a2c7056b1b288`: 46/47); fixed by withdrawing failed capture.
+Final coupled `9d032a3687254ddfa858bea3766314c2`: 89/89 (47 dynamic, 42 existing Core/Runtime),
+zero failed/skipped. The earlier zero-discovery filter run is not acceptance evidence.
 
 ## Task 3: conservative GPU depth, hierarchy and tests
 

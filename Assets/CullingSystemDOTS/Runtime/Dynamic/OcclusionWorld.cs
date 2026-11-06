@@ -8,18 +8,19 @@ using UnityEngine;
 
 namespace CullingSystemDOTS.Dynamic
 {
-    public sealed class OcclusionWorld : IDisposable
+    public sealed partial class OcclusionWorld : IDisposable
     {
         private sealed class GeometrySlot
         {
-            internal uint Generation = 1;
+            internal uint Generation = 1, PreparedRevision;
             internal OcclusionGeometry Data;
             internal bool Available;
         }
         private sealed class InstanceSlot
         {
-            internal uint Generation = 1, BoundsRevision = 1;
-            internal bool Active;
+            internal uint Generation = 1, BoundsRevision = 1, PreparedRevision;
+            internal OcclusionBlocks.CellRange Range;
+            internal bool Active, Available;
             internal OcclusionInstanceDescriptor Descriptor;
         }
         private static long identityCounter;
@@ -44,6 +45,7 @@ namespace CullingSystemDOTS.Dynamic
             long identity = Interlocked.Increment(ref identityCounter);
             if (identity <= 0) throw new InvalidOperationException("Runtime occlusion World identity space is exhausted.");
             Identity = (ulong)identity;
+            InitializeUpdates();
         }
 
         public GeometryHandle RegisterGeometry(Mesh mesh)
@@ -55,7 +57,7 @@ namespace CullingSystemDOTS.Dynamic
             if (index == geometries.Count) geometries.Add(new GeometrySlot());
             var slot = geometries[index]; slot.Data = data; slot.Available = true;
             geometryCount++; Revision = checked(Revision + 1);
-            return new GeometryHandle(Identity, index, slot.Generation);
+            var handle = new GeometryHandle(Identity, index, slot.Generation); QueueGeometry(handle, slot); return handle;
         }
 
         /// <summary>Copies the source again. A rejected replacement preserves old data but withdraws it as an occluder.</summary>
@@ -66,6 +68,7 @@ namespace CullingSystemDOTS.Dynamic
             var next = new OcclusionGeometry(mesh, checked(slot.Data.Revision + 1), budget);
             try
             {
+                ValidateReplacementMembership(handle, next);
                 // Validate every dependent binding before publishing the replacement. A larger mesh
                 // must never reuse its former, potentially undersized candidate bounds.
                 foreach (var instance in instances)
@@ -81,36 +84,58 @@ namespace CullingSystemDOTS.Dynamic
             }
             catch { next.Dispose(); throw; }
             var previous = slot.Data; slot.Data = next; slot.Available = true; previous.Dispose();
-            foreach (var instance in instances)
+            QueueGeometry(handle, slot);
+            for (int index = 0; index < instances.Count; index++)
+            {
+                var instance = instances[index];
                 if (instance.Active && instance.Descriptor.Geometry.Equals(handle))
                 {
-                    var state = instance.Descriptor.State;
+                    var oldState = instance.Descriptor.State; var oldRange = instance.Range;
+                    var state = oldState;
                     state.WorldBounds.Encapsulate(TransformBounds(next.Mesh.bounds, state.LocalToWorld));
                     instance.Descriptor.State = state; instance.BoundsRevision++;
+                    TrackInstance(new InstanceHandle(Identity, index, instance.Generation), instance, oldState, oldRange);
                 }
+            }
         }
 
         public InstanceHandle RegisterInstance(in OcclusionInstanceDescriptor descriptor)
         {
             CheckAlive(); Validate(descriptor, descriptor.State);
+            var range = blockLayout.GetRange(descriptor.State.WorldBounds); ValidateMembershipChange(default, range);
             if (instanceCount >= settings.MaxInstances) throw new InvalidOperationException("Instance capacity is exhausted.");
             int index = freeInstances.Count > 0 ? freeInstances.Pop() : instances.Count;
             if (index == instances.Count) instances.Add(new InstanceSlot());
-            var slot = instances[index]; slot.Active = true; slot.Descriptor = descriptor; slot.BoundsRevision = 1;
+            var slot = instances[index]; slot.Active = true; slot.Available = true; slot.Descriptor = descriptor; slot.BoundsRevision = 1;
             instanceCount++; Changed(descriptor.State.Roles);
-            return new InstanceHandle(Identity, index, slot.Generation);
+            var handle = new InstanceHandle(Identity, index, slot.Generation); TrackInstance(handle, slot, default, default); return handle;
         }
 
         public void UpdateInstance(InstanceHandle handle, in OcclusionInstanceState state)
         {
-            CheckAlive(); var slot = GetInstance(handle); Validate(slot.Descriptor, state);
-            var previous = slot.Descriptor.State; slot.Descriptor.State = state;
-            slot.BoundsRevision = checked(slot.BoundsRevision + 1); Changed(previous.Roles | state.Roles);
+            CheckAlive(); var slot = GetInstance(handle);
+            try
+            {
+                Validate(slot.Descriptor, state);
+                var range = blockLayout.GetRange(state.WorldBounds); ValidateMembershipChange(slot.Range, range);
+                uint nextRevision = checked(slot.BoundsRevision + 1);
+                var previous = slot.Descriptor.State; var oldRange = slot.Range; Changed(previous.Roles | state.Roles);
+                slot.Descriptor.State = state; slot.BoundsRevision = nextRevision; slot.Available = true;
+                TrackInstance(handle, slot, previous, oldRange);
+            }
+            catch
+            {
+                // Failed capture must not leave an obsolete pose eligible to occlude or own rendering.
+                slot.Available = false; slot.PreparedRevision = 0;
+                updates.Remove(OcclusionUpdateKey.ForInstance(handle)); Changed(slot.Descriptor.State.Roles);
+                throw;
+            }
         }
 
         public void RemoveInstance(InstanceHandle handle)
         {
             CheckAlive(); var slot = GetInstance(handle); Changed(slot.Descriptor.State.Roles);
+            RemoveMembership(handle, slot.Range); updates.Remove(OcclusionUpdateKey.ForInstance(handle)); slot.Range = default;
             slot.Active = false; slot.Descriptor = default; instanceCount--;
             if (slot.Generation != uint.MaxValue) { slot.Generation++; freeInstances.Push(handle.Index); }
         }
@@ -122,6 +147,7 @@ namespace CullingSystemDOTS.Dynamic
                 if (instance.Active && instance.Descriptor.Geometry.Equals(handle))
                     throw new InvalidOperationException("Remove referencing instances before removing their geometry.");
             slot.Data.Dispose(); slot.Data = null; slot.Available = false; geometryCount--;
+            updates.Remove(OcclusionUpdateKey.ForGeometry(handle));
             if (slot.Generation != uint.MaxValue) { slot.Generation++; freeGeometries.Push(handle.Index); }
             Changed(OcclusionRole.Occluder);
         }
@@ -141,7 +167,7 @@ namespace CullingSystemDOTS.Dynamic
                 {
                     var slot = geometries[i]; if (slot.Data == null) continue;
                     var handle = new GeometryHandle(Identity, i, slot.Generation);
-                    slot.Data.Retain(); retained.Add(handle, slot.Data); if (!slot.Available) unavailable.Add(handle);
+                    slot.Data.Retain(); retained.Add(handle, slot.Data); if (!GeometryPrepared(handle)) unavailable.Add(handle);
                 }
                 native = new NativeArray<OcclusionInstanceSnapshot>(instanceCount, Allocator.Persistent);
                 var materials = new Material[instanceCount]; int output = 0;
@@ -150,10 +176,11 @@ namespace CullingSystemDOTS.Dynamic
                     var slot = instances[i]; if (!slot.Active) continue;
                     var descriptor = slot.Descriptor; var state = descriptor.State;
                     var roles = state.Roles;
-                    if (unavailable.Contains(descriptor.Geometry)) roles &= ~OcclusionRole.Occluder;
+                    if ((roles & OcclusionRole.Occluder) != 0 && (unavailable.Contains(descriptor.Geometry) || !OccluderPrepared(slot))) roles &= ~OcclusionRole.Occluder;
                     native[output] = new OcclusionInstanceSnapshot { Handle = new InstanceHandle(Identity, i, slot.Generation),
                         Geometry = descriptor.Geometry, LocalToWorld = state.LocalToWorld, WorldBounds = state.WorldBounds,
                         Color = state.Color, BoundsRevision = slot.BoundsRevision, Roles = roles, Opaque = state.Opaque ? (byte)1 : (byte)0,
+                        Prepared = InstancePrepared(slot) ? (byte)1 : (byte)0,
                         SubMesh = descriptor.SubMesh, Layer = descriptor.Layer, Shadows = descriptor.Shadows };
                     materials[output++] = descriptor.Material;
                 }
@@ -230,6 +257,7 @@ namespace CullingSystemDOTS.Dynamic
             if (disposed) return; CheckAlive();
             foreach (var lease in leases) lease.CompleteReaders();
             disposed = true;
+            ClearUpdates();
             foreach (var slot in geometries) { slot.Data?.Dispose(); slot.Data = null; }
             geometries.Clear(); instances.Clear(); freeGeometries.Clear(); freeInstances.Clear();
         }

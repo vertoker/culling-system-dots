@@ -40,6 +40,7 @@ namespace CullingSystemDOTS.Dynamic
             }
             if (indices.Count == 0) throw new ArgumentException("The Mesh has no triangles.", nameof(source));
             long nativeBytes = checked((long)vertices.Length * 12 + (long)indices.Count * 4);
+            if (nativeBytes > int.MaxValue) throw new ArgumentException("Geometry exceeds one addressable update payload.", nameof(source));
             long reserved = checked(nativeBytes + MeshPayload(source) * 2 + (long)vertices.Length * 24);
             budget.Reserve(reserved); bytes = reserved;
             try

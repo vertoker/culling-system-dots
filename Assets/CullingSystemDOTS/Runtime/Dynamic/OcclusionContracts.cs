@@ -69,7 +69,7 @@ namespace CullingSystemDOTS.Dynamic
         public float4 Color;
         public uint BoundsRevision;
         public OcclusionRole Roles;
-        public byte Opaque;
+        public byte Opaque, Prepared;
         public int SubMesh, Layer;
         public ShadowCastingMode Shadows;
     }
